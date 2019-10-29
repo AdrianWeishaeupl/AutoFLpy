@@ -19,7 +19,7 @@ AutoFLpy
 Automated flight log code
 
 
-* Free software: BSD
+* Free software: GPLv3
 * Documentation: https://autoflpy.readthedocs.io.
 
 
