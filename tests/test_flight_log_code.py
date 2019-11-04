@@ -16,10 +16,18 @@ from datetime import datetime
 
 class Test_flight_log_code(unittest.TestCase):
 
+    @classmethod
+    def tearDownClass(cls):
+        # Removes generated flight log.
+        base_path = os.getcwd() + os.sep + "tests" + os.sep + \
+                    "test_files" + os.sep
+        os.remove(base_path + "test_generated_flight_log20190123 2.ipynb")
+
     def setUp(self):
         # Sets up all of the test variables and locations to be used
         # throughout.
-        self.base_path = os.getcwd() + os.sep + "test_files" + os.sep
+        self.base_path = os.getcwd() + os.sep + "tests" + os.sep + \
+                            "test_files" + os.sep
         self.base_path = self.base_path.replace(os.sep, "/")
         # Imports data from template.
         with open(self.base_path + 'test_Input File.json') as file:
@@ -50,6 +58,7 @@ class Test_flight_log_code(unittest.TestCase):
         self.metar_file_path = self.base_path + self.data[
                 "flight_log_generator_input"]["metar_file_path"]
 
+
     def test_flight_log_maker(self):
         flight_log_code.flight_log_maker(self.template_file_path,
                                          self.template_file_name,
@@ -77,10 +86,11 @@ class Test_flight_log_code(unittest.TestCase):
         # Checks that the file was recently created.
         filetime = os.stat(test_flight_log_file_path)
         # Finds the time since the file has been created.
-        time_diff = datetime.fromtimestamp(filetime.st_mtime) - datetime.now()
-        # Checks that the time difference is less than 0.01 seconds
-        time_diff_negligible = time_diff.seconds < 0.01
-        self.assertTrue(time_diff_negligible)
+        time_diff = datetime.now() - datetime.fromtimestamp(filetime.st_mtime)
+        # Checks that the time difference is less than 0.1 seconds.
+        self.assertLess(time_diff.seconds, 0.1)
+        # Check that the files weren't created in the past.
+        self.assertGreater(time_diff.seconds, 0)
 
     def test_flight_data(self):
         # Tests the flight data code.

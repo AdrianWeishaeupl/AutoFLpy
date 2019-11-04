@@ -18,7 +18,7 @@ class Testlog_to_xls(unittest.TestCase):
 
     def setUp(self):
         # Create variables and assign directories before any test.
-        base_path = os.getcwd() + "\\test_files"
+        base_path = os.getcwd() + os.sep + "tests" + os.sep + "test_files"
         # Tidies up the base path for python.
         self.base_path = base_path.replace(os.sep, "/")
         # Reads the test_input_file information
