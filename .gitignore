@@ -100,3 +100,12 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# Output files
+/data/*_Flight*.xls
+/data/flight logs generated/*
+/data/metar file storage/*
+/data/arduino data/*
+/data/excel data/*
+/data/log files/*
+!/data/log files/test_log_to_xls.log

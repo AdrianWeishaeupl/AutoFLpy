@@ -11,11 +11,11 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [ ]
+requirements = []
 
-setup_requirements = [ ]
+setup_requirements = []
 
-test_requirements = [ ]
+test_requirements = []
 
 setup(
     author="Adrian Benedikt Weishaeupl",
@@ -43,7 +43,7 @@ setup(
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/AdrianWeishaeupl/autoflpy',
+    url='https://github.com/AdrianWeishaeupl/AutoFLpy.git',
     version='0.1.0',
     zip_safe=False,
 )
