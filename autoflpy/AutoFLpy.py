@@ -32,9 +32,9 @@ def autoflpy(input_file='Input File.json'):
     with open(base_path + input_file) as file:
         data = json.load(file)
     # Sets  variables from the input file to be used.
-    log_file_path = base_path + data["log_to_xls_input"][
+    log_file_path = (base_path + data["log_to_xls_input"][
             "log_file_path"] + os.sep + data["log_to_xls_input"][
-            "log_file_name"]
+            "log_file_name"]).replace(os.sep, "/")
     name_converter_file_path = base_path + data[
             "log_to_xls_input"]["name_converter_file_path"]
     data_sources_path = base_path + data[

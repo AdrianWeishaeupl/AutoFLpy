@@ -1,9 +1,9 @@
 {
 	"log_to_xls_input": {
-		"log_file_name": "/test_log_to_xls.log",
+		"log_file_name": "test_log_to_xls.log",
 		"log_file_path": "",
-        "name_converter_file_path": "/test_name_converter_list.txt",
-        "data_sources_file_path": "/test_data_sources.txt",
+        "name_converter_file_path": "test_name_converter_list.txt",
+        "data_sources_file_path": "test_data_sources.txt",
         "excel_data_file_path": "",
 		"date": "20190123",
 		"flight_number": "2"
