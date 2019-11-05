@@ -51,6 +51,7 @@ def flight_log_maker(template_file_path, template_file_name,
                      start_time_hours, end_time_hours, metar_file_path):
     """This code will edit a specified template and return the result that has
     been produced after the substitution of data into the template."""
+    print('Starting Flight Log Maker')
     flight_data_file_path_slash = flight_data_file_path.replace("\\",
                                                                 jupyter_sep)
     arduino_flight_data_file_path_slash =\
@@ -75,6 +76,7 @@ def flight_log_maker(template_file_path, template_file_name,
                         arduino_flight_data_name) is True and
          len(arduino_flight_data_file_path + os.sep +
          arduino_flight_data_name) > 1):
+        print('Importing xls data')
         # This replaces the file path with the neccissary information
         contents = contents.replace("PYTHON_FILE_PATH", "\\\"" +
                                     os.getcwd().replace("\\", jupyter_sep) +
@@ -132,6 +134,7 @@ def flight_log_maker(template_file_path, template_file_name,
                                              "Checklists nominal.xlsx")
             frame_list_emergency = flight_data(checklist_file_path,
                                                "Checklists Emergency.xlsx")
+            print('Looking for checklists')
             filtered_frame_nominal = checklist_finder(frame_list_nominal,
                                                       flight_number,
                                                       flight_date)
@@ -239,6 +242,7 @@ def flight_log_maker(template_file_path, template_file_name,
     # Creates a new flight log from the contents
     flight_log_creator(contents, flight_log_file_path, flight_date,
                        flight_number, flight_log_file_name_header)
+    print('Flight log maker finished')
 
 
 def flight_data(file_path, file_name):
@@ -668,6 +672,7 @@ def flight_data_and_axis(new_frames):
     """Returns list of lists with the following structure [[data source,
     [name, unit, data],[name, unit, data]], [data source, [name, unit, data],
     [name, unit, data]]]."""
+    print('Importing flight data')
     # Creates an empty list for all the data.
     values_list = []
     # Checks through all the data frames
@@ -1700,6 +1705,7 @@ def flight_log_creator(contents, file_path, date, flight_number,
      flight_number.ipynb  and fills the file with the
     contents provided as an input."""
     # Creates file with name
+    print('Creating new flight log')
     file = open(file_path + os.sep + file_name_header + str(date) + " " +
                 str(flight_number) + ".ipynb", "w+")
     # Extracts contents.
@@ -1852,6 +1858,7 @@ def METAR_finder(location, year, month, day, month_end, day_end,
                  start_time_hours, end_time_hours, metar_file_path=""):
     """This grabs URL if it is not already available."""
     # End time to actual end time in hours
+    print('Checking for METAR')
     end_time_hours = str(int(end_time_hours) - 1)
     # Checks to see if a metar file path is available.
     if metar_file_path != "" or metar_file_path != "data":

@@ -17,9 +17,12 @@ Based on work done by Samuel Pearson (sp1g18@soton.ac.uk) (06-08/2019)
 def log_reader(log_file_path, name_converter_file_path, data_sources_path,
                excel_file_path, excel_file_name, flight_date, flight_number):
     """Creates a formated excell 95 file from a log file. """
+    print('Starting log reader')
+    print('Creating new work book')
     # Creates a new workbook
     workbook = xlwt.Workbook()
     # Opens log file
+    print('Reading log file')
     log_opened = open(log_file_path, "r")
     # Reads contents
     log_contents_text = log_opened.read()
@@ -44,6 +47,7 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
     # splits log contents about each new line
     log_contents = log_contents_text.split("\n")
     # Goes through each line
+    print('Populating work book')
     for line in log_contents:
         # Splits data into columns
         data = line.split(", ")
@@ -130,4 +134,6 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
             # Ends for loop and so saves code
             break
     # Saves file
+    print('Saving workbook')
     workbook.save(excel_file_path + os.sep + excel_file_name + ".xls")
+    print('Log reader finished')

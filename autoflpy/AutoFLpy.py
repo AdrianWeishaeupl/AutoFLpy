@@ -13,14 +13,23 @@ import json
 import autoflpy.flight_log_code as flight_log_code
 import autoflpy.log_to_xls as log_to_xls
 
-if __name__ == "__main__":
+"""
+TODO:
+    Find why the METAR information displays the incorrect date/data.
+    Move utility files into a util folder.
+    Remove the code from the Jupyter template and move it out of sight.
+    Find a way of using an API to automatically locate the nearest
+        airfield from the Latitude and Longitude in the data.
+    Find a way that the code can recognise if 
+"""
 
+def autoflpy(input_file='Input File.json'):
     # Finds the file path from where this code is being run.
     base_path = os.getcwd()[:-9] + os.sep + 'data' + os.sep
     # Tidies up the base path for python.
     base_path = base_path.replace(os.sep, "/")
     # Reads the test_input_file information
-    with open(base_path + 'Input File.json') as file:
+    with open(base_path + input_file) as file:
         data = json.load(file)
     # Sets  variables from the input file to be used.
     log_file_path = base_path + data["log_to_xls_input"][
@@ -54,7 +63,6 @@ if __name__ == "__main__":
             "template_file_path"]
     flight_log_file_path = base_path + data["flight_log_generator_input"][
             "flight_log_destination"]
-    # NOTE: Need to find out what this is.
     flight_data_file_path = excel_file_path
     flight_data_file_name = excel_file_name + ".xls"
     arduino_flight_data_file_path = base_path + data[
@@ -87,4 +95,6 @@ if __name__ == "__main__":
                                      start_time_hours,
                                      end_time_hours,
                                      metar_file_path)
-   
+
+if __name__ == "__main__":
+    autoflpy()

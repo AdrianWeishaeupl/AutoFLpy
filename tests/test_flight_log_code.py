@@ -10,6 +10,7 @@ No tests are currently written for the GUI.
 import unittest
 import os
 import json
+import time
 from autoflpy import flight_log_code
 from datetime import datetime
 
@@ -58,7 +59,6 @@ class Test_flight_log_code(unittest.TestCase):
         self.metar_file_path = self.base_path + self.data[
                 "flight_log_generator_input"]["metar_file_path"]
 
-
     def test_flight_log_maker(self):
         flight_log_code.flight_log_maker(self.template_file_path,
                                          self.template_file_name,
@@ -87,10 +87,10 @@ class Test_flight_log_code(unittest.TestCase):
         filetime = os.stat(test_flight_log_file_path)
         # Finds the time since the file has been created.
         time_diff = datetime.now() - datetime.fromtimestamp(filetime.st_mtime)
-        # Checks that the time difference is less than 0.1 seconds.
-        self.assertLess(time_diff.seconds, 0.1)
+        # Checks that the time difference is less than 1 second.
+        self.assertLess(time_diff.microseconds, 1e6)
         # Check that the files weren't created in the past.
-        self.assertGreater(time_diff.seconds, 0)
+        self.assertGreater(time_diff.microseconds, 0)
 
     def test_flight_data(self):
         # Tests the flight data code.
