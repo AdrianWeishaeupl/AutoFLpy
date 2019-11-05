@@ -109,3 +109,6 @@ ENV/
 /data/excel data/*
 /data/log files/*
 !/data/log files/test_log_to_xls.log
+
+# Test files
+!/tests/test_files/test_log_to_xls.log
