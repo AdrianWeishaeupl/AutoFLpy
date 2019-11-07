@@ -112,3 +112,7 @@ ENV/
 
 # Test files
 !/tests/test_files/test_log_to_xls.log
+
+# Images
+/data/images/
+!/data/images/Logo here.png
