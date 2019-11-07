@@ -1,0 +1,29 @@
+{
+	"log_to_xls_input": {
+		"log_file_name": "Your log file to be run",
+		"log_file_path": "Set to your storage location",
+        "excel_data_file_path": "Destination for the generated excel data",
+		"date": "YYYYMMDD",
+		"flight_number": ""
+	},
+	"flight_log_generator_input": {
+		"template_file_path": "",
+        "flight_data_file_path": "If blank, same as excel_data_file_path",
+        "arduino_flight_data_file_path": "",
+        "checklist_data_file_path": "",
+        "metar_file_path": "METAR data collected will be stored here",
+        "icao_code": "ICAO of the nearest airfield with frequent METAR data available",
+        "flight_log_destination": ""
+		
+		"flight_log_generator_input": {
+		"template_file_path": "",
+        "flight_data_file_path": "",
+		"arduino_flight_data_name": "",
+        "arduino_flight_data_file_path": "",
+        "checklist_data_file_path": "",
+        "metar_file_path": "METAR data collected will be stored here",
+        "flight_log_destination": "",
+		"start_time_hours": "HH - 24 hr clock",
+		"end_time_hours": "HH - 24 hr clock"
+	}
+}

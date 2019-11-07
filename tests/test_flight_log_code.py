@@ -10,9 +10,9 @@ No tests are currently written for the GUI.
 import unittest
 import os
 import json
-import time
 from autoflpy import flight_log_code
 from datetime import datetime
+from autoflpy import nearest_ICAO_finder
 
 
 class Test_flight_log_code(unittest.TestCase):
@@ -22,7 +22,10 @@ class Test_flight_log_code(unittest.TestCase):
         # Removes generated flight log.
         base_path = os.getcwd() + os.sep + "tests" + os.sep + \
                     "test_files" + os.sep
-        os.remove(base_path + "test_generated_flight_log20190123 2.ipynb")
+        generated_file_name = base_path + \
+            "test_generated_flight_log20190123 2.ipynb"
+        if os.path.exists(generated_file_name):
+            os.remove(generated_file_name)
 
     def setUp(self):
         # Sets up all of the test variables and locations to be used
@@ -50,8 +53,9 @@ class Test_flight_log_code(unittest.TestCase):
         self.flight_log_file_name_header = "test_generated_flight_log"
         self.checklist_file_path = self.base_path
         self.log_code_version = "autoflpy.flight_log_code"
-        self.ICAO_airfield = self.data["flight_log_generator_input"][
-                "icao_code"]
+        self.ICAO_airfield = nearest_ICAO_finder.icao_finder(
+                self.flight_data_file_path,
+                self.flight_data_file_name)
         self.start_time_hours = self.data["flight_log_generator_input"][
                 "start_time_hours"]
         self.end_time_hours = self.data["flight_log_generator_input"][
@@ -110,7 +114,64 @@ class Test_flight_log_code(unittest.TestCase):
             self.assertEqual(1, 2)
 
     def test_checklist_finder(self):
-        pass
+        pass  # Not yet written.
+
+    def test_flight_log_checklist(self):
+        pass  # Not yet written.
+
+    def test_contents_opener(self):
+        pass  # Not yet written.
+
+    def test_flight_data_and_axis(self):
+        pass  # Not yet written.
+
+    def test_flight_log_graph_contents_replacer(self):
+        pass  # Not yet written.
+
+    def test_graph_function(self):
+        pass  # Not yet written.
+
+    def test_flight_log_multiaxis_graph_contents_replacer(self):
+        pass  # Not yet written.
+
+    def test_multiaxis_graph_function(self):
+        pass  # Not yet written.
+
+    def test_cell_remover(self):
+        pass  # Not yet written.
+
+    def test_line_remover(self):
+        pass  # Not yet written.
+
+    def test_flight_log_creator(self):
+        pass  # Not yet written.
+
+    def test_flight_data_time_sorter(self):
+        pass  # Not yet written.
+
+    def test_file_type_finder(self):
+        pass  # Not yet written.
+
+    def test_date_and_flight_number(self):
+        pass  # Not yet written.
+
+    def test_METAR_finder(self):
+        pass  # Not yet written.
+
+    def test_METAR_returner(self):
+        pass  # Not yet written.
+
+    def test_no_METAR_returner(self):
+        pass  # Not yet written.
+
+    def test_METAR_quota_returner(self):
+        pass  # Not yet written.
+
+    def test_METAR_replacer(self):
+        pass  # Not yet written.
+
+    def test_arduino_micro_frame(self):
+        pass  # Not yet written.
 
 
 if __name__ == '__main__':

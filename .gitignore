@@ -114,5 +114,5 @@ ENV/
 !/tests/test_files/test_log_to_xls.log
 
 # Images
-/data/images/
-!/data/images/Logo here.png
+autoflpy/data/images/
+!autoflpy/data/images/Logo here.png

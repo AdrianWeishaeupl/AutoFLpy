@@ -15,7 +15,6 @@
         "arduino_flight_data_file_path": "",
         "checklist_data_file_path": "",
         "metar_file_path": "",
-        "icao_code": "EGHI",
         "flight_log_destination": "",
 		"start_time_hours": "9",
 		"end_time_hours": "10"

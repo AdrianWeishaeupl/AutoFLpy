@@ -3,10 +3,18 @@ include CONTRIBUTING.rst
 include HISTORY.rst
 include LICENSE
 include README.rst
-recursive-include data *
-
+include /data/log files/test_log_to_xls.log
+include /autoflpy/data/images/Logo here.png
+recursive-include autoflpy/data *
 recursive-include tests *
+
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
+recursive-exclude data *
+exclude autoflpy/AutoFLpy_batch.py
+exclude autoflpy/AutoFLpy_temp.py
+exclude autoflpy/input_creator_draft.py
+recursive-exclude autoflpy/data/images *
+
 
 recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif

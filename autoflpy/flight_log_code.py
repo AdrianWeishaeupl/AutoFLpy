@@ -218,6 +218,8 @@ def flight_log_maker(template_file_path, template_file_name,
             else:
                 # Includes METAR data into the contents.
                 contents = METAR_returner(metar_data, contents,
+                                          int(str(flight_date)[4:6]),
+                                          int(str(flight_date)[:4]),
                                           replace_key="METAR_INFORMATION")
                 # Replaces JFLTS METAR text with nothing if data is available.
                 contents = contents.replace("METAR_LINE", "")
@@ -1942,18 +1944,19 @@ def METAR_finder(location, year, month, day, month_end, day_end,
     return(metar_data)
 
 
-def METAR_returner(metar_data, contents, replace_key="METAR_INFORMATION"):
+def METAR_returner(metar_data, contents, month, year,
+                   replace_key="METAR_INFORMATION"):
     """Replaces the key word in a cell with METAR information from the day"""
     # finds the locations that the metars were recorded from.
     metar_text = "    \"The METARs for " +\
-        str(Metar.Metar(metar_data[0]))[9:13] +\
+        str(Metar.Metar(metar_data[0], month=month, year=year))[9:13] +\
         " were:\\n\",\n    \"\\n\",\n"
     # Goes through the metars and creates a list of metars from that day.
     for metar in metar_data[:-1]:
         # Uses the metar function to get the data from the metar and display
         # the data labeled nicely
         metar_text += "    \"" +\
-            str(Metar.Metar(metar[6:]))[14:].replace(
+            str(Metar.Metar(metar[6:], month=month, year=year))[14:].replace(
                     "\n", "\\n\",\n    \"\\n\",\n    \"") +\
             "\\n\",\n     \"<br><br><br><br>\\n\",\n"
     # Adds the metar data to the text file.
