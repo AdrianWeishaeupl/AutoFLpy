@@ -6,6 +6,7 @@ include README.rst
 include /data/log files/test_log_to_xls.log
 include /autoflpy/data/images/Logo here.png
 recursive-include autoflpy/data *
+recursive-include autoflpy/user_files *
 recursive-include tests *
 
 recursive-exclude * __pycache__

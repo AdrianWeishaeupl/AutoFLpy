@@ -6,3 +6,8 @@ History
 ------------------
 
 * First release on PyPI.
+
+0.1.1 (2019-11-07)
+------------------
+
+* Updates and added code. Reformatted directory.

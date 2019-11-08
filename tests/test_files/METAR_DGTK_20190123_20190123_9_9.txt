@@ -1,0 +1,2 @@
+METAR DGTK 230900Z NIL
+https://www.ogimet.com/display_metars2.php?lang=en&lugar=DGTK&tipo=ALL&ord=REV&nil=SI&fmt=html&ano=2019&mes=01&day=23&hora=9&anof=2019&mesf=01&dayf=23&horaf=9&minf=59&send=send

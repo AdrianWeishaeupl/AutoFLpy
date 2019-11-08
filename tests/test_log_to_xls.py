@@ -18,8 +18,8 @@ class Testlog_to_xls(unittest.TestCase):
 
     def setUp(self):
         # Create variables and assign directories before any test.
-        base_path = os.getcwd() + os.sep + "tests" + os.sep + "test_files" + \
-            os.sep
+        base_path = os.path.join(os.path.dirname(__file__),
+                                 "test_files") + os.sep
         # Tidies up the base path for python.
         self.base_path = base_path.replace(os.sep, "/")
         # Reads the test_input_file information
@@ -27,12 +27,10 @@ class Testlog_to_xls(unittest.TestCase):
             self.data = json.load(file)
         # Sets dummy variables for testing to be used throughout.
         self.log_file_path = self.base_path + self.data["log_to_xls_input"][
-                "log_file_path"] + self.data["log_to_xls_input"][
                 "log_file_name"]
-        self.name_converter_file_path = self.base_path + self.data[
-                "log_to_xls_input"]["name_converter_file_path"]
-        self.data_sources_path = self.base_path + self.data[
-                "log_to_xls_input"]["data_sources_file_path"]
+        self.name_converter_file_path = self.base_path + \
+            "test_name_converter_list.txt"
+        self.data_sources_path = self.base_path + "test_data_sources.txt"
         self.excel_file_path = self.base_path
         self.excel_file_name = "test_xls"
         self.flight_date = self.data["log_to_xls_input"]["date"]

@@ -1,0 +1,3 @@
+METAR DGTK 011300Z NIL
+METAR DGTK 011200Z NIL
+https://www.ogimet.com/display_metars2.php?lang=en&lugar=DGTK&tipo=ALL&ord=REV&nil=SI&fmt=html&ano=2019&mes=01&day=01&hora=12&anof=2019&mesf=01&dayf=01&horaf=13&minf=59&send=send

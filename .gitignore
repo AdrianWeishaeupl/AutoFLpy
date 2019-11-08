@@ -51,10 +51,6 @@ coverage.xml
 *.mo
 *.pot
 
-# Django stuff:
-*.log
-local_settings.py
-
 # Flask stuff:
 instance/
 .webassets-cache
@@ -102,16 +98,11 @@ ENV/
 .mypy_cache/
 
 # Output files
-/data/*_Flight*.xls
-/data/flight logs generated/*
-/data/metar file storage/*
-/data/arduino data/*
-/data/excel data/*
-/data/log files/*
-!/data/log files/test_log_to_xls.log
+/data
 
 # Test files
 !/tests/test_files/test_log_to_xls.log
+
 
 # Images
 autoflpy/data/images/

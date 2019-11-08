@@ -20,8 +20,8 @@ class Test_flight_log_code(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         # Removes generated flight log.
-        base_path = os.getcwd() + os.sep + "tests" + os.sep + \
-                    "test_files" + os.sep
+        base_path = os.path.join(os.path.dirname(__file__),
+                                 "test_files") + os.sep
         generated_file_name = base_path + \
             "test_generated_flight_log20190123 2.ipynb"
         if os.path.exists(generated_file_name):
@@ -30,8 +30,8 @@ class Test_flight_log_code(unittest.TestCase):
     def setUp(self):
         # Sets up all of the test variables and locations to be used
         # throughout.
-        self.base_path = os.getcwd() + os.sep + "tests" + os.sep + \
-                            "test_files" + os.sep
+        self.base_path = os.path.join(os.path.dirname(__file__),
+                                      "test_files") + os.sep
         self.base_path = self.base_path.replace(os.sep, "/")
         # Imports data from template.
         with open(self.base_path + 'test_Input File.json') as file:
@@ -40,11 +40,10 @@ class Test_flight_log_code(unittest.TestCase):
         self.flight_date = self.data["log_to_xls_input"]["date"]
         self.template_file_path = self.base_path
         self.template_file_name = self.data["flight_log_generator_input"][
-                "template_file_path"]
+                "template_file_name"]
         self.flight_log_file_path = self.base_path + self.data[
                 "flight_log_generator_input"]["flight_log_destination"]
-        # NOTE: Need to find out what this is.
-        self.flight_data_file_path = self.base_path
+        self.flight_data_file_path = self.base_path  # Path to xls file
         self.flight_data_file_name = "test_xls.xls"
         self.arduino_flight_data_file_path = self.base_path + self.data[
                 "flight_log_generator_input"]["arduino_flight_data_file_path"]
@@ -53,9 +52,6 @@ class Test_flight_log_code(unittest.TestCase):
         self.flight_log_file_name_header = "test_generated_flight_log"
         self.checklist_file_path = self.base_path
         self.log_code_version = "autoflpy.flight_log_code"
-        self.ICAO_airfield = nearest_ICAO_finder.icao_finder(
-                self.flight_data_file_path,
-                self.flight_data_file_name)
         self.start_time_hours = self.data["flight_log_generator_input"][
                 "start_time_hours"]
         self.end_time_hours = self.data["flight_log_generator_input"][
@@ -64,6 +60,9 @@ class Test_flight_log_code(unittest.TestCase):
                 "flight_log_generator_input"]["metar_file_path"]
 
     def test_flight_log_maker(self):
+        self.ICAO_airfield = nearest_ICAO_finder.icao_finder(
+                self.flight_data_file_path,
+                self.flight_data_file_name)
         flight_log_code.flight_log_maker(self.template_file_path,
                                          self.template_file_name,
                                          self.flight_log_file_path,
