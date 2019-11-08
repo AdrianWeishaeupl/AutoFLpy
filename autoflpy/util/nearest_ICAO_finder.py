@@ -56,7 +56,8 @@ def airport_lat_long():
           https://github.com/sobester/ADRpy')
     # Runways data is taken from ADRpy and has empty location cells filled with
     # very large numbers to eliminate the likelyhood of them being picked.
-    file_path = os.path.join(os.path.dirname(__file__), "data", "runways.csv")
+    file_path = os.path.join(os.path.dirname(__file__)[:-5], "data",
+                             "runways.csv")
     # Creates pandas data frames for the data required.
     data = pd.read_csv(file_path)
     information = np.array([data['airport_ident'], data['le_latitude_deg'],

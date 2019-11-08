@@ -93,7 +93,7 @@ class Test_flight_log_code(unittest.TestCase):
         # Checks that the time difference is less than 1 second.
         self.assertLess(time_diff.microseconds, 1e6)
         # Check that the files weren't created in the past.
-        self.assertGreater(time_diff.microseconds, 0)
+        self.assertGreaterEqual(time_diff.microseconds, 0)
 
     def test_flight_data(self):
         # Tests the flight data code.
