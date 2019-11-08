@@ -7,7 +7,7 @@ No tests are currently written for the GUI.
 @author Adrian Weishaeupl (aw6g15@soton.ac.uk)
 """
 
-from autoflpy import log_to_xls
+from autoflpy.util import log_to_xls
 import unittest
 import xlrd
 import os

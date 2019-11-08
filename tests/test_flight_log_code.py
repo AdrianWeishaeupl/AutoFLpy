@@ -10,9 +10,9 @@ No tests are currently written for the GUI.
 import unittest
 import os
 import json
-from autoflpy import flight_log_code
+from autoflpy.util import flight_log_code
 from datetime import datetime
-from autoflpy import nearest_ICAO_finder
+from autoflpy.util import nearest_ICAO_finder
 
 
 class Test_flight_log_code(unittest.TestCase):
