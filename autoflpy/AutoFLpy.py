@@ -153,7 +153,7 @@ def autoflpy(input_file='Input File.json'):
             os.makedirs(checklist_file_path)
         except OSError:
             print('Checklists folder found.')
-    log_code_version = "autoflpy.flight_log_code"
+    log_code_version = "autoflpy.util.flight_log_code"
     start_time_hours = data["flight_log_generator_input"]["start_time_hours"]
     end_time_hours = data["flight_log_generator_input"]["end_time_hours"]
     if data["flight_log_generator_input"][
