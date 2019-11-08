@@ -10,7 +10,6 @@
 	"flight_log_generator_input": {
 		"template_file_path": "",
 		"template_file_name": "test_template.ipynb",
-        "flight_data_file_path": "",
 		"arduino_flight_data_name": "test_arduino.CSV",
         "arduino_flight_data_file_path": "",
         "checklist_data_file_path": "",

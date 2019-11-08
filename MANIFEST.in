@@ -14,7 +14,7 @@ recursive-exclude * *.py[co]
 recursive-exclude data *
 exclude autoflpy/AutoFLpy_batch.py
 exclude autoflpy/AutoFLpy_temp.py
-exclude autoflpy/input_creator_draft.py
+exclude autoflpy/util/input_creator_draft.py
 recursive-exclude autoflpy/data/images *
 
 

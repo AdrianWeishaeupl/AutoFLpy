@@ -36,11 +36,13 @@ def autoflpy(input_file='Input File.json'):
     # Reads the test_input_file information.
     with open(base_path + input_file) as file:
         data = json.load(file)
-    default_storage_path = (os.getcwd() + os.sep + 'user_files' + os.sep
-                            ).replace(os.sep, "/")
+    default_storage_path = str((os.getcwd() + os.sep + 'user_files' + os.sep
+                                ).replace(os.sep, "/"))
+
     # Sets  variables from the input file to be used.
     # If no log file path has been entered, go to the standard log path.
-    if data["log_to_xls_input"]["log_file_path"] != "":
+    if data["log_to_xls_input"]["log_file_path"] != "" and os.path.exists(
+            data["log_to_xls_input"]["log_file_path"]) is True:
         log_file_path = (data["log_to_xls_input"][
             "log_file_path"] + os.sep + data["log_to_xls_input"][
             "log_file_name"]).replace(os.sep, "/")
@@ -50,26 +52,28 @@ def autoflpy(input_file='Input File.json'):
         log_file_path = (log_file_base_path + os.sep + data[
                 "log_to_xls_input"]["log_file_name"]).replace(os.sep, "/")
         try:
-            os.mkdir(log_file_base_path)
+            os.makedirs(log_file_base_path)
             # Raises error and gives advice on how to continue.
             print('No log file directory was entered. A new directory has been\
               made, please copy the file path of this directory into the \
               input file and place your log files into this directory.')
             raise FileNotFoundError
-        except FileExistsError:
+        except OSError:
             print('Log file path found.')
     name_converter_file_path = base_path + 'Name converter list.txt'
     data_sources_path = base_path + 'Data sources.txt'
     # If no excel data file path has been entered, go to the standard path.
-    if data["log_to_xls_input"]["excel_data_file_path"] != "":
+    if data["log_to_xls_input"]["excel_data_file_path"] != "" and \
+        os.path.exists(
+            data["log_to_xls_input"]["excel_data_file_path"]) is True:
         excel_file_path = (data["log_to_xls_input"][
             "excel_data_file_path"]).replace(os.sep, "/")
     else:
         # Makes a directory in the current working path to be used.
         excel_file_path = default_storage_path + "excel_file_path"
         try:
-            os.mkdir(excel_file_path)
-        except FileExistsError:
+            os.makedirs(excel_file_path)
+        except OSError:
             print('Excel folder found. Will use this folder to store generated\
                   xls files.')
 
@@ -91,31 +95,40 @@ def autoflpy(input_file='Input File.json'):
     # Assigns variables - checks if any information is entered into the input
     # file for the directories before creating new directories in the current
     # working directory.
-    if data["flight_log_generator_input"]["template_file_path"] != "":
+    if data["flight_log_generator_input"]["template_file_path"] != "" and \
+        os.path.exists(
+            data["flight_log_generator_input"]["template_file_path"]) is True:
         template_file_path = (data["flight_log_generator_input"][
             "template_file_path"]).replace(os.sep, "/")
     else:
         template_file_path = base_path
-    if data["flight_log_generator_input"]["template_file_name"] != "":
+    if data["flight_log_generator_input"]["template_file_name"] != "" and \
+        os.path.exists(
+            data["flight_log_generator_input"]["template_file_name"]) is True:
         template_file_name = data["flight_log_generator_input"][
             "template_file_name"]
     else:
         template_file_name = 'Default Template (Full Summary).ipynb'
-    if data["flight_log_generator_input"]["flight_log_destination"] != "":
+    if data["flight_log_generator_input"]["flight_log_destination"] != "" and \
+        os.path.exists(
+            data["flight_log_generator_input"][
+                    "flight_log_destination"]) is True:
         flight_log_file_path = data["flight_log_generator_input"][
                 "flight_log_destination"]
     else:
         # Makes a directory in the current working path to be used.
         flight_log_file_path = default_storage_path + "flight_logs_generated"
         try:
-            os.mkdir(flight_log_file_path)
-        except FileExistsError:
+            os.makedirs(flight_log_file_path)
+        except OSError:
             print('Flight log folder found. Will use this folder to store\
                   generated flight log files.')
     flight_data_file_path = (excel_file_path + os.sep).replace(os.sep, "/")
     flight_data_file_name = excel_file_name + ".xls"
     if data["flight_log_generator_input"][
-            "arduino_flight_data_file_path"] != "":
+            "arduino_flight_data_file_path"] != "" and \
+        os.path.exists(data["flight_log_generator_input"]
+                       ["arduino_flight_data_file_path"]) is True:
         arduino_flight_data_file_path = data[
             "flight_log_generator_input"]["arduino_flight_data_file_path"]
     else:
@@ -123,36 +136,40 @@ def autoflpy(input_file='Input File.json'):
         arduino_flight_data_file_path = default_storage_path + \
             "arduino_flight_data"
         try:
-            os.mkdir(arduino_flight_data_file_path)
-        except FileExistsError:
+            os.makedirs(arduino_flight_data_file_path)
+        except OSError:
             print('Arduino flight data folder found.')
     arduino_flight_data_name = data["flight_log_generator_input"][
             "arduino_flight_data_name"]
     flight_log_file_name_header = "Generated flight log"
     if data["flight_log_generator_input"][
-            "checklist_data_file_path"] != "":
+            "checklist_data_file_path"] != "" and \
+        os.path.exists(data[
+            "flight_log_generator_input"]["checklist_data_file_path"]) is True:
         checklist_file_path = data[
             "flight_log_generator_input"]["checklist_data_file_path"]
     else:
         # Makes a directory in the current working path to be used.
         checklist_file_path = default_storage_path + "checklists"
         try:
-            os.mkdir(checklist_file_path)
-        except FileExistsError:
+            os.makedirs(checklist_file_path)
+        except OSError:
             print('Checklists folder found.')
     log_code_version = "autoflpy.flight_log_code"
     start_time_hours = data["flight_log_generator_input"]["start_time_hours"]
     end_time_hours = data["flight_log_generator_input"]["end_time_hours"]
     if data["flight_log_generator_input"][
-            "metar_file_path"] != "":
+            "metar_file_path"] != "" and \
+        os.path.exists(
+            data["flight_log_generator_input"]["metar_file_path"]) is True:
         metar_file_path = data[
             "flight_log_generator_input"]["metar_file_path"]
     else:
         # Makes a directory in the current working path to be used.
         metar_file_path = default_storage_path + "METAR_storage"
         try:
-            os.mkdir(metar_file_path)
-        except FileExistsError:
+            os.makedirs(metar_file_path)
+        except OSError:
             print('METAR storage folder found.')
     # Finds the nearest airfield for METAR information
     ICAO_airfield = nearest_ICAO_finder.icao_finder(flight_data_file_path,
