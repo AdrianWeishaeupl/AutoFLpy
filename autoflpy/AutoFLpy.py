@@ -5,14 +5,12 @@ automatic flight log generator.
 
 __author__ = "Adrian Weishaeupl"
 
-from autoflpy.log_to_xls import *
-from autoflpy.flight_log_code import *
-import autoflpy.name_generator as name_generator
+import autoflpy.util.name_generator as name_generator
 import os
 import json
-import autoflpy.flight_log_code as flight_log_code
-import autoflpy.log_to_xls as log_to_xls
-import autoflpy.nearest_ICAO_finder as nearest_ICAO_finder
+import autoflpy.util.flight_log_code as flight_log_code
+import autoflpy.util.log_to_xls as log_to_xls
+import autoflpy.util.nearest_ICAO_finder as nearest_ICAO_finder
 
 """
 TODO:

@@ -21,3 +21,8 @@ History
 ------------------
 
 * Fixed directory issues
+
+0.1.4 (2019-11-08)
+------------------
+
+* Fixed more directory issues
