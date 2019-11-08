@@ -26,3 +26,8 @@ History
 ------------------
 
 * Fixed more directory issues
+
+0.2.0 (2019-11-08)
+------------------
+
+* Fixed path issues in template
