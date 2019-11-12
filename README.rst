@@ -26,6 +26,7 @@ Automated flight log code
 Features
 --------
 
+* Generates a flight summary using data from log input files.
 * TODO
 
 Credits

@@ -31,3 +31,9 @@ History
 ------------------
 
 * Fixed path issues in template
+
+0.2.1 (2019-11-12)
+------------------
+
+* Generated the input file into the generated folder structure
+* Added example data for first time running

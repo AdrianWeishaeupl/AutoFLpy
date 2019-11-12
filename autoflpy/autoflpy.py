@@ -41,6 +41,8 @@ def autoflpy(input_file='Input File.json'):
 
     # Copies the standard input file into the working directory
     if os.path.exists(default_storage_path + input_file) is False:
+        os.makedirs(default_storage_path)
+        print('Storage directory made in: {}'.format(default_storage_path))
         copyfile(base_path + input_file, default_storage_path + input_file)
     else:
         pass
