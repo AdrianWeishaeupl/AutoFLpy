@@ -37,3 +37,13 @@ History
 
 * Generated the input file into the generated folder structure
 * Added example data for first time running
+
+0.2.2 (2019-11-12)
+------------------
+
+* Default storage directory bug fixed
+
+0.2.3 (2019-11-12)
+------------------
+
+* Changed autoflpy.py to log_analysis.py
