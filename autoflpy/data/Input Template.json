@@ -6,6 +6,7 @@
 		"date": "YYYYMMDD",
 		"flight_number": "Flight number on the date specified"
 	},
+	
 	"flight_log_generator_input": {		
 		"template_file_path": "If blank, finds the default template location",
 		"template_file_name": "If blank, uses the default template",

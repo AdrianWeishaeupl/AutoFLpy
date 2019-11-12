@@ -16,20 +16,15 @@ from shutil import copyfile
 """
 TODO:
     Finish writing unittests.
-    Find why the METAR information displays the incorrect date/data.
     Remove the code from the Jupyter template and move it out of sight.
     Find a way that the code can recognise if the nearest airfield has weather
         data.
     Find a way of allowing custom weather data to be added - add it into the
         input file.
     Fix checklist integration into notebook.
-    Examples in the example folder.
-    Make the code access the template from the current working directory or the
-        default directory.
     Make it easier to find the sample data (arduino and xls).
     Allow for channel mapping in the flight log code.
     Throttle as a %??
-    Place the input file into the current directory.
 """
 
 
@@ -70,7 +65,8 @@ def autoflpy(input_file='Input File.json'):
             "log_file_name"]).replace(os.sep, "/")
     else:
         # Creates a new directory to look for files.
-        log_file_base_path = default_storage_path + "log_files"
+        log_file_base_path = (default_storage_path + "log_files" + os.sep
+                              ).replace(os.sep, "/")
         log_file_path = (log_file_base_path + os.sep + data[
                 "log_to_xls_input"]["log_file_name"]).replace(os.sep, "/")
         try:
@@ -82,6 +78,10 @@ def autoflpy(input_file='Input File.json'):
             raise FileNotFoundError
         except OSError:
             print('Log file path found.')
+            # Copies the example data file into the log storage
+            copyfile(base_path + 'test_log_to_xls.log', log_file_base_path +
+                     'test_log_to_xls.log')
+
     name_converter_file_path = base_path + 'Name converter list.txt'
     data_sources_path = base_path + 'Data sources.txt'
     # If no excel data file path has been entered, go to the standard path.
@@ -155,12 +155,17 @@ def autoflpy(input_file='Input File.json'):
             "flight_log_generator_input"]["arduino_flight_data_file_path"]
     else:
         # Makes a directory in the current working path to be used.
-        arduino_flight_data_file_path = default_storage_path + \
-            "arduino_flight_data"
+        arduino_flight_data_file_path = (default_storage_path +
+                                         "arduino_flight_data" + os.sep
+                                         ).replace(os.sep, "/")
         try:
             os.makedirs(arduino_flight_data_file_path)
         except OSError:
             print('Arduino flight data folder found.')
+        # Copies the arduino test data into the new file path
+        copyfile(base_path + 'test_arduino.CSV', arduino_flight_data_file_path
+                 + 'test_arduino.CSV')
+
     arduino_flight_data_name = data["flight_log_generator_input"][
             "arduino_flight_data_name"]
     flight_log_file_name_header = "Generated flight log"

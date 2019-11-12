@@ -6,6 +6,7 @@
 		"date": "20190101",
 		"flight_number": "1"
 	},
+	
 	"flight_log_generator_input": {
 		"template_file_path": "",
 		"template_file_name": "",
@@ -14,7 +15,7 @@
 		"checklist_data_file_path": "",
 		"metar_file_path": "",
 		"flight_log_destination": "",
-		"start_time_hours": "12",
-		"end_time_hours": "14"
+		"start_time_hours": "9",
+		"end_time_hours": "10"
 	}
 }
