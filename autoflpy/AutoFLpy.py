@@ -11,6 +11,7 @@ import json
 import autoflpy.util.flight_log_code as flight_log_code
 import autoflpy.util.log_to_xls as log_to_xls
 import autoflpy.util.nearest_ICAO_finder as nearest_ICAO_finder
+from shutil import copyfile
 
 """
 TODO:
@@ -23,6 +24,12 @@ TODO:
         input file.
     Fix checklist integration into notebook.
     Examples in the example folder.
+    Make the code access the template from the current working directory or the
+        default directory.
+    Make it easier to find the sample data (arduino and xls).
+    Allow for channel mapping in the flight log code.
+    Throttle as a %??
+    Place the input file into the current directory.
 """
 
 
@@ -31,11 +38,28 @@ def autoflpy(input_file='Input File.json'):
     base_path = os.path.join(os.path.dirname(__file__), "data") + os.sep
     # Tidies up the base path for python.
     base_path = base_path.replace(os.sep, "/")
-    # Reads the test_input_file information.
-    with open(base_path + input_file) as file:
-        data = json.load(file)
+
+    # Sets the default storage location in the working directory.
     default_storage_path = str((os.getcwd() + os.sep + 'user_files' + os.sep
                                 ).replace(os.sep, "/"))
+
+    # Copies the standard input file into the working directory
+    if os.path.exists(default_storage_path + input_file) is False:
+        copyfile(base_path + input_file, default_storage_path + input_file)
+    else:
+        pass
+
+    # Copies the template input file into the current working directory
+    input_template_file = 'Input Template.json'
+    if os.path.exists(default_storage_path + input_template_file) is False:
+        copyfile(base_path + input_template_file, default_storage_path +
+                 input_template_file)
+    else:
+        pass
+
+    # Reads the test_input_file information.
+    with open(default_storage_path + input_file) as file:
+        data = json.load(file)
 
     # Sets  variables from the input file to be used.
     # If no log file path has been entered, go to the standard log path.

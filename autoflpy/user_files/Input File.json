@@ -1,0 +1,20 @@
+{
+	"log_to_xls_input": {
+		"log_file_name": "test_log_to_xls.log",
+		"log_file_path": "",
+		"excel_data_file_path": "",
+		"date": "20190101",
+		"flight_number": "1"
+	},
+	"flight_log_generator_input": {
+		"template_file_path": "",
+		"template_file_name": "",
+		"arduino_flight_data_name": "test_arduino.CSV",
+		"arduino_flight_data_file_path": "",
+		"checklist_data_file_path": "",
+		"metar_file_path": "",
+		"flight_log_destination": "",
+		"start_time_hours": "12",
+		"end_time_hours": "14"
+	}
+}
