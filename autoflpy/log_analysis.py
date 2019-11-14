@@ -25,7 +25,8 @@ TODO:
     Make it easier to find the sample data (arduino and xls).
     Allow for channel mapping in the flight log code.
     Throttle as a %??
-    Change name?
+    Copy sample checklists into generated folders as well
+    
 """
 
 
@@ -171,7 +172,7 @@ def autoflpy(input_file='Input File.json'):
 
     arduino_flight_data_name = data["flight_log_generator_input"][
             "arduino_flight_data_name"]
-    flight_log_file_name_header = "Generated flight log"
+    flight_log_file_name_header = "Generated flight log "
     if data["flight_log_generator_input"][
             "checklist_data_file_path"] != "" and \
         os.path.exists(data[
@@ -180,11 +181,17 @@ def autoflpy(input_file='Input File.json'):
             "flight_log_generator_input"]["checklist_data_file_path"]
     else:
         # Makes a directory in the current working path to be used.
-        checklist_file_path = default_storage_path + "checklists"
+        checklist_file_path = (default_storage_path + "checklists" + os.sep
+                               ).replace(os.sep, "/")
         try:
             os.makedirs(checklist_file_path)
         except OSError:
             print('Checklists folder found.')
+        # Copies sample checklists into the generated folder.
+        copyfile(base_path + 'Checklists emergency.xlsx', checklist_file_path +
+                 'Checklists emergency.xlsx')
+        copyfile(base_path + 'Checklists nominal.xlsx', checklist_file_path +
+                 'Checklists nominal.xlsx')
     log_code_version = "autoflpy.util.flight_log_code"
     start_time_hours = data["flight_log_generator_input"]["start_time_hours"]
     end_time_hours = data["flight_log_generator_input"]["end_time_hours"]
