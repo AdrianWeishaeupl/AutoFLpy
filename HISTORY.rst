@@ -47,3 +47,8 @@ History
 ------------------
 
 * Changed autoflpy.py to log_analysis.py
+
+0.2.4 (2019-11-14)
+------------------
+
+* Documentation updated

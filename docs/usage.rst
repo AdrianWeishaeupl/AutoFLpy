@@ -16,13 +16,20 @@ For changing directories to the data and running your own code, edit the "Input 
 If no input file is given, the default input file will be chosen.
 
 Folder structure generated:
-user_files
-	arduino_data				Contains sample arduino data. User data can be added here.
-	checklists					Contains sample checklists. User data can be added here.
-	excel_file_path				Contains excel files generated from the log files.
-	flight_logs_generated		Contains the generated flight logs.
-	log_files					Contains the user input flight data in the .log format.
-	METAR_storage				This acts as a database for the METAR data.
+
+	user_files
+	
+	* arduino_data				Contains sample arduino data. User data can be added here.
+	
+	* checklists					Contains sample checklists. User data can be added here.
+	
+	* excel_file_path				Contains excel files generated from the log files.
+	
+	* flight_logs_generated		Contains the generated flight logs.
+	
+	* log_files					Contains the user input flight data in the .log format.
+	
+	* METAR_storage				This acts as a database for the METAR data.
 
 The user should place any flight data to be analysed into the log_files folder if no specific directory is set in the input file.
 
