@@ -161,8 +161,8 @@ def flight_log_maker(template_file_path, template_file_name,
             print("Checklist not found")
         except PermissionError:
             contents = remove_checklist_line_from_template(contents)
-            print("Unable to open the checklist, check that it is not open \
-                  else where")
+            print("Unable to open the checklist, check that it is not open "
+                  "else where")
         except UnboundLocalError:
             contents = remove_checklist_line_from_template(contents)
             print("Check checklists contain all of the relevant information")
@@ -1696,7 +1696,6 @@ def line_remover(contents, key):
             # if it is not then the line is appended.
             contents += line + "\n"
         else:
-            print('THIS IS A LINE ' + line)
             # if the line does not have a comma at the end so it is the last
             # line then remove the comma from the previous line.
             if line[-1:] != ",":

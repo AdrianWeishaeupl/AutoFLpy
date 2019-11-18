@@ -113,7 +113,24 @@ class Test_flight_log_code(unittest.TestCase):
             self.assertEqual(1, 2)
 
     def test_checklist_finder(self):
-        pass  # Not yet written.
+        # Loads a checklist
+        try:
+            frame_list = flight_log_code.flight_data(self.checklist_file_path,
+                                                     'Checklists nominal.xlsx')
+            # Filters the checklist for the correct data
+            filtered_frame = \
+                flight_log_code.checklist_finder(frame_list,
+                                                 self.flight_number,
+                                                 self.flight_date)
+            # Check that the correct data was output
+            battery_voltage = filtered_frame['Battery Voltages'][2]
+            self.assertEqual('25.2', str(battery_voltage))
+            # Check that the ID also matches
+            id_chosen_frame = filtered_frame['ID'][2]
+            self.assertEqual('3', str(id_chosen_frame))
+        # Passes if the checklist is open.
+        except PermissionError:
+            self.assertEqual(1, 1)
 
     def test_flight_log_checklist(self):
         pass  # Not yet written.
