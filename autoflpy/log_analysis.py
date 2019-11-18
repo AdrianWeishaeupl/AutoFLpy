@@ -25,8 +25,11 @@ TODO:
     Make it easier to find the sample data (arduino and xls).
     Allow for channel mapping in the flight log code.
     Throttle as a %??
-    Copy sample checklists into generated folders as well
-    
+
+DONE:
+    Created image folder into the new directory
+    Checklist input fixed
+    Fix checklist line
 """
 
 
@@ -42,7 +45,7 @@ def autoflpy(input_file='Input File.json'):
 
     # Copies the standard input file into the working directory
     if os.path.exists(default_storage_path + input_file) is False:
-        os.makedirs(default_storage_path)
+        os.makedirs(default_storage_path, exist_ok=True)
         print('Storage directory made in: {}'.format(default_storage_path))
         copyfile(base_path + input_file, default_storage_path + input_file)
     else:
@@ -76,9 +79,9 @@ def autoflpy(input_file='Input File.json'):
         try:
             os.makedirs(log_file_base_path)
             # Raises error and gives advice on how to continue.
-            print('No log file directory was entered. A new directory has been\
-              made, please copy the file path of this directory into the \
-              input file and place your log files into this directory.')
+            print('No log file directory was entered. A new directory has been'
+                  ' made, please copy the file path of this directory into the'
+                  ' input file and place your log files into this directory.')
             raise FileNotFoundError
         except OSError:
             print('Log file path found.')
@@ -100,8 +103,8 @@ def autoflpy(input_file='Input File.json'):
         try:
             os.makedirs(excel_file_path)
         except OSError:
-            print('Excel folder found. Will use this folder to store generated\
-                  xls files.')
+            print("Excel folder found. Will use this folder to store generated"
+                  " xls files.")
 
     flight_date = data["log_to_xls_input"]["date"]
     flight_number = data["log_to_xls_input"]["flight_number"]
@@ -147,8 +150,8 @@ def autoflpy(input_file='Input File.json'):
         try:
             os.makedirs(flight_log_file_path)
         except OSError:
-            print('Flight log folder found. Will use this folder to store\
-                  generated flight log files.')
+            print("Flight log folder found. Will use this folder to store "
+                  "generated flight log files.")
     flight_data_file_path = (excel_file_path + os.sep).replace(os.sep, "/")
     flight_data_file_name = excel_file_name + ".xls"
     if data["flight_log_generator_input"][
@@ -187,11 +190,16 @@ def autoflpy(input_file='Input File.json'):
             os.makedirs(checklist_file_path)
         except OSError:
             print('Checklists folder found.')
-        # Copies sample checklists into the generated folder.
-        copyfile(base_path + 'Checklists emergency.xlsx', checklist_file_path +
-                 'Checklists emergency.xlsx')
-        copyfile(base_path + 'Checklists nominal.xlsx', checklist_file_path +
-                 'Checklists nominal.xlsx')
+        # Checks that the ckecklists are not already present in the folder
+        if os.path.exists(checklist_file_path + 'Checklists emergency.xlsx'
+                          ) is False:
+            # Copies sample checklists into the generated folder.
+            copyfile(base_path + 'Checklists emergency.xlsx',
+                     checklist_file_path + 'Checklists emergency.xlsx')
+        if os.path.exists(checklist_file_path + 'Checklists nominal.xlsx'
+                          ) is False:
+            copyfile(base_path + 'Checklists nominal.xlsx', checklist_file_path
+                     + 'Checklists nominal.xlsx')
     log_code_version = "autoflpy.util.flight_log_code"
     start_time_hours = data["flight_log_generator_input"]["start_time_hours"]
     end_time_hours = data["flight_log_generator_input"]["end_time_hours"]
@@ -203,11 +211,21 @@ def autoflpy(input_file='Input File.json'):
             "flight_log_generator_input"]["metar_file_path"]
     else:
         # Makes a directory in the current working path to be used.
-        metar_file_path = default_storage_path + "METAR_storage"
+        metar_file_path = (default_storage_path + "METAR_storage" +
+                           os.sep).replace(os.sep, "/")
         try:
             os.makedirs(metar_file_path)
         except OSError:
             print('METAR storage folder found.')
+    # Creates images folder for the logo
+    images_path = (default_storage_path + 'images' + os.sep
+                   ).replace(os.sep, "/")
+    try:
+        os.makedirs(images_path)
+    except OSError:
+        print('Images folder found.')
+        # Copies the test logo into the new file path
+    copyfile(base_path + 'Logo.png', images_path + 'Logo.png')
     # Finds the nearest airfield for METAR information
     ICAO_airfield = nearest_ICAO_finder.icao_finder(flight_data_file_path,
                                                     flight_data_file_name)

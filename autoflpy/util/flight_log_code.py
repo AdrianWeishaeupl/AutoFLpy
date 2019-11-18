@@ -76,7 +76,7 @@ def flight_log_maker(template_file_path, template_file_name,
          len(arduino_flight_data_file_path + os.sep +
          arduino_flight_data_name) > 1):
         print('Importing xls data')
-        # This replaces the file path with the neccissary information
+        # This replaces the file path with the necessary information
         contents = contents.replace("PYTHON_FILE_PATH", "\\\"" +
                                     os.getcwd().replace("\\", jupyter_sep) +
                                     "\\\"")
@@ -126,13 +126,15 @@ def flight_log_maker(template_file_path, template_file_name,
     def remove_checklist_line_from_template(contents):
         contents = line_remover(contents, "CHECKLIST_LINE")
         contents = cell_remover(contents, "CHECKLIST_INFORMATION")
+        return contents
+
     # Creates a list of all nominal frames from the nominal checklist.
     if checklist_file_path != "data" or checklist_file_path != "":
         try:
             frame_list_nominal = flight_data(checklist_file_path,
                                              "Checklists nominal.xlsx")
             frame_list_emergency = flight_data(checklist_file_path,
-                                               "Checklists Emergency.xlsx")
+                                               "Checklists emergency.xlsx")
             print('Looking for checklists')
             filtered_frame_nominal = checklist_finder(frame_list_nominal,
                                                       flight_number,
@@ -151,25 +153,25 @@ def flight_log_maker(template_file_path, template_file_name,
                                     filtered_frame_emergency,
                                     "CHECKLIST_INFORMATION",
                                     contents)[1] is False:
-                remove_checklist_line_from_template(contents)
+                contents = remove_checklist_line_from_template(contents)
             else:
                 contents = contents.replace("CHECKLIST_LINE", "")
         except ValueError:
-            remove_checklist_line_from_template(contents)
+            contents = remove_checklist_line_from_template(contents)
             print("Checklist not found")
         except PermissionError:
-            remove_checklist_line_from_template(contents)
+            contents = remove_checklist_line_from_template(contents)
             print("Unable to open the checklist, check that it is not open \
                   else where")
         except UnboundLocalError:
-            remove_checklist_line_from_template(contents)
+            contents = remove_checklist_line_from_template(contents)
             print("Check checklists contain all of the relevant information")
         except FileNotFoundError:
-            remove_checklist_line_from_template(contents)
+            contents = remove_checklist_line_from_template(contents)
             print("Checklist not found, check that the checklist exists and is\
                   in the correct location")
     else:
-        remove_checklist_line_from_template(contents)
+        contents = remove_checklist_line_from_template(contents)
     # Checks to see if the start and end time are in the correct format
     hours_valid = True
     try:
@@ -249,7 +251,7 @@ def flight_log_maker(template_file_path, template_file_name,
 def flight_data(file_path, file_name):
     """This imports the data excel using pandas"""
     # Excel file.
-    file_path_with_name = file_path + os.sep + file_name
+    file_path_with_name = file_path + file_name
     # Tidies up the base path for python.
     file_path_with_name = file_path_with_name.replace(os.sep, "/")
     file = pd.ExcelFile(file_path_with_name)
@@ -291,6 +293,7 @@ def checklist_finder(frame_list, flight_number, date):
             # Once found it breaks out of the for loop.
             break
     # Filters Frame by flight number, removing any rows that do not match
+    flight_number = float(flight_number)
     flight_number_filtered = \
         checklist_frame[checklist_frame[flight_number_column] == flight_number]
     # Converts index to list
@@ -388,7 +391,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
         # the notes or damage that was recorded with them.
         for index in range(len(checklists_actioned)):
             text = "\n    \"The " + checklists_actioned[index] +\
-                " was actioned by " + checklist_actioned_by[index] +\
+                " was implemented by " + checklist_actioned_by[index] +\
                 " starting at " + str(start_date_time[index]) + " and " +\
                 "ending at " + str(end_date_time[index]) + "."
             # If there are notes, then append them to the text with the
@@ -411,7 +414,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                 text += "</i>"
             if str(battery[index]) != "nan":
                 text = text + " The Battery voltages of each battery are/ " +\
-                    "can be found at: <i>" + battery[index]
+                    "can be found at: <i>" + str(battery[index])
                 # Adds full stop to end if required.
                 if text[-1:] != "." and text[-1:] != "!" and text[-1:] != "?":
                     text += "."
@@ -431,7 +434,8 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
         # were actioned and the notes that were recorded with them.
         for index in range(len(emergency_checklists_actioned)):
             text = "\n    \"The " + emergency_checklists_actioned[index] +\
-                " was actioned by " + emergency_checklist_actioned_by[index] +\
+                " was implemented by " +\
+                emergency_checklist_actioned_by[index] +\
                 " starting at " + str(emergency_start_date_time[index]) +\
                 " and ending at " + str(emergency_end_date_time[index]) + "."
             # If there are notes, then append them to the text with the
@@ -556,7 +560,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                 text = text[:-2] + " "
                 # This does the last item in the list of checklists
                 text = text + "and " + checklist_and_number[-1:][0][0] +\
-                    checklist_item[1] + " checklists were actioned"
+                    checklist_item[1] + " checklists were implemented"
                 # This checks the last item in the list checklist_and_number to
                 # see if it should appear in the list with items that appear
                 # more than once.
@@ -567,20 +571,20 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                 # Checks to see if the list has length 1.
                 if len(number_greater_than_1) == 1:
                     text = text + " and " + number_greater_than_1[0][0] +\
-                        " was actioned " + str(number_greater_than_1[0][1]) +\
-                        " times."
+                        " was implemented " + str(number_greater_than_1[0][1])\
+                        + " times."
                 # if it does not then it loops through the lists.
                 else:
                     if len(number_greater_than_1) != 0:
                         text = text + " and "
                         for repeat in number_greater_than_1[:-1]:
-                            text = text + repeat[0] + " was actioned " +\
+                            text = text + repeat[0] + " was implemented " +\
                                 str(repeat[1]) + " times, "
                             # This removes the Oxford comma.
                         text = text[:-2] + " "
                         text = text + "and " +\
                             number_greater_than_1[-1:][0][0] +\
-                            " was actioned " +\
+                            " was implemented " +\
                             str(number_greater_than_1[-1:][0][1]) + " times."
                     else:
                         text = text + "."
@@ -590,10 +594,10 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
             # will state how many times it was repeated.
             if checklist_and_number[0][1] == 1:
                 text = "The " + checklist_and_number[0][0] + checklist_item[1]\
-                    + " checklist was actioned."
+                    + " checklist was implemented."
             else:
                 text = "The " + checklist_and_number[0][0] + checklist_item[1]\
-                    + " checklist was actioned " +\
+                    + " checklist was implemented " +\
                     str(checklist_and_number[0][1]) + " times."
         text_list.append(text)
     # Checks to see if the emergency checklist is available and replaces it
@@ -1681,7 +1685,7 @@ def cell_remover(contents, key):
 
 
 def line_remover(contents, key):
-    """ This function will remove and lines that contain a specific key."""
+    """ This function will removes any lines that contain a specific key."""
     # splits contents into lines.
     lines = contents.split("\n")
     contents = ""
@@ -1692,6 +1696,7 @@ def line_remover(contents, key):
             # if it is not then the line is appended.
             contents += line + "\n"
         else:
+            print('THIS IS A LINE ' + line)
             # if the line does not have a comma at the end so it is the last
             # line then remove the comma from the previous line.
             if line[-1:] != ",":
