@@ -136,7 +136,12 @@ class Test_flight_log_code(unittest.TestCase):
         pass  # Not yet written.
 
     def test_contents_opener(self):
-        pass  # Not yet written.
+        contents = flight_log_code.contents_opener(self.template_file_path,
+                                                   self.template_file_name)
+        test_string = (contents[370:430])
+        test_string_true = 'go, To view images, place the images in a' + \
+                           ' folder called imag'
+        self.assertEqual(test_string_true, test_string)
 
     def test_flight_data_and_axis(self):
         pass  # Not yet written.
