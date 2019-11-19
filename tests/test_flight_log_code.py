@@ -35,16 +35,6 @@ def check_str_in_content(string, content):
 
 class Test_flight_log_code(unittest.TestCase):
 
-    @classmethod
-    def tearDownClass(cls):
-        # Removes generated flight log.
-        base_path = os.path.join(os.path.dirname(__file__),
-                                 "test_files") + os.sep
-        generated_file_name = base_path + \
-            "test_generated_flight_log20190123 2.ipynb"
-        if os.path.exists(generated_file_name):
-            os.remove(generated_file_name)
-
     def setUp(self):
         # Sets up all of the test variables and locations to be used
         # throughout.
@@ -76,6 +66,15 @@ class Test_flight_log_code(unittest.TestCase):
                 "end_time_hours"]
         self.metar_file_path = self.base_path + self.data[
                 "flight_log_generator_input"]["metar_file_path"]
+
+    def tearDown(self):
+        # Removes generated flight log.
+        base_path = os.path.join(os.path.dirname(__file__),
+                                 "test_files") + os.sep
+        generated_file_name = base_path + \
+            "test_generated_flight_log20190123 2.ipynb"
+        if os.path.exists(generated_file_name):
+            os.remove(generated_file_name)
 
     def test_flight_log_maker(self):
         self.ICAO_airfield = nearest_ICAO_finder.icao_finder(
@@ -199,6 +198,10 @@ class Test_flight_log_code(unittest.TestCase):
             # Generates content
             content = flight_log_code.contents_opener(self.template_file_path,
                                                       self.template_file_name)
+            # Counts the keys in the content
+            content_count = check_str_in_content(key, content)
+            # Checks that the keys are present
+            self.assertNotEqual(0, content_count)
             # Runs cell remover
             content = flight_log_code.cell_remover(content, key)
             # Counts Key occurences
@@ -214,6 +217,10 @@ class Test_flight_log_code(unittest.TestCase):
             # Generates content
             content = flight_log_code.contents_opener(self.template_file_path,
                                                       self.template_file_name)
+            # Counts how many times the key is present
+            content_count = check_str_in_content(key, content)
+            # Checks that the key is present
+            self.assertNotEqual(0, content_count)
             # Runs line remover
             content = flight_log_code.line_remover(content, key)
             # Counts Key occurences
@@ -222,7 +229,19 @@ class Test_flight_log_code(unittest.TestCase):
             self.assertEqual(0, content_count)
 
     def test_flight_log_creator(self):
-        pass  # Not yet written.
+        # Generates content
+        content = flight_log_code.contents_opener(self.template_file_path,
+                                                  self.template_file_name)
+        # Runs the flight log creator code
+        flight_log_code.flight_log_creator(content, self.base_path,
+                                           self.flight_date,
+                                           self.flight_number,
+                                           self.flight_log_file_name_header)
+        # Checks the file was created correctly
+        file_exists = os.path.exists(self.base_path
+                                     + 'test_generated_flight_log20190123'
+                                     ' 2.ipynb')
+        self.assertTrue(file_exists)
 
     def test_flight_data_time_sorter(self):
         pass  # Not yet written.
