@@ -1875,9 +1875,10 @@ def METAR_finder(location, year, month, day, month_end, day_end,
             start_time_hours + "_" + end_time_hours
         # Goes through each of the files.
         for file in file_list:
-            # Checks to see if there is a chached file that matches the current
+            # Checks to see if there is a cached file that matches the current
             # requested data.
             if file_name in file:
+                print('Found cached METAR information')
                 # Opens file.
                 metar_file = open(metar_file_path + os.sep + file_name +
                                   ".txt", "r")
@@ -1887,6 +1888,7 @@ def METAR_finder(location, year, month, day, month_end, day_end,
                 metar_file.close()
                 metar_data = metar_data.split("\n")
                 return(metar_data)
+    print('Getting METAR data from API')
     URL = "https://www.ogimet.com/display_metars2.php?lang=en&lugar=" +\
         location + "&tipo=ALL&ord=REV&nil=SI&fmt=html&ano=" + year +\
         "&mes=" + month + "&day=" + day + "&hora=" + start_time_hours +\

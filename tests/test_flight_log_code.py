@@ -243,17 +243,16 @@ class Test_flight_log_code(unittest.TestCase):
                                      ' 2.ipynb')
         self.assertTrue(file_exists)
 
-    def test_flight_data_time_sorter(self):
-        pass  # Not yet written.
-
-    def test_file_type_finder(self):
-        pass  # Not yet written.
-
-    def test_date_and_flight_number(self):
-        pass  # Not yet written.
-
     def test_METAR_finder(self):
-        pass  # Not yet written.
+        # Checks if the METAR data exists. If it doesn't, it gets it from the
+        # API. NOTE: API has a limit and so the original METAR file is not
+        # deleted before every run.
+        flight_log_code.METAR_finder('DGTK', '2019', '01', '23', '01', '23',
+                                     '9', '10', self.base_path)
+        # Checks if the file path exists.
+        metar_data_exists = os.path.exists(self.base_path + 'METAR_DGTK_2019'
+                                           '0123_20190123_9_9.txt')
+        self.assertTrue(metar_data_exists)
 
     def test_METAR_returner(self):
         pass  # Not yet written.
@@ -278,10 +277,22 @@ class Test_flight_log_code(unittest.TestCase):
         pass  # Not yet written.
 
     def test_graph_function(self):
-        # Gets called in the Jupyter Notebook.
+        # Gets run in the Jupyter Notebook.
         pass  # Not yet written.
 
     def test_multiaxis_graph_function(self):
+        # Gets run in the Jupyter Notebook.
+        pass  # Not yet written.
+
+    def test_flight_data_time_sorter(self):
+        # Gets run in the Jupyter Notebook.
+        pass  # Not yet written.
+
+    def test_file_type_finder(self):
+        # Gets run in the Jupyter Notebook.
+        pass  # Not yet written.
+
+    def test_date_and_flight_number(self):
         # Gets run in the Jupyter Notebook.
         pass  # Not yet written.
 
