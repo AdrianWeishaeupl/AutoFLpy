@@ -15,6 +15,24 @@ from datetime import datetime
 from autoflpy.util import nearest_ICAO_finder
 
 
+def check_str_in_content(string, content):
+    """Checks that a certain string is present in the content
+    provided. This is case sensitive. This is used in the test functions."""
+    if string in content:
+        # Checks that the string is present in the content
+        occurence = 0
+        # Counts the number of occurences
+        for section in range((len(content) - len(string) + 1)):
+            if content[section:section + len(string)] == string:
+                occurence = occurence + 1
+            else:
+                continue
+    else:
+        occurence = 0
+    # Returns results
+    return (occurence)
+
+
 class Test_flight_log_code(unittest.TestCase):
 
     @classmethod
@@ -141,28 +159,13 @@ class Test_flight_log_code(unittest.TestCase):
         self.assertEqual(test_string_true, test_string)
 
     def test_flight_log_graph_contents_replacer(self):
+        # Function being tested is expected to replace all fields with
+        # single axis graphs.
+        # Generates content.
         contents = flight_log_code.contents_opener(self.template_file_path,
                                                    self.template_file_name)
         # Runs the flight_log_content_replacer
         contents = flight_log_code.flight_log_graph_contents_replacer(contents)
-
-        def check_str_in_content(string, content):
-            """Checks that a certain string is present in the content
-            provided. This is case sensitive."""
-            if string in content:
-                # Checks that the string is present in the content
-                occurence = 0
-                # Counts the number of occurences
-                for section in range((len(content) - len(string) + 1)):
-                    if content[section:section + len(string)] == string:
-                        occurence = occurence + 1
-                    else:
-                        continue
-            else:
-                occurence = 0
-            # Returns results
-            return (occurence)
-
         # Checks for values replaced by the function
         check_x_lim = check_str_in_content('x_limits', contents)
         check_y_lim = check_str_in_content('y_limits', contents)
@@ -171,13 +174,22 @@ class Test_flight_log_code(unittest.TestCase):
         self.assertEqual(24, check_y_lim)
         self.assertEqual(12, check_graph_function)
 
-    def test_graph_function(self):
-        pass  # Not yet written.
-
     def test_flight_log_multiaxis_graph_contents_replacer(self):
-        pass  # Not yet written.
-
-    def test_multiaxis_graph_function(self):
+        # Function being tested is expected to replace all fields with
+        # multi-axis graphs.
+        # Generates content.
+        contents = flight_log_code.contents_opener(self.template_file_path,
+                                                   self.template_file_name)
+        # Runs the flight_log_content_replacer
+        contents = flight_log_code.\
+            flight_log_multiaxis_graph_contents_replacer(contents)
+        # Checks for values replaced by the function
+        check_x_lim = check_str_in_content('x_limits', contents)
+        check_y_lim = check_str_in_content('y_limits', contents)
+        check_graph_function = check_str_in_content('graph_function', contents)
+        self.assertEqual(6, check_x_lim)
+        self.assertEqual(12, check_y_lim)  # Note: multiple y axis inputs.
+        self.assertEqual(3, check_graph_function)
         pass  # Not yet written.
 
     def test_cell_remover(self):
@@ -220,6 +232,14 @@ class Test_flight_log_code(unittest.TestCase):
         pass  # Not yet written.
 
     def test_flight_data_and_axis(self):
+        # Gets run in the Jupyter Notebook.
+        pass  # Not yet written.
+
+    def test_graph_function(self):
+        # Gets called in the Jupyter Notebook.
+        pass  # Not yet written.
+
+    def test_multiaxis_graph_function(self):
         # Gets run in the Jupyter Notebook.
         pass  # Not yet written.
 
