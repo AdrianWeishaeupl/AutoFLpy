@@ -190,10 +190,21 @@ class Test_flight_log_code(unittest.TestCase):
         self.assertEqual(6, check_x_lim)
         self.assertEqual(12, check_y_lim)  # Note: multiple y axis inputs.
         self.assertEqual(3, check_graph_function)
-        pass  # Not yet written.
 
     def test_cell_remover(self):
-        pass  # Not yet written.
+        # Defines keys to be tested in the cell remover
+        keys = ['METAR_INFORMATION', 'CHECKLIST_INFORMATION', 'GRAPH',
+                'MULTIAXIS_GRAPH']
+        for key in keys:
+            # Generates content
+            content = flight_log_code.contents_opener(self.template_file_path,
+                                                      self.template_file_name)
+            # Runs cell remover
+            content = flight_log_code.cell_remover(content, key)
+            # Counts Key occurences
+            content_count = check_str_in_content(key, content)
+            # Checks that the cell has been removed
+            self.assertEqual(0, content_count)
 
     def test_line_remover(self):
         pass  # Not yet written.
