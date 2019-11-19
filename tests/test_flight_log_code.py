@@ -132,9 +132,6 @@ class Test_flight_log_code(unittest.TestCase):
         except PermissionError:
             self.assertEqual(1, 1)
 
-    def test_flight_log_checklist(self):
-        pass  # Not yet written.
-
     def test_contents_opener(self):
         contents = flight_log_code.contents_opener(self.template_file_path,
                                                    self.template_file_name)
@@ -143,11 +140,36 @@ class Test_flight_log_code(unittest.TestCase):
                            ' folder called imag'
         self.assertEqual(test_string_true, test_string)
 
-    def test_flight_data_and_axis(self):
-        pass  # Not yet written.
-
     def test_flight_log_graph_contents_replacer(self):
-        pass  # Not yet written.
+        contents = flight_log_code.contents_opener(self.template_file_path,
+                                                   self.template_file_name)
+        # Runs the flight_log_content_replacer
+        contents = flight_log_code.flight_log_graph_contents_replacer(contents)
+
+        def check_str_in_content(string, content):
+            """Checks that a certain string is present in the content
+            provided. This is case sensitive."""
+            if string in content:
+                # Checks that the string is present in the content
+                occurence = 0
+                # Counts the number of occurences
+                for section in range((len(content) - len(string) + 1)):
+                    if content[section:section + len(string)] == string:
+                        occurence = occurence + 1
+                    else:
+                        continue
+            else:
+                occurence = 0
+            # Returns results
+            return (occurence)
+
+        # Checks for values replaced by the function
+        check_x_lim = check_str_in_content('x_limits', contents)
+        check_y_lim = check_str_in_content('y_limits', contents)
+        check_graph_function = check_str_in_content('graph_function', contents)
+        self.assertEqual(24, check_x_lim)
+        self.assertEqual(24, check_y_lim)
+        self.assertEqual(12, check_graph_function)
 
     def test_graph_function(self):
         pass  # Not yet written.
@@ -192,6 +214,13 @@ class Test_flight_log_code(unittest.TestCase):
         pass  # Not yet written.
 
     def test_arduino_micro_frame(self):
+        pass  # Not yet written.
+
+    def test_flight_log_checklist(self):
+        pass  # Not yet written.
+
+    def test_flight_data_and_axis(self):
+        # Gets run in the Jupyter Notebook.
         pass  # Not yet written.
 
 
