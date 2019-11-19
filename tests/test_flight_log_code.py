@@ -207,7 +207,19 @@ class Test_flight_log_code(unittest.TestCase):
             self.assertEqual(0, content_count)
 
     def test_line_remover(self):
-        pass  # Not yet written.
+        # Defines keys to be tested in the line remover
+        keys = ['METAR_INFORMATION', 'CHECKLIST_INFORMATION', 'GRAPH',
+                'MULTIAXIS_GRAPH', 'CHECKLIST_LINE', 'GRAPH_LINE']
+        for key in keys:
+            # Generates content
+            content = flight_log_code.contents_opener(self.template_file_path,
+                                                      self.template_file_name)
+            # Runs line remover
+            content = flight_log_code.line_remover(content, key)
+            # Counts Key occurences
+            content_count = check_str_in_content(key, content)
+            # Checks that the line has been removed
+            self.assertEqual(0, content_count)
 
     def test_flight_log_creator(self):
         pass  # Not yet written.
