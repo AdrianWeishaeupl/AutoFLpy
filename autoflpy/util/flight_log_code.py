@@ -2024,7 +2024,7 @@ def METAR_quota_returner(contents, file_name, location, year,
                          end_time_hours, metar_file_path,
                          replace_key="METAR_INFORMATION"):
     """Puts METAR_replacer function in to replace METAR_INFORMATION cell"""
-    """Replaces the key word in a cell with METAR incofrmation from the day"""
+    """Replaces the key word in a cell with METAR information from the day"""
     # Creates replacement text for the METAR key.
     metar_replacement = "\n  {\n " + \
         "  \"cell_type\": \"markdown\",\n" + \

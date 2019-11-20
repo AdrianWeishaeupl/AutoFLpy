@@ -301,7 +301,23 @@ class Test_flight_log_code(unittest.TestCase):
         self.assertEqual(1, information_present)
 
     def test_METAR_quota_returner(self):
-        pass  # Not yet written.
+        content = flight_log_code.contents_opener(self.template_file_path,
+                                                  self.template_file_name)
+
+        # Check that METAR_INFORMATION is present in the content
+        metar_information_present = check_str_in_content("METAR_INFORMATION",
+                                                         content)
+        self.assertEqual(1, metar_information_present)
+        # Runs METAR_quota_returner
+        content = flight_log_code.METAR_quota_returner(content, 'test20190123',
+                                                       'DGTK', '2019', '01',
+                                                       '23', '01', '23', '9',
+                                                       '10', self.base_path,
+                                                       replace_key="METAR_INFO"
+                                                       "RMATION")
+        expected_content = 'METAR_replacer(os.getcwd(),'
+        content_present = check_str_in_content(expected_content, content)
+        self.assertEqual(1, content_present)
 
     def test_METAR_replacer(self):
         pass  # Not yet written.
