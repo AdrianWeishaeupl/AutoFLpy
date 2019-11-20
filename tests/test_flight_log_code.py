@@ -255,7 +255,29 @@ class Test_flight_log_code(unittest.TestCase):
         self.assertTrue(metar_data_exists)
 
     def test_METAR_returner(self):
-        pass  # Not yet written.
+        # Generate content
+        content = flight_log_code.contents_opener(self.template_file_path,
+                                                  self.template_file_name)
+
+        # Check that METAR_INFORMATION is present in the content
+        metar_information_present = check_str_in_content("METAR_INFORMATION",
+                                                         content)
+        self.assertEqual(1, metar_information_present)
+        # Gets METAR data
+        metar_data = flight_log_code.METAR_finder('DGTK', '2019', '01', '23',
+                                                  '01', '23', '9', '10',
+                                                  self.base_path)
+        # Runs METAR returner
+        content = flight_log_code.METAR_returner(metar_data, content, 1,
+                                                 2019,
+                                                 replace_key="METAR_"
+                                                 "INFORMATION")
+        # Assigns expected metar information
+        metar_information = "METAR: DGTK 230900Z NIL"
+        # Checks that the expected metar information is present
+        metar_information_present = check_str_in_content(metar_information,
+                                                         content)
+        self.assertEqual(1, metar_information_present)
 
     def test_no_METAR_returner(self):
         pass  # Not yet written.
