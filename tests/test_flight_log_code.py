@@ -345,17 +345,42 @@ class Test_flight_log_code(unittest.TestCase):
         # Checks that the METAR data is present
         expected_content = 'METAR: DGTK 230900Z NIL'
         metar_in_content = check_str_in_content(expected_content, content)
+        # NOTE: also replaces the content of the METAR_INFORMATION cell, hence
+        # 2 instances are present in this test. This is also only relevant to
+        # the test template.
         self.assertEqual(2, metar_in_content)
         # Removes the generated document
         generated_file_name = self.template_file_path + template_temp_name
         if os.path.exists(generated_file_name):
             os.remove(generated_file_name)
 
-    def test_arduino_micro_frame(self):
-        pass  # Not yet written.
-
     def test_flight_log_checklist(self):
-        pass  # Not yet written.
+        # Generates the content
+        content = flight_log_code.contents_opener(self.template_file_path,
+                                                  self.template_file_name)
+        # Creates checklist frames
+        frame_list_nominal = flight_log_code.flight_data(
+                self.checklist_file_path, "Checklists nominal.xlsx")
+        frame_list_emergency = flight_log_code.flight_data(
+                self.checklist_file_path, "Checklists emergency.xlsx")
+        # Filters checklist for the current flight
+        filtered_frame_nominal = flight_log_code.checklist_finder(
+                frame_list_nominal, self.flight_number, self.flight_date)
+        filtered_frame_emergency = flight_log_code.checklist_finder(
+                frame_list_emergency, self.flight_number, self.flight_date)
+        # Runs the flight_log_checklist code
+        content = \
+            flight_log_code.flight_log_checklist(filtered_frame_nominal,
+                                                 filtered_frame_emergency,
+                                                 "CHECKLIST_INFORMATION",
+                                                 content)[0]
+        # Checks that the content has been changed
+        expected_content = 'The Initial Pre-Flight was implemented by Adria' +\
+                           'n Weishaeupl starting at 2019-01-23 15:31:44 an' +\
+                           'd ending at 2019-01-23 15:32:58. The notes reco' +\
+                           'rded on this checklist were: <i>THIS IS A TEST.'
+        content_present = check_str_in_content(expected_content, content)
+        self.assertEqual(1, content_present)
 
     def test_flight_data_and_axis(self):
         # Gets run in the Jupyter Notebook.
@@ -378,6 +403,10 @@ class Test_flight_log_code(unittest.TestCase):
         pass  # Not yet written.
 
     def test_date_and_flight_number(self):
+        # Gets run in the Jupyter Notebook.
+        pass  # Not yet written.
+
+    def test_arduino_micro_frame(self):
         # Gets run in the Jupyter Notebook.
         pass  # Not yet written.
 
