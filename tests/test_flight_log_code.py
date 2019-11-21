@@ -13,6 +13,7 @@ import json
 from autoflpy.util import flight_log_code
 from datetime import datetime
 from autoflpy.util import nearest_ICAO_finder
+from shutil import copyfile
 
 
 def check_str_in_content(string, content):
@@ -153,8 +154,8 @@ class Test_flight_log_code(unittest.TestCase):
         contents = flight_log_code.contents_opener(self.template_file_path,
                                                    self.template_file_name)
         test_string = (contents[370:430])
-        test_string_true = 'go, To view images, place the images in a' + \
-                           ' folder called imag'
+        test_string_true = 'o view images, place the images in a folder' +\
+            ' called images (a'
         self.assertEqual(test_string_true, test_string)
 
     def test_flight_log_graph_contents_replacer(self):
@@ -169,9 +170,9 @@ class Test_flight_log_code(unittest.TestCase):
         check_x_lim = check_str_in_content('x_limits', contents)
         check_y_lim = check_str_in_content('y_limits', contents)
         check_graph_function = check_str_in_content('graph_function', contents)
-        self.assertEqual(24, check_x_lim)
-        self.assertEqual(24, check_y_lim)
-        self.assertEqual(12, check_graph_function)
+        self.assertEqual(26, check_x_lim)
+        self.assertEqual(26, check_y_lim)
+        self.assertEqual(13, check_graph_function)
 
     def test_flight_log_multiaxis_graph_contents_replacer(self):
         # Function being tested is expected to replace all fields with
@@ -320,7 +321,35 @@ class Test_flight_log_code(unittest.TestCase):
         self.assertEqual(1, content_present)
 
     def test_METAR_replacer(self):
-        pass  # Not yet written.
+        # Creates a backup copy to work on
+        template_temp_name = self.template_file_name[:-6] + '_temp.ipynb'
+        copyfile(self.template_file_path + self.template_file_name,
+                 self.template_file_path + template_temp_name)
+        # Generates content
+        content = flight_log_code.contents_opener(self.template_file_path,
+                                                  template_temp_name)
+        # Check that # METAR REPLACER is present in the content
+        metar_information_present = check_str_in_content("# METAR REPLACER",
+                                                         content)
+        self.assertEqual(1, metar_information_present)
+        # Run the METAR_replacer
+        content = flight_log_code.METAR_replacer(self.template_file_path,
+                                                 template_temp_name,
+                                                 'DGTK', '2019', '01', '23',
+                                                 '01', '23', '9', '10',
+                                                 self.base_path)
+        # Check information was replaced correctly
+        # Re-reads content
+        content = flight_log_code.contents_opener(self.template_file_path,
+                                                  template_temp_name)
+        # Checks that the METAR data is present
+        expected_content = 'METAR: DGTK 230900Z NIL'
+        metar_in_content = check_str_in_content(expected_content, content)
+        self.assertEqual(2, metar_in_content)
+        # Removes the generated document
+        generated_file_name = self.template_file_path + template_temp_name
+        if os.path.exists(generated_file_name):
+            os.remove(generated_file_name)
 
     def test_arduino_micro_frame(self):
         pass  # Not yet written.

@@ -2096,7 +2096,7 @@ def METAR_replacer(file_path, file_name, location, year, month, day,
     # Reassembles contents from lines
     for line in lines:
         contents += line + "\n"
-    contents = METAR_returner(metar_data, contents,
+    contents = METAR_returner(metar_data, contents, int(month), int(year),
                               replace_key="METAR_INFORMATION")
     file = open(file_path + os.sep + file_name, "w+")
     # Extracts contents.
