@@ -480,6 +480,37 @@ class Test_flight_log_code(unittest.TestCase):
         for item in range(len(expected_values)):
             self.assertEqual(expected_values[item], values[item])
 
+    def test_flight_data_time_sorter(self):
+        # Gets run in the Jupyter Notebook.
+        data_frames = notebook_results[3]
+        # Checks that the frames were split into the correct number of
+        # subframes
+        self.assertEqual(len(data_frames), 9)
+        # Assigns expected titles
+        data_frame_section_titles = [
+                'Status_unavailable_GPS_20190123_Flight2',
+                'aileron_CH1_us_RCIN_20190123_Flight2',
+                'Altitude_m_BARO_20190123_Flight2',
+                'Airspeed_mpers_ARSP_20190123_Flight2',
+                'Desired_Roll_degrees_ATT_20190123_Flight2',
+                'VibeX_mperspers_VIBE_20190123_Flight2',
+                'NavRoll_unavailable_CTUN_20190123_Flight2',
+                'AOA_degrees_AOA_20190123_Flight2',
+                'Temp0_degC_ArduinoMicro_20190123_Flight2']
+        correct_titles = 0
+        # Runs through titles. Checks that each title can be called and adds 1
+        # to the counter (correct_titles). If a title is not correct/cannot be
+        # called, raise a failure.
+        for item in range(len(data_frame_section_titles)):
+            try:
+                data_frames[item][data_frame_section_titles[item]]
+                correct_titles += 1
+            except KeyError:
+                self.assertEqual(1, 2)
+        # Checks that all titles are correct
+        self.assertEqual(correct_titles, 9)
+        pass  # Not yet written.
+
     def test_flight_data_and_axis(self):
         # Gets run in the Jupyter Notebook.
         pass  # Not yet written.
@@ -489,10 +520,6 @@ class Test_flight_log_code(unittest.TestCase):
         pass  # Not yet written.
 
     def test_multiaxis_graph_function(self):
-        # Gets run in the Jupyter Notebook.
-        pass  # Not yet written.
-
-    def test_flight_data_time_sorter(self):
         # Gets run in the Jupyter Notebook.
         pass  # Not yet written.
 
