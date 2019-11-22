@@ -10,7 +10,9 @@ No tests are currently written for the GUI.
 import unittest
 import os
 import json
+import sys
 from autoflpy.util import flight_log_code
+from autoflpy.util.flight_log_code import *
 from datetime import datetime
 from autoflpy.util import nearest_ICAO_finder
 from shutil import copyfile
@@ -32,6 +34,42 @@ def check_str_in_content(string, content):
         occurence = 0
     # Returns results
     return (occurence)
+
+
+def notebook_sample_code(flight_data_file_path, flight_data_file_name,
+                         arduino_data_file_path, arduino_flight_data_name):
+    """Sample flight log code for testing purposes"""
+    # GRAPH_DATA_IMPORT
+
+    # Creates a base_path to the test files.
+    base_path = os.path.dirname(__file__) + os.sep
+
+    # Creates a link to where the code is stored.
+    sys.path.append(base_path[:-11])
+
+    # file_path of the flight data.
+    # flight_data_file_path = base_path
+    # Excel File name
+    # flight_data_file_name = "test_xls.xls"
+    # Arduino File name
+    # arduino_flight_data_name = "test_arduino.CSV"
+    # Arduino Data file path
+    # arduino_data_file_path = base_path
+    # Excell Sheets
+    frame_list = flight_data(flight_data_file_path, flight_data_file_name)
+    # A list containing the date first and then the flight number
+    Date_and_flight_Number = date_and_flight_number(frame_list)
+    # Retrieves arduino flight data
+    arduino_micro_flight_data_frame =\
+        arduino_micro_frame(arduino_data_file_path, arduino_flight_data_name)
+    # Appends audino frame to flight data from pixhawk
+    frame_list.append(arduino_micro_flight_data_frame)
+    # Sorts frames by time
+    sorted_frames = flight_data_time_sorter(frame_list)
+    # Creates a list of all the values.
+    values_list = flight_data_and_axis(sorted_frames)
+    return(frame_list, Date_and_flight_Number, arduino_micro_flight_data_frame,
+           sorted_frames, values_list)
 
 
 class Test_flight_log_code(unittest.TestCase):
@@ -382,6 +420,19 @@ class Test_flight_log_code(unittest.TestCase):
         content_present = check_str_in_content(expected_content, content)
         self.assertEqual(1, content_present)
 
+    def test_date_and_flight_number(self):
+        # Gets run in the Jupyter Notebook.
+        # Runs the sample notebook code to extract teh desired variable
+        date_and_flight_number =\
+            notebook_sample_code(self.flight_data_file_path,
+                                 self.flight_data_file_name,
+                                 self.arduino_flight_data_file_path,
+                                 self.arduino_flight_data_name)[1]
+        # Checks that the output is as expected
+        expected_date_and_flight_number = ('20190123', '2')
+        self.assertEqual(expected_date_and_flight_number,
+                         date_and_flight_number)
+
     def test_flight_data_and_axis(self):
         # Gets run in the Jupyter Notebook.
         pass  # Not yet written.
@@ -399,10 +450,6 @@ class Test_flight_log_code(unittest.TestCase):
         pass  # Not yet written.
 
     def test_file_type_finder(self):
-        # Gets run in the Jupyter Notebook.
-        pass  # Not yet written.
-
-    def test_date_and_flight_number(self):
         # Gets run in the Jupyter Notebook.
         pass  # Not yet written.
 

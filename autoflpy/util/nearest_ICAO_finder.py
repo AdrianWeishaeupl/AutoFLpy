@@ -7,8 +7,6 @@ aw6g15@soton.ac.uk 2019
 
 runways.csv downloaded from https://github.com/sobester/ADRpy/blob/master/ADRpy
 /data/runways.csv
-
-NOTE: Finding runways.csv is a problem in the unit tests.
 """
 
 import numpy as np
