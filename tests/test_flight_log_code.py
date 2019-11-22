@@ -513,7 +513,15 @@ class Test_flight_log_code(unittest.TestCase):
 
     def test_flight_data_and_axis(self):
         # Gets run in the Jupyter Notebook.
-        pass  # Not yet written.
+        # Loads the data generated previously
+        flight_data_and_axis = notebook_results[4]
+        # Assogns expected titles
+        expected_titles = ['GPS', 'RCIN', 'BARO', 'ARSP', 'ATT', 'VIBE',
+                           'CTUN', 'AOA', 'ArduinoMicro']
+        # Checks that the titles are present and in the correct palace
+        for item in range(len(expected_titles)):
+            self.assertEqual(flight_data_and_axis[item][0],
+                             expected_titles[item])
 
     def test_graph_function(self):
         # Gets run in the Jupyter Notebook.
