@@ -25,6 +25,7 @@ TODO:
     Make it easier to find the sample data (arduino and xls).
     Allow for channel mapping in the flight log code.
     Throttle as a %??
+    METAR appears twice?
 
 DONE:
     Created image folder into the new directory
@@ -130,7 +131,7 @@ def autoflpy(input_file='Input File.json'):
         template_file_path = (data["flight_log_generator_input"][
             "template_file_path"]).replace(os.sep, "/")
     else:
-        template_file_path = base_path
+        template_file_path = default_storage_path
     if data["flight_log_generator_input"]["template_file_name"] != "" and \
         os.path.exists(
             data["flight_log_generator_input"]["template_file_name"]) is True:
@@ -138,6 +139,10 @@ def autoflpy(input_file='Input File.json'):
             "template_file_name"]
     else:
         template_file_name = 'Default Template (Full Summary).ipynb'
+        print('Using default template')
+        # Copies the default template into the default storage directory
+        copyfile(base_path + template_file_name, default_storage_path +
+                 template_file_name)
     if data["flight_log_generator_input"]["flight_log_destination"] != "" and \
         os.path.exists(
             data["flight_log_generator_input"][
