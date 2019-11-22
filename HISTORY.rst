@@ -52,3 +52,9 @@ History
 ------------------
 
 * Documentation updated
+
+0.2.5 (2019-11-14)
+------------------
+
+* Checklist issues resolved
+* Unittests expanded

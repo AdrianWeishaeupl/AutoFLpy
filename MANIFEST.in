@@ -12,8 +12,7 @@ recursive-include tests *
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 recursive-exclude data *
-exclude autoflpy/AutoFLpy_batch.py
-exclude autoflpy/AutoFLpy_temp.py
+exclude autoflpy/autoflpy_batch.py
 exclude autoflpy/util/input_creator_draft.py
 recursive-exclude autoflpy/data/images *
 
