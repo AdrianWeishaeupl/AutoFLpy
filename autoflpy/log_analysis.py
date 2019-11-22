@@ -229,8 +229,10 @@ def autoflpy(input_file='Input File.json'):
         os.makedirs(images_path)
     except OSError:
         print('Images folder found.')
-        # Copies the test logo into the new file path
-    copyfile(base_path + 'Logo.png', images_path + 'Logo.png')
+        # Copies the test logo into the new file path if it is not already
+        # present
+    if os.path.exists(images_path + 'Logo.png') is False:
+        copyfile(base_path + 'Logo.png', images_path + 'Logo.png')
     # Finds the nearest airfield for METAR information
     ICAO_airfield = nearest_ICAO_finder.icao_finder(flight_data_file_path,
                                                     flight_data_file_name)
