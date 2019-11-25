@@ -64,3 +64,8 @@ History
 
 * Updated Default Template with GPS and autopilot data
 * Imporved unit testing
+
+1.0.0 (2019-11-25)
+------------------
+
+* Autoflpy v 1.0.0 released
