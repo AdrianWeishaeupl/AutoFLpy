@@ -525,6 +525,12 @@ class Test_flight_log_code(unittest.TestCase):
 
     def test_graph_function(self):
         # Gets run in the Jupyter Notebook.
+        x_limits = ["x_min", "x_max"]
+        y_limits = ["y_min", "y_max"]
+        flight_log_code.graph_function([["y", "groundspeed", "gps"],
+                                        ["x", "time", "gps"]],
+                                       notebook_results[4],
+                                       x_limits, y_limits)
         pass  # Not yet written.
 
     def test_multiaxis_graph_function(self):

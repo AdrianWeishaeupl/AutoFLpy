@@ -36,16 +36,6 @@ class Testlog_to_xls(unittest.TestCase):
         self.flight_date = self.data["log_to_xls_input"]["date"]
         self.flight_number = self.data["log_to_xls_input"]["flight_number"]
 
-#    def tearDown(self):
-#        # Remove variables and any files generated throughout the tests at the
-#        # end of all tests.
-#        pass
-
-#    def test_log_to_xls_converter_interface(self):
-#        # Need to find a way to test the internally defined functions.
-#        # Need to find a way to test a GUI using unit tests.
-#        pass
-
     def test_log_reader(self):
         # Make sure the test workbook is closed.
         log_to_xls.log_reader(self.log_file_path,

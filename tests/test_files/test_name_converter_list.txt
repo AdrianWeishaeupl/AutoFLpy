@@ -127,11 +127,11 @@ RSSI, RXRSSI, RXRSSI, unavailable
 BARO, TimeUS, Time, US
 BARO, Alt, Altitude, m
 BARO, Press, Pressure, Pa
-BARO, Temp, Temperature, degrees celcius
+BARO, Temp, Temperature, degrees Celsius
 BARO, CRt, CRt, unavailable
 BARO, SMS, SMS, unavailable
 BARO, Offset, Offset, unavailable
-BARO, GndTemp, GndTemp, degrees celcius
+BARO, GndTemp, GndTemp, degrees Celsius
 POWR, TimeUS, Time, US
 POWR, Vcc, Vcc, unavailable
 POWR, VServo, VServo, unavailable
@@ -182,7 +182,7 @@ TRIG, Yaw, Yaw, degrees
 ARSP, TimeUS, Time, US
 ARSP, Airspeed, Airspeed, mpers
 ARSP, DiffPress, Diff_Pressure, Pa
-ARSP, Temp, Temp, degrees celcius
+ARSP, Temp, Temp, degrees Celsius
 ARSP, RawPress, Raw_Pressure, Pa
 ARSP, Offset, Offset, unavailable
 ARSP, U, U, unavailable
@@ -191,7 +191,7 @@ ARSP, Primary, Primary, unavailable
 ASP2, TimeUS, Time, US
 ASP2, Airspeed, Airspeed, mpers
 ASP2, DiffPress, DiffPress, unavailable
-ASP2, Temp, Temp, degrees celcius
+ASP2, Temp, Temp, degrees Celsius
 ASP2, RawPress, RawPress, Pa
 ASP2, Offset, Offset, unavailable
 ASP2, U, U, unavailable
@@ -203,7 +203,7 @@ BAT, VoltR, Voltage R, V
 BAT, Curr, Current, A
 BAT, CurrTot, Current_Total, A
 BAT, EnrgTot, Enrgy_Total, J
-BAT, Temp, Temprature, degrees celcius
+BAT, Temp, Temprature, degrees Celsius
 BAT, Res, Res, unavailable
 BAT2, TimeUS, Time, US
 BAT2, Volt, Voltage, V
