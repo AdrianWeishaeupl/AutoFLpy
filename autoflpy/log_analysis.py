@@ -15,17 +15,13 @@ from shutil import copyfile
 
 """
 TODO:
-    Finish writing unittests.
     Remove the code from the Jupyter template and move it out of sight.
     Find a way that the code can recognise if the nearest airfield has weather
         data.
     Find a way of allowing custom weather data to be added - add it into the
         input file.
-    Fix checklist integration into notebook.
-    Make it easier to find the sample data (arduino and xls).
     Allow for channel mapping in the flight log code.
     Throttle as a %??
-    METAR appears twice?
 
 DONE:
 """
