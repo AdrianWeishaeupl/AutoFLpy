@@ -8,21 +8,46 @@ aw6g15@soton.ac.uk 2019
 
 from autoflpy.util import nearest_ICAO_finder
 import unittest
+import numpy as np
+import os
 
 
 class Testnearest_ICAO_finder(unittest.TestCase):
 
     def setUp(self):
         # Defines variables needed
-        pass
+        # Set the working directory
+        base_path = os.path.join(os.path.dirname(__file__),
+                                 "test_files") + os.sep
+        # Tidies up the base path for python.
+        self.base_path = base_path.replace(os.sep, "/")
+        # Define the variables
+        self.excel_file_path = self.base_path
+        self.excel_file_name = "test_xls.xls"
 
     def test_icao_finder(self):
-        # To be written
-        pass
+        icao = nearest_ICAO_finder.icao_finder(self.excel_file_path,
+                                               self.excel_file_name)
+        self.assertEqual('DGTK', icao)
 
     def test_closest_icao(self):
-        # To be written
-        pass
+        # Runs the airport_lat_long function
+        airport_lat_long = nearest_ICAO_finder.airport_lat_long()
+        # Arbitary latitude and longtitude for checking
+        uav_lat_long_check = [[[51.067397], [-1.320574]],
+                              [[50.154234], [8.735601]],
+                              [[49.721109], [-102.279640]],
+                              [[-40.424322], [-68.260537]],
+                              [[-8.266594], [28.914712]]]
+        # Defines the expected outputs
+        expected_closest_icao = [14637, 14122, 12234, 30551, 16258]
+        # Runs closest_icao function from the nearest_ICAO_finder.py
+        for lat_long in range(len(uav_lat_long_check)):
+            result = nearest_ICAO_finder.closest_icao(np.array(
+                    uav_lat_long_check[lat_long]), np.array(
+                            [airport_lat_long[:, 1], airport_lat_long[:, 2]]))
+            # Check the results are equal to the expected
+            self.assertEqual(result, expected_closest_icao[lat_long])
 
     def test_airport_lat_long(self):
         # Runs the airport_lat_long function
@@ -39,8 +64,14 @@ class Testnearest_ICAO_finder(unittest.TestCase):
             self.assertEqual(icao, expected_ICAO)
 
     def test_uav_lat_long(self):
-        # To be written
-        pass
+        # Runs the uav_lat_long function from the nearest_ICAO_finder.py
+        uav_lat_long = nearest_ICAO_finder.uav_lat_long(self.excel_file_path,
+                                                        self.excel_file_name)
+        # Defines expected_results
+        expected_lat_long = np.array([[0.0108352], [0.0308365]])
+        # Compares the uav_lat_long to the expected_lat_long, 0 = lat, 1 = long
+        self.assertEqual(expected_lat_long[0], uav_lat_long[0])
+        self.assertEqual(expected_lat_long[1], uav_lat_long[1])
 
 
 if __name__ == '__main__':

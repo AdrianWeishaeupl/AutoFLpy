@@ -28,9 +28,6 @@ TODO:
     METAR appears twice?
 
 DONE:
-    Created image folder into the new directory
-    Checklist input fixed
-    Fix checklist line
 """
 
 
