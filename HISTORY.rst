@@ -58,3 +58,9 @@ History
 
 * Checklist issues resolved
 * Unittests expanded
+
+0.2.6 (2019-11-25)
+------------------
+
+* Updated Default Template with GPS and autopilot data
+* Imporved unit testing

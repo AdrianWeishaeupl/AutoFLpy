@@ -17,7 +17,7 @@ GPS, TimeUS, Time, US
 GPS, Status, Status, unavailable
 GPS, GMS, GMS, unavailable
 GPS, GWk, GWk, unavailable
-GPS, NSats, Number_of_Satelites, no unit
+GPS, NSats, Number_of_Satellites, no unit
 GPS, HDop, HDop, unavailable
 GPS, Lat, latitude, degrees latitude
 GPS, Lng, longitude, degrees longitude
