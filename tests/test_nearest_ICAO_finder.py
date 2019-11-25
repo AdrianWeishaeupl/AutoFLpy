@@ -26,8 +26,10 @@ class Testnearest_ICAO_finder(unittest.TestCase):
         self.excel_file_name = "test_xls.xls"
 
     def test_icao_finder(self):
+        # Runs icao_finder function
         icao = nearest_ICAO_finder.icao_finder(self.excel_file_path,
                                                self.excel_file_name)
+        # Checks that the correct icao code is returned.
         self.assertEqual('DGTK', icao)
 
     def test_closest_icao(self):
