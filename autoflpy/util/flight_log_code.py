@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import textwrap
 import matplotlib.pyplot as plt
+from metar import Metar as mtr
 from requests import get
 
 
@@ -19,19 +20,6 @@ aw6g15@soton.ac.uk 2019
 based on work done by Samuel Pearson (sp1g18@soton.ac.uk) (06-08/2019)
 
 """
-
-# Tries to import Metar, if it fails, it imports PIP and installs Metar
-try:
-    from metar import Metar
-except ModuleNotFoundError:
-    import pip._internal
-    pip._internal.main(["install", "metar"])
-    print("Installing METAR module")
-except ImportError:
-    import pip._internal
-    pip._internal.main(["install", "metar"])
-    print("Installing METAR module")
-
 
 # Checsk to see if os.sep is \\
 if os.sep == "\\":
@@ -1954,14 +1942,15 @@ def METAR_returner(metar_data, contents, month, year,
     """Replaces the key word in a cell with METAR information from the day"""
     # finds the locations that the metars were recorded from.
     metar_text = "    \"The METARs for " +\
-        str(Metar.Metar(metar_data[0], month=month, year=year))[9:13] +\
+        str(mtr.Metar(metar_data[0], month=month, year=year))[9:13] +\
         " were:\\n\",\n    \"\\n\",\n"
     # Goes through the metars and creates a list of metars from that day.
     for metar in metar_data[:-1]:
         # Uses the metar function to get the data from the metar and display
         # the data labeled nicely
         metar_text += "    \"" +\
-            str(Metar.Metar(metar[6:], month=month, year=year))[14:].replace(
+            str(mtr.Metar(metar[6:], month=month, year=year
+                                ))[14:].replace(
                     "\n", "\\n\",\n    \"\\n\",\n    \"") +\
             "\\n\",\n     \"<br><br><br><br>\\n\",\n"
     # Adds the metar data to the text file.

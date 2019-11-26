@@ -22,7 +22,6 @@ TODO:
         input file.
     Allow for channel mapping in the flight log code.
     Throttle as a %??
-
 DONE:
 """
 
