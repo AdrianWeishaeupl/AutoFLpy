@@ -69,3 +69,8 @@ History
 ------------------
 
 * Autoflpy v 1.0.0 released
+
+1.0.1 (2019-11-26)
+------------------
+
+* Metar module issue fixed
