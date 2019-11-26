@@ -30,11 +30,11 @@ def autoflpy(input_file='Input File.json'):
     # Finds the file path from where this code is being run.
     base_path = os.path.join(os.path.dirname(__file__), "data") + os.sep
     # Tidies up the base path for python.
-    base_path = base_path.replace(os.sep, "/")
+    base_path = base_path
 
     # Sets the default storage location in the working directory.
     default_storage_path = str((os.getcwd() + os.sep + 'user_files' + os.sep
-                                ).replace(os.sep, "/"))
+                                ))
 
     # Copies the standard input file into the working directory
     if os.path.exists(default_storage_path + input_file) is False:
@@ -62,13 +62,13 @@ def autoflpy(input_file='Input File.json'):
             data["log_to_xls_input"]["log_file_path"]) is True:
         log_file_path = (data["log_to_xls_input"][
             "log_file_path"] + os.sep + data["log_to_xls_input"][
-            "log_file_name"]).replace(os.sep, "/")
+            "log_file_name"])
     else:
         # Creates a new directory to look for files.
         log_file_base_path = (default_storage_path + "log_files" + os.sep
-                              ).replace(os.sep, "/")
+                              )
         log_file_path = (log_file_base_path + os.sep + data[
-                "log_to_xls_input"]["log_file_name"]).replace(os.sep, "/")
+                "log_to_xls_input"]["log_file_name"])
         try:
             os.makedirs(log_file_base_path)
             # Raises error and gives advice on how to continue.
@@ -89,7 +89,7 @@ def autoflpy(input_file='Input File.json'):
         os.path.exists(
             data["log_to_xls_input"]["excel_data_file_path"]) is True:
         excel_file_path = (data["log_to_xls_input"][
-            "excel_data_file_path"]).replace(os.sep, "/")
+            "excel_data_file_path"])
     else:
         # Makes a directory in the current working path to be used.
         excel_file_path = default_storage_path + "excel_file_path"
@@ -121,7 +121,7 @@ def autoflpy(input_file='Input File.json'):
         os.path.exists(
             data["flight_log_generator_input"]["template_file_path"]) is True:
         template_file_path = (data["flight_log_generator_input"][
-            "template_file_path"]).replace(os.sep, "/")
+            "template_file_path"])
     else:
         template_file_path = default_storage_path
     if data["flight_log_generator_input"]["template_file_name"] != "" and \
@@ -149,7 +149,7 @@ def autoflpy(input_file='Input File.json'):
         except OSError:
             print("Flight log folder found. Will use this folder to store "
                   "generated flight log files.")
-    flight_data_file_path = (excel_file_path + os.sep).replace(os.sep, "/")
+    flight_data_file_path = (excel_file_path + os.sep)
     flight_data_file_name = excel_file_name + ".xls"
     if data["flight_log_generator_input"][
             "arduino_flight_data_file_path"] != "" and \
@@ -161,7 +161,7 @@ def autoflpy(input_file='Input File.json'):
         # Makes a directory in the current working path to be used.
         arduino_flight_data_file_path = (default_storage_path +
                                          "arduino_flight_data" + os.sep
-                                         ).replace(os.sep, "/")
+                                         )
         try:
             os.makedirs(arduino_flight_data_file_path)
         except OSError:
@@ -182,7 +182,7 @@ def autoflpy(input_file='Input File.json'):
     else:
         # Makes a directory in the current working path to be used.
         checklist_file_path = (default_storage_path + "checklists" + os.sep
-                               ).replace(os.sep, "/")
+                               )
         try:
             os.makedirs(checklist_file_path)
         except OSError:
@@ -209,14 +209,14 @@ def autoflpy(input_file='Input File.json'):
     else:
         # Makes a directory in the current working path to be used.
         metar_file_path = (default_storage_path + "METAR_storage" +
-                           os.sep).replace(os.sep, "/")
+                           os.sep)
         try:
             os.makedirs(metar_file_path)
         except OSError:
             print('METAR storage folder found.')
     # Creates images folder for the logo
     images_path = (default_storage_path + 'images' + os.sep
-                   ).replace(os.sep, "/")
+                   )
     try:
         os.makedirs(images_path)
     except OSError:

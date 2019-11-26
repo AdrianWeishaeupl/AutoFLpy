@@ -241,7 +241,7 @@ def flight_data(file_path, file_name):
     # Excel file.
     file_path_with_name = file_path + file_name
     # Tidies up the base path for python.
-    file_path_with_name = file_path_with_name.replace(os.sep, "/")
+    file_path_with_name = file_path_with_name
     file = pd.ExcelFile(file_path_with_name)
     # Finds list of sheet names.
     sheet_list = file.sheet_names
