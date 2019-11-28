@@ -49,7 +49,9 @@ def flight_log_maker(template_file_path, template_file_name,
     contents = contents.replace("FLIGHT_LOG_CODE_VERSION",
                                 log_code_version)
     # Inserts the date into the contents.
-    contents = contents.replace("FLIGHT_DATE", str(flight_date))
+    contents = contents.replace("FLIGHT_DATE", (str(flight_date)[6:] + "/" +
+                                                str(flight_date)[4:6] + "/" +
+                                                str(flight_date)[:4]))
     # Inserts the flight number into the contents.
     contents = contents.replace("FLIGHT_NUMBER", str(flight_number))
     # Checks to see wether there is graph data or arduino data that can be
