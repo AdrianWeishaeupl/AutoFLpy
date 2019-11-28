@@ -22,11 +22,13 @@ TODO:
         input file.
     Allow for channel mapping in the flight log code.
     Throttle as a %??
+    Needs to stop overwriting template.
+    Fix issue of the user template not being used.
 DONE:
 """
 
 
-def autoflpy(input_file='Input File.json'):
+def autoflpy(input_file='Input_File.json'):
     # Finds the file path from where this code is being run.
     base_path = os.path.join(os.path.dirname(__file__), "data") + os.sep
     # Tidies up the base path for python.
@@ -45,7 +47,7 @@ def autoflpy(input_file='Input File.json'):
         pass
 
     # Copies the template input file into the current working directory
-    input_template_file = 'Input Template.json'
+    input_template_file = 'Input_File_Template.json'
     if os.path.exists(default_storage_path + input_template_file) is False:
         copyfile(base_path + input_template_file, default_storage_path +
                  input_template_file)
@@ -82,8 +84,8 @@ def autoflpy(input_file='Input File.json'):
             copyfile(base_path + 'test_log_to_xls.log', log_file_base_path +
                      'test_log_to_xls.log')
 
-    name_converter_file_path = base_path + 'Name converter list.txt'
-    data_sources_path = base_path + 'Data sources.txt'
+    name_converter_file_path = base_path + 'Name_converter_list.txt'
+    data_sources_path = base_path + 'Data_sources.txt'
     # If no excel data file path has been entered, go to the standard path.
     if data["log_to_xls_input"]["excel_data_file_path"] != "" and \
         os.path.exists(
@@ -106,6 +108,7 @@ def autoflpy(input_file='Input File.json'):
     excel_file_name = name_generator.generated_file_name
 
     # Runs the xls converter
+
     log_to_xls.log_reader(log_file_path,
                           name_converter_file_path,
                           data_sources_path,
@@ -130,7 +133,7 @@ def autoflpy(input_file='Input File.json'):
         template_file_name = data["flight_log_generator_input"][
             "template_file_name"]
     else:
-        template_file_name = 'Default Template (Full Summary).ipynb'
+        template_file_name = 'Default_Template_(Full_Summary).ipynb'
         print('Using default template')
         # Copies the default template into the default storage directory
         copyfile(base_path + template_file_name, default_storage_path +
@@ -172,7 +175,7 @@ def autoflpy(input_file='Input File.json'):
 
     arduino_flight_data_name = data["flight_log_generator_input"][
             "arduino_flight_data_name"]
-    flight_log_file_name_header = "Generated flight log "
+    flight_log_file_name_header = "Generated_flight_log_"
     if data["flight_log_generator_input"][
             "checklist_data_file_path"] != "" and \
         os.path.exists(data[
@@ -188,15 +191,15 @@ def autoflpy(input_file='Input File.json'):
         except OSError:
             print('Checklists folder found.')
         # Checks that the ckecklists are not already present in the folder
-        if os.path.exists(checklist_file_path + 'Checklists emergency.xlsx'
+        if os.path.exists(checklist_file_path + 'Checklists_emergency.xlsx'
                           ) is False:
             # Copies sample checklists into the generated folder.
-            copyfile(base_path + 'Checklists emergency.xlsx',
-                     checklist_file_path + 'Checklists emergency.xlsx')
-        if os.path.exists(checklist_file_path + 'Checklists nominal.xlsx'
+            copyfile(base_path + 'Checklists_emergency.xlsx',
+                     checklist_file_path + 'Checklists_emergency.xlsx')
+        if os.path.exists(checklist_file_path + 'Checklists_nominal.xlsx'
                           ) is False:
-            copyfile(base_path + 'Checklists nominal.xlsx', checklist_file_path
-                     + 'Checklists nominal.xlsx')
+            copyfile(base_path + 'Checklists_nominal.xlsx', checklist_file_path
+                     + 'Checklists_nominal.xlsx')
     log_code_version = "autoflpy.util.flight_log_code"
     start_time_hours = data["flight_log_generator_input"]["start_time_hours"]
     end_time_hours = data["flight_log_generator_input"]["end_time_hours"]

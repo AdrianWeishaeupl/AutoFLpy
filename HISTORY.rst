@@ -74,3 +74,8 @@ History
 ------------------
 
 * Metar module issue fixed
+
+1.0.2 (2019-11-26)
+------------------
+
+* Compatibility for multiple operating systems improved

@@ -84,7 +84,7 @@ class Test_flight_log_code(unittest.TestCase):
         # Tidies base path
         base_path = base_path.replace(os.sep, "/")
         # Opens the input file and reads content
-        with open(base_path + 'test_Input File.json') as file:
+        with open(base_path + 'test_Input_File.json') as file:
             data = json.load(file)
         # Defines variables
         flight_data_file_path = base_path
@@ -109,7 +109,7 @@ class Test_flight_log_code(unittest.TestCase):
                                       "test_files") + os.sep
         self.base_path = self.base_path.replace(os.sep, "/")
         # Imports data from template.
-        with open(self.base_path + 'test_Input File.json') as file:
+        with open(self.base_path + 'test_Input_File.json') as file:
             self.data = json.load(file)
         self.flight_number = self.data["log_to_xls_input"]["flight_number"]
         self.flight_date = self.data["log_to_xls_input"]["date"]
@@ -139,7 +139,7 @@ class Test_flight_log_code(unittest.TestCase):
         base_path = os.path.join(os.path.dirname(__file__),
                                  "test_files") + os.sep
         generated_file_name = base_path + \
-            "test_generated_flight_log20190123 2.ipynb"
+            "test_generated_flight_log20190123_2.ipynb"
         if os.path.exists(generated_file_name):
             os.remove(generated_file_name)
 
@@ -166,7 +166,7 @@ class Test_flight_log_code(unittest.TestCase):
         # This code tests the flight_log_maker function.
         # First, check that a file has been created.
         test_flight_log_file_path = self.base_path + \
-            'test_generated_flight_log20190123 2.ipynb'
+            'test_generated_flight_log20190123_2.ipynb'
         if os.path.exists(test_flight_log_file_path) is True:
             file_exists = True
         self.assertTrue(file_exists)
@@ -200,7 +200,7 @@ class Test_flight_log_code(unittest.TestCase):
         # Loads a checklist
         try:
             frame_list = flight_log_code.flight_data(self.checklist_file_path,
-                                                     'Checklists nominal.xlsx')
+                                                     'Checklists_nominal.xlsx')
             # Filters the checklist for the correct data
             filtered_frame = \
                 flight_log_code.checklist_finder(frame_list,
@@ -307,7 +307,7 @@ class Test_flight_log_code(unittest.TestCase):
         # Checks the file was created correctly
         file_exists = os.path.exists(self.base_path
                                      + 'test_generated_flight_log20190123'
-                                     ' 2.ipynb')
+                                     '_2.ipynb')
         self.assertTrue(file_exists)
 
     def test_METAR_finder(self):
@@ -426,9 +426,9 @@ class Test_flight_log_code(unittest.TestCase):
                                                   self.template_file_name)
         # Creates checklist frames
         frame_list_nominal = flight_log_code.flight_data(
-                self.checklist_file_path, "Checklists nominal.xlsx")
+                self.checklist_file_path, "Checklists_nominal.xlsx")
         frame_list_emergency = flight_log_code.flight_data(
-                self.checklist_file_path, "Checklists emergency.xlsx")
+                self.checklist_file_path, "Checklists_emergency.xlsx")
         # Filters checklist for the current flight
         filtered_frame_nominal = flight_log_code.checklist_finder(
                 frame_list_nominal, self.flight_number, self.flight_date)

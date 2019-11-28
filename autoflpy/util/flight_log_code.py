@@ -120,9 +120,9 @@ def flight_log_maker(template_file_path, template_file_name,
     if checklist_file_path != "data" or checklist_file_path != "":
         try:
             frame_list_nominal = flight_data(checklist_file_path,
-                                             "Checklists nominal.xlsx")
+                                             "Checklists_nominal.xlsx")
             frame_list_emergency = flight_data(checklist_file_path,
-                                               "Checklists emergency.xlsx")
+                                               "Checklists_emergency.xlsx")
             print('Looking for checklists')
             filtered_frame_nominal = checklist_finder(frame_list_nominal,
                                                       flight_number,
@@ -188,7 +188,7 @@ def flight_log_maker(template_file_path, template_file_name,
                 # to re-try when the quota limit has been reached.
                 contents = METAR_quota_returner(contents,
                                                 flight_log_file_name_header +
-                                                str(flight_date) + " " +
+                                                str(flight_date) + "_" +
                                                 str(flight_number) +
                                                 ".ipynb", ICAO_airfield,
                                                 str(flight_date)[:4],
@@ -1693,13 +1693,13 @@ def line_remover(contents, key):
 
 
 def flight_log_creator(contents, file_path, date, flight_number,
-                       file_name_header="Flight Log "):
+                       file_name_header="Flight_Log_"):
     """This creates or overwrites a file with the name file_name_header date
      flight_number.ipynb  and fills the file with the
     contents provided as an input."""
     # Creates file with name
     print('Creating new flight log')
-    file = open(file_path + os.sep + file_name_header + str(date) + " " +
+    file = open(file_path + os.sep + file_name_header + str(date) + "_" +
                 str(flight_number) + ".ipynb", "w+")
     # Extracts contents.
     file.write(contents)
@@ -1950,7 +1950,7 @@ def METAR_returner(metar_data, contents, month, year,
         # the data labeled nicely
         metar_text += "    \"" +\
             str(mtr.Metar(metar[6:], month=month, year=year
-                                ))[14:].replace(
+                          ))[14:].replace(
                     "\n", "\\n\",\n    \"\\n\",\n    \"") +\
             "\\n\",\n     \"<br><br><br><br>\\n\",\n"
     # Adds the metar data to the text file.

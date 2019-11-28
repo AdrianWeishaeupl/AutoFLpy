@@ -23,7 +23,7 @@ class Testlog_to_xls(unittest.TestCase):
         # Tidies up the base path for python.
         self.base_path = base_path.replace(os.sep, "/")
         # Reads the test_input_file information
-        with open((base_path + 'test_Input File.json')) as file:
+        with open((base_path + 'test_Input_File.json')) as file:
             self.data = json.load(file)
         # Sets dummy variables for testing to be used throughout.
         self.log_file_path = self.base_path + self.data["log_to_xls_input"][

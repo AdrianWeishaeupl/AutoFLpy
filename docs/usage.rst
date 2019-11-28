@@ -2,13 +2,21 @@
 Usage
 =====
 
+First time users
+----------------
+
+
+
+
+
+
 To use AutoFLpy in a project::
 
     from autoflpy import log_analysis
 
 Individual flight logs can be generated using the log_analyser function::
 
-	log_analyser.autoflpy("Input_File")
+	log_analysis.autoflpy("Input_File"="Input_File)
 
 When this is run for the first time, a folder structure (user_files) will be created in the current working directory. This will be populated using example data to create an example flight log and the input file.
 
@@ -39,7 +47,7 @@ The following should be noted when editing the default template notebook:
 
 
 
-Principal of template operation
+Principle of template operation
 -------------------------------
 The template will only accept capital letters as inputs in the cells. Only certain words in certain configurations will be checked. Autoflpy will use these to add/ remove information or cells based on external information.
 
