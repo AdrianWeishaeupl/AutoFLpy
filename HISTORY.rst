@@ -79,3 +79,9 @@ History
 ------------------
 
 * Compatibility for multiple operating systems improved
+
+1.0.3 (2019-11-28)
+------------------
+
+* Compatibility extended to Python 3.5 and 3.8
+* Improved the default template and plotting functions
