@@ -16,7 +16,7 @@ To use AutoFLpy in a project::
 
 Individual flight logs can be generated using the log_analyser function::
 
-	log_analysis.autoflpy("Input_File"="Input_File)
+	log_analysis.autoflpy(input_file='Input_File.json')
 
 When this is run for the first time, a folder structure (user_files) will be created in the current working directory. This will be populated using example data to create an example flight log and the input file.
 
