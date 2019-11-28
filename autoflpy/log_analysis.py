@@ -24,6 +24,7 @@ TODO:
     Throttle as a %??
     Needs to stop overwriting template.
     Fix issue of the user template not being used.
+    Issue with multi-variable graph titles
 DONE:
 """
 

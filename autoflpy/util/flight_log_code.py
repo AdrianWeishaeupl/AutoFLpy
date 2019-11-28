@@ -1070,6 +1070,7 @@ def graph_function(plot_information, values_list, x_limits=["x_min", "x_max"],
         title = text + " plotted against " + xy_pairs[0][0][0]
     # if plot info is equal to 0 then nothing is returned
     if plot_info == 0:
+        print('No data present or variables entered incorrectly.')
         return
     # Splits title if its width exceeds 60
     wraped_title = textwrap.wrap(title, width=60)
@@ -1087,6 +1088,7 @@ def graph_function(plot_information, values_list, x_limits=["x_min", "x_max"],
     # Checks to see if plot limts have been set for the y values
     if isinstance(y_limits[0], int) and isinstance(y_limits[1], int):
         plt.ylim(y_limits)
+    plt.show()
 
 
 def flight_log_multiaxis_graph_contents_replacer(contents):
@@ -1551,6 +1553,7 @@ def multiaxis_graph_function(plot_information_left, plot_information_right,
     # If there is no valid data then return nothing.
     if plot_info == 0 and plot_info_left == 0:
         plt.close()
+        print('No data present or data entered incorrectly.')
         return
     if plot_info != 0 and plot_info_left != 0:
         # Plots the title.
@@ -1567,6 +1570,7 @@ def multiaxis_graph_function(plot_information_left, plot_information_right,
             xy_pairs[0][0][0]
         # Hides left axis if data is missing.
         axis_1.set_yticks([])
+        print('Left axis data missing or entered incorrectly.')
     # Splits title if its width exceeds 60
     wraped_title = textwrap.wrap(full_title, width=60)
     # Creates an empty string for the final title
@@ -1590,6 +1594,7 @@ def multiaxis_graph_function(plot_information_left, plot_information_right,
         # Removes left axis label from legend if left hand axis is not
         # plotting.
         axis_2.legend(lines[1:], label[1:], loc=legend_location)
+        print('Right axis data missing or entered incorrectly.')
     # Checks to see if plot limits have been set for the x values
     if isinstance(x_limits[0], int) and isinstance(x_limits[1], int):
         axis_1.set_xlim(x_limits)
@@ -1602,6 +1607,7 @@ def multiaxis_graph_function(plot_information_left, plot_information_right,
     if isinstance(y_limits_right[0], int) and \
             isinstance(y_limits_right[1], int):
         axis_2.set_ylim(y_limits_right)
+    plt.show()
 
 
 def cell_remover(contents, key):
