@@ -23,8 +23,8 @@ TODO:
     Allow for channel mapping in the flight log code.
     Throttle as a %??
     Needs to stop overwriting template.
-    Fix issue of the user template not being used.
-    Issue with multi-variable graph titles
+    Issue with multi-variable graph titles.
+    Axis variables in plots only take round numbers.
 DONE:
 """
 
@@ -130,15 +130,18 @@ def autoflpy(input_file='Input_File.json'):
         template_file_path = default_storage_path
     if data["flight_log_generator_input"]["template_file_name"] != "" and \
         os.path.exists(
+            template_file_path +
             data["flight_log_generator_input"]["template_file_name"]) is True:
         template_file_name = data["flight_log_generator_input"][
             "template_file_name"]
     else:
         template_file_name = 'Default_Template_(Full_Summary).ipynb'
         print('Using default template')
-        # Copies the default template into the default storage directory
-        copyfile(base_path + template_file_name, default_storage_path +
-                 template_file_name)
+        # Checks that the file is not already present
+        if os.path.exists(default_storage_path + template_file_name) is False:
+            # Copies the default template into the default storage directory
+            copyfile(base_path + template_file_name, default_storage_path +
+                     template_file_name)
     if data["flight_log_generator_input"]["flight_log_destination"] != "" and \
         os.path.exists(
             data["flight_log_generator_input"][
