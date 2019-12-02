@@ -22,7 +22,6 @@ TODO:
         input file.
     Allow for channel mapping in the flight log code.
     Throttle as a %??
-    Needs to stop overwriting template.
     Issue with multi-variable graph titles.
     Axis variables in plots only take round numbers.
 DONE:

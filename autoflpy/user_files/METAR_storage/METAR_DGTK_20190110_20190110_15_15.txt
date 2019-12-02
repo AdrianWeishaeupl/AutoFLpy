@@ -1,0 +1,2 @@
+METAR DGTK 101500Z 23012KT 8000 NSC 32/25 Q1008 NOSIG
+https://www.ogimet.com/display_metars2.php?lang=en&lugar=DGTK&tipo=ALL&ord=REV&nil=SI&fmt=html&ano=2019&mes=01&day=10&hora=15&anof=2019&mesf=01&dayf=10&horaf=15&minf=59&send=send
