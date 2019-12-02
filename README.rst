@@ -38,7 +38,7 @@ Features
 		* Flight attitude throughout the flight.
 		* Flight computer vibrational data.
 		* Additional arduino data (if supplied).
-* Sample data files included. This will be ** created when the code is run for the first time **.
+* Sample data files included. This will be *created when the code is run for the first time*.
 * Full choice of file paths for the data and outputs can be specified using the input file.
 
 
