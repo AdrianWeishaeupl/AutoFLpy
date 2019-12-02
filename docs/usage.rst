@@ -5,16 +5,19 @@ Usage
 First time users
 ----------------
 
+AutoFLpy is a code designed to allow drone pilots and operators to easily analyse flight data in the field. It works by reading the data collected by the flight computer (eg. PixHawk) and plotting the data in a Jupyter Notebook. This notebook is fully customisable and allows the user to plot any variable collected by its self or with other data in the same plot.
+
+**Upon first time running of the script, sample data will be used to create a sample flight log for the user to look at for inspiration.** 
+A folder structure containing the "Input_File.json" and base file paths will also be created. The user can then complete the "Input_File.json" with appropriate information and analyse their own flight data.
 
 
+-----------------
 
-
-
-To use AutoFLpy in a project::
+To use AutoFLpy::
 
     from autoflpy import log_analysis
 
-Individual flight logs can be generated using the log_analyser function::
+Individual flight logs can be generated using the log_analysis function::
 
 	log_analysis.autoflpy(input_file='Input_File.json')
 
@@ -54,8 +57,8 @@ The template will only accept capital letters as inputs in the cells. Only certa
 Graphs
 ------
 
-Creating graphs
----------------
+* Creating graphs
+-----------------
 If you wish to create a graph, then you can create an empty cell with GRAPH at the top in capital letters.  A new line must follow this, then the data used must be stated in the format axis, name, data source. This is done as many times as required. 
 This should look as follows.
 
@@ -95,8 +98,8 @@ Y SUBDEPLOY_CH6 RCIN
 Note: the labels that have a gap in them (Flap_CH5 and SUBDEPLOY_CH6) use an underscore instead of a space. This is to avoid any confusion as to the data source and name.
 
 
-Graph types
------------
+* Graph types
+-------------
 There are three main types of graphs that will be automatically generated. Note that the graph type cannot be selected by the user.
 
 Plot type 1 
@@ -108,8 +111,8 @@ These are x and y graphs with multiple y values of the same unit. A legend is di
 Plot type 3
 These are x and y graphs with multiple y values with different units. The legend shows the names of the variables and their units. The y axis has no label or units.
 
-Multiaxis Graphs
-----------------
+* Multiaxis Graphs
+------------------
 Multiaxis graphs will have left and right axis. These are like the normal graphs but the text to create the graph is MULTIAXIS_GRAPH. To state the data for the left axis the label is LEFT_AXIS and to state the data for the right axis, the label is RIGHT_AXIS.
 
 MUTLIAXIS_GRAPH
@@ -129,8 +132,8 @@ Y THROTTLE_CH3 RCIN
 
 Note that the default axis is the left axis. If the Y axes have the same source, then X does not need to be stated twice. Note that if the left axis information is missing, the graph will behave like a normal graph but with the axis on the right. It will behave as a normal graph if no right axis data is put in. If no valid data is put in then nothing will be plotted or returned.
 
-Graph related information
--------------------------
+* Graph related information
+---------------------------
 If the graphs cannot be plotted, then the graphs and any cells or lines labelled with GRAPH_TEXT or lines labelled with GRAPH_LINE will be removed. For any python that needs to be removed the comment # GRAPH_DATA_IMPORT will also remove cells, this is used in the python code to remove the python cells that import the graph data.
 
 Checklists
