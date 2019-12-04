@@ -24,6 +24,9 @@ TODO:
     Throttle as a %??
     Issue with multi-variable graph titles.
     Axis variables in plots only take round numbers.
+    Plot a map behind the latitude/longitude plot.
+    Calculate wind speed/vector/plot.
+    Add flight duration from arm/disarm or vibration data.
 DONE:
 """
 
@@ -46,6 +49,11 @@ def autoflpy(input_file='Input_File.json'):
     else:
         pass
 
+    data_sources_path = default_storage_path + 'Data_sources.txt'
+    if os.path.exists(data_sources_path) is False:
+        copyfile(base_path + 'Data_sources.txt', data_sources_path)
+    else:
+        pass
     # Copies the template input file into the current working directory
     input_template_file = 'Input_File_Template.json'
     if os.path.exists(default_storage_path + input_template_file) is False:
@@ -85,7 +93,6 @@ def autoflpy(input_file='Input_File.json'):
                      'test_log_to_xls.log')
 
     name_converter_file_path = base_path + 'Name_converter_list.txt'
-    data_sources_path = base_path + 'Data_sources.txt'
     # If no excel data file path has been entered, go to the standard path.
     if data["log_to_xls_input"]["excel_data_file_path"] != "" and \
         os.path.exists(
