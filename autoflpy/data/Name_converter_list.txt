@@ -198,7 +198,7 @@ ASP2, U, U, unavailable
 ASP2, Health, Health, unavailable
 ASP2, Primary, Primary, unavailable
 BAT, TimeUS, Time, US
-BAT, Volt, Voltange, V
+BAT, Volt, Voltage, V
 BAT, VoltR, Voltage R, V
 BAT, Curr, Current, A
 BAT, CurrTot, Current_Total, A
