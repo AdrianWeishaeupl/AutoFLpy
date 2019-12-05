@@ -85,3 +85,8 @@ History
 
 * Compatibility extended to Python 3.5 and 3.8
 * Improved the default template and plotting functions
+
+1.0.4 (2019-12-05)
+------------------
+
+* Added backplotted map for latitude and longitude data
