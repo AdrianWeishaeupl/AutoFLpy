@@ -24,7 +24,6 @@ TODO:
     Throttle as a %??
     Issue with multi-variable graph titles.
     Axis variables in plots only take round numbers.
-    Plot a map behind the latitude/longitude plot.
     Calculate wind speed/vector/plot.
     Add flight duration from arm/disarm or vibration data.
 DONE:

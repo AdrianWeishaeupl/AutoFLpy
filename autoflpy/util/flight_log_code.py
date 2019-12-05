@@ -2,9 +2,17 @@ import pandas as pd
 import os
 import textwrap
 import matplotlib.pyplot as plt
+import numpy as np
 from metar import Metar as mtr
-from requests import get
+from requests import get, HTTPError
+from pyproj import Proj, transform
 
+try:
+    import geopandas as gpd
+    import contextily as ctx
+    map_modules_imported = True
+except ModuleNotFoundError:
+    map_modules_imported = False
 
 """
 Flight Log Generation Code.
@@ -1020,7 +1028,94 @@ def graph_function(plot_information, values_list, x_limits=["x_min", "x_max"],
                     # Appends which x values and y values that can be plotted
                     # against each other.
                     xy_pairs.append([x_data[1], y_data[1]])
-    if plot_info == 1:
+    if plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude'\
+            and map_modules_imported is True:
+        """WORK IN PROGRESS"""
+        # Plots a map behind latitude and longitude data.
+        # Assigns data to variables
+        lat = y[2]
+        long = x[2]
+        # Sets titles for the data frame
+        column_titles = np.array(['index', 'lat, long'])
+        index = range(len(lat))
+        points = []
+        # Formats the location data in the correct way to make the data frame
+        for point in range(len(lat)):
+            points.append([long[point], lat[point]])
+        # Creates a correctly formatted numpy array
+        path_data_array = (np.array([index, points])).T
+        # Turns this array into a pandas data frame
+        path_data = pd.DataFrame(path_data_array,
+                                 columns=column_titles)
+        # Creates a GeoDataFrame to be used with the map and sets the geometry
+        # and coordinate system (epsg 4326) - latitude and longitude
+        geo_data_frame = gpd.GeoDataFrame(
+                path_data,
+                geometry=gpd.points_from_xy(long, lat),
+                crs={'init': 'epsg:4326'})
+        # Renames the GeoDataFrame
+        path_data_geo = geo_data_frame
+        # Changes the data's coordinate system to epsg 3857 (needed for the
+        # maps)
+        path_data_geo = path_data_geo.to_crs(epsg=3857)
+        # Plots the data points
+        mapplot = path_data_geo.plot(markersize=1)
+
+        # To get the axis lables correctly:
+        # Find max and min lat and long.
+        extreme_lat = [max(lat), min(lat)]
+        extreme_long = [max(long), min(long)]
+        # Round mins down, round max up
+        extreme_lat_rounded = [round(extreme_lat[0], 3), round(
+                extreme_lat[1], 3) - 1e-3]
+        extreme_long_rounded = [round(extreme_long[0], 3), round(
+                extreme_long[1], 3) - 1e-3]
+        # Create intermediate points with linspace spaced at 0.001
+        lat_values = np.arange(extreme_lat_rounded[1],
+                               extreme_lat_rounded[0], 1e-3)
+        long_values = np.linspace(extreme_long_rounded[1],
+                                  extreme_long_rounded[0], len(lat_values))
+        # Convert to epsg3857 - from https://gis.stackexchange.com/questions/
+        # 78838/converting-projected-coordinates-to-lat-lon-using-python
+        inProj = Proj(init='epsg:4326')
+        outProj = Proj(init='epsg:3857')
+        long_values_3857, lat_values_3857 = transform(inProj, outProj,
+                                                      long_values, lat_values)
+        # Use xticks and yticks to replace with original values
+        plt.xticks(long_values_3857, np.round(long_values, 4))
+        plt.yticks(lat_values_3857, np.round(lat_values, 4))
+
+        try:
+            # Tries to plot a Statem terrain map
+            ctx.add_basemap(mapplot, url=ctx.sources.ST_TERRAIN)
+        except HTTPError:
+            # If the resolution is not good enough, plots an OpenStreetMap
+            # instead
+            print('Location does not have high resolution Stamen terrain'
+                  ' map data. Defaulting to OpenStreetMap data.')
+            ctx.add_basemap(mapplot, url=ctx.sources.OSM_A)
+        # plots x name with unit in brackets.
+        plt.xlabel(x[0] + " (" + x[1] + ")")
+        # plots y name with unit in brackets.
+        plt.ylabel(y[0] + " (" + y[1] + ")")
+        # plots title for graph.
+        title = y[0] + " (" + y[1] + ") plotted against " + x[0] + " (" +\
+            x[1] + ")"
+
+        # Splits title if its width exceeds 60
+        wraped_title = textwrap.wrap(title, width=60)
+        # Creates an empty string for the final title
+        final_title = ""
+        # Goes through each line in the title and joins them together with a
+        # new line character between each line.
+        for title_line in wraped_title:
+            final_title += title_line + "\n"
+        plt.title(final_title[:-1], y=1.05)
+        plt.show()
+        return
+        """END WORK IN PROGRESS"""
+
+    elif plot_info == 1:
         plt.plot(x[2], y[2])
         # plots x name with unit in brackets.
         plt.xlabel(x[0] + " (" + x[1] + ")")
