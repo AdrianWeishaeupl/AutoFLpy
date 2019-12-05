@@ -11,8 +11,6 @@ try:
     import geopandas as gpd
     import contextily as ctx
     map_modules_imported = True
-except ModuleNotFoundError:
-    map_modules_imported = False
 except ImportError:
     map_modules_imported = False
 
