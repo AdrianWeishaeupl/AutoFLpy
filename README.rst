@@ -32,7 +32,7 @@ Features
 	* Checklist Information (if provided).
 	* Plots for:
 		* GPS altitude and velocity.
-		* GPS latitude and longitude.
+		* GPS latitude and longitude plotted on a map**.
 		* Control inputs throughout the flight.
 		* Barometric data throughout the flight.
 		* Flight attitude throughout the flight.
@@ -40,6 +40,8 @@ Features
 		* Additional arduino data (if supplied).
 * Sample data files included. This will be **created when the code is run for the first time**.
 * Full choice of file paths for the data and outputs can be specified using the input file.
+
+** For this feature to work, both geopandas and contextily need to be installed on the local machine. This needs to be done by the user due to difficulty installing these on various operating systems. A short help guide is attached in the instalation instructions.
 
 
 Credits

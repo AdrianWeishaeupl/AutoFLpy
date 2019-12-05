@@ -49,3 +49,21 @@ Once you have a copy of the source, you can install it with:
 
 .. _Github repo: https://github.com/AdrianWeishaeupl/autoflpy
 .. _tarball: https://github.com/AdrianWeishaeupl/autoflpy/tarball/master
+
+Installing geopandas and contextily for map plotting
+----------------------------------------------------
+
+The easiest way to install geopandas was found to be::
+
+conda install --channel conda-forge geopandas
+
+alternate ways can be found under the following link:
+http://geopandas.org/install.html
+
+The easiest way to install contextily was found to be::
+
+conda install contextily --channel conda-forge
+
+alternate ways can be found under the following link:
+https://stackoverflow.com/questions/54149384/how-to-install-contextily
+
