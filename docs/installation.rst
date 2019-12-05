@@ -53,7 +53,8 @@ Once you have a copy of the source, you can install it with:
 Installing geopandas and contextily for map plotting
 ----------------------------------------------------
 
-The easiest way to install geopandas was found to be::
+The easiest way to install geopandas was found to be:
+
 .. code-block:: console
 
 	$ conda install --channel conda-forge geopandas
@@ -61,7 +62,7 @@ The easiest way to install geopandas was found to be::
 alternate ways can be found under the following link:
 http://geopandas.org/install.html
 
-The easiest way to install contextily was found to be::
+The easiest way to install contextily was found to be:
 
 .. code-block:: console
 
