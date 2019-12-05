@@ -13,6 +13,8 @@ try:
     map_modules_imported = True
 except ModuleNotFoundError:
     map_modules_imported = False
+except ImportError:
+    map_modules_imported = False
 
 """
 Flight Log Generation Code.
