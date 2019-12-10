@@ -71,15 +71,17 @@ def flight_log_maker(template_file_path, template_file_name,
          len(arduino_flight_data_file_path + os.sep +
          arduino_flight_data_name) > 1):
         print('Importing xls data')
+        # Assigns file name based on excel data
+        compressed_data_file_path = flight_data_file_path +\
+            flight_data_file_name[:-4] + ".pkl"
         # This replaces the file path with the necessary information
         contents = contents.replace("PYTHON_FILE_PATH", "\\\"" +
                                     os.getcwd().replace("\\", jupyter_sep) +
                                     "\\\"")
         # This replaces the file path to the compressed data
         contents = contents.replace("COMPRESSED_DATA_FILE_PATH", "\\\"" +
-                                    (flight_data_file_path +
-                                     flight_data_file_name[:-4]
-                                     ).replace("\\", jupyter_sep) + ".pkl\\\"")
+                                    (compressed_data_file_path
+                                     ).replace("\\", jupyter_sep) + "\\\"")
         # This replaces the graph text label
         contents = contents.replace("GRAPH_TEXT", "")
         # This replaces the graph data label
@@ -225,10 +227,10 @@ def flight_log_maker(template_file_path, template_file_name,
     flight_log_creator(contents, flight_log_file_path, flight_date,
                        flight_number, flight_log_file_name_header)
     print('Compressing data')
-    # NOTE
+    # Compresses the flight data for faster loading
     compile_and_compress(flight_data_file_path, flight_data_file_name,
                          arduino_flight_data_file_path,
-                         arduino_flight_data_name)
+                         arduino_flight_data_name, compressed_data_file_path)
     print('Flight log maker finished')
 
 
@@ -2195,12 +2197,11 @@ def arduino_micro_frame(flight_data_file_path, arduino_flight_data_name):
 
 
 def compile_and_compress(flight_data_file_path, flight_data_file_name,
-                         arduino_data_file_path, arduino_data_file_name):
+                         arduino_data_file_path, arduino_data_file_name,
+                         compressed_data_file_path):
 
     # Excell Sheets
     frame_list = flight_data(flight_data_file_path, flight_data_file_name)
-    # NOTE: UNUSED? A list containing the date first and then the flight number
-    # date_and_flight_number = date_and_flight_number(frame_list)
     # Retrieves arduino flight data
     arduino_flight_data_frame = arduino_micro_frame(arduino_data_file_path,
                                                     arduino_data_file_name)
@@ -2210,6 +2211,5 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     sorted_frames = flight_data_time_sorter(frame_list)
     # Creates a list of all the values.
     values_list = flight_data_and_axis(sorted_frames)
-    compressed_data_file_path = flight_data_file_path +\
-        flight_data_file_name[:-4] + ".pkl"
+    # Compresses (pickels) the data and saves it in the excel files folder.
     pk.dump(values_list, open(compressed_data_file_path, "wb"))
