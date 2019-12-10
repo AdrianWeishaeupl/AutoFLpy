@@ -15,7 +15,6 @@ from shutil import copyfile
 
 """
 TODO:
-    Remove the code from the Jupyter template and move it out of sight.
     Find a way that the code can recognise if the nearest airfield has weather
         data.
     Find a way of allowing custom weather data to be added - add it into the
@@ -27,6 +26,8 @@ TODO:
     Calculate wind speed/vector/plot.
     Add flight duration from arm/disarm or vibration data.
 DONE:
+    Pickle data for a faster notebook running.
+    Remove the code from the Jupyter template and move it out of sight.
 """
 
 

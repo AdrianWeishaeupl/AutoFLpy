@@ -3,6 +3,7 @@ import os
 import textwrap
 import matplotlib.pyplot as plt
 import numpy as np
+import pickle as pk
 from metar import Metar as mtr
 from requests import get, HTTPError
 from pyproj import Proj, transform
@@ -47,10 +48,6 @@ def flight_log_maker(template_file_path, template_file_name,
     """This code will edit a specified template and return the result that has
     been produced after the substitution of data into the template."""
     print('Starting Flight Log Maker')
-    flight_data_file_path_slash = flight_data_file_path.replace("\\",
-                                                                jupyter_sep)
-    arduino_flight_data_file_path_slash =\
-        arduino_flight_data_file_path.replace("\\", jupyter_sep)
     # loads contents.
     contents = contents_opener(template_file_path, template_file_name)
     # Replaces the key for the flight log code version with the text
@@ -78,19 +75,11 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = contents.replace("PYTHON_FILE_PATH", "\\\"" +
                                     os.getcwd().replace("\\", jupyter_sep) +
                                     "\\\"")
-        # This replaces the file path with the neccissary information
-        contents = contents.replace("FLIGHT_DATA_FILE_PATH", "\\\"" +
-                                    flight_data_file_path_slash + "\\\"")
-        # Inserts the flight data file name into the contents.
-        contents = contents.replace("FLIGHT_DATA_FILE_NAME",
-                                    "\\\"" + flight_data_file_name + "\\\"")
-        # Inserts the flight data file name into the contents.
-        contents = contents.replace("ARDUINO_DATA_FILE_PATH", "\\\"" +
-                                    arduino_flight_data_file_path_slash
-                                    + "\\\"")
-        # Inserts the flight data file path into the contents.
-        contents = contents.replace("ARDUINO_DATA_FILE_NAME",
-                                    "\\\"" + arduino_flight_data_name + "\\\"")
+        # This replaces the file path to the compressed data
+        contents = contents.replace("COMPRESSED_DATA_FILE_PATH", "\\\"" +
+                                    (flight_data_file_path +
+                                     flight_data_file_name[:-4]
+                                     ).replace("\\", jupyter_sep) + ".pkl\\\"")
         # This replaces the graph text label
         contents = contents.replace("GRAPH_TEXT", "")
         # This replaces the graph data label
@@ -102,14 +91,6 @@ def flight_log_maker(template_file_path, template_file_name,
         # Includes interactive Graphs.
         contents = flight_log_graph_contents_replacer(contents)
     else:
-        # This is the text from the template that needs to be removed.
-        flight_data_text = "flight_data_file_path = FLIGHT_DATA_FILE_PATH"
-        # Removes the flight data file path into the contents.
-        contents = contents.replace(flight_data_text, "")
-        # This is the text from the template that needs to be removed.
-        flight_data_text = "flight_data_file_name = FLIGHT_DATA_FILE_NAME"
-        # Removes the flight data file path into the contents.
-        contents = contents.replace(flight_data_text, "")
         # Removes the cell importing the graph data.
         contents = cell_remover(contents, "# GRAPH_DATA_IMPORT")
         # Removes the cells containg graph data.
@@ -243,6 +224,11 @@ def flight_log_maker(template_file_path, template_file_name,
     # Creates a new flight log from the contents
     flight_log_creator(contents, flight_log_file_path, flight_date,
                        flight_number, flight_log_file_name_header)
+    print('Compressing data')
+    # NOTE
+    compile_and_compress(flight_data_file_path, flight_data_file_name,
+                         arduino_flight_data_file_path,
+                         arduino_flight_data_name)
     print('Flight log maker finished')
 
 
@@ -675,7 +661,6 @@ def flight_data_and_axis(new_frames):
     """Returns list of lists with the following structure [[data source,
     [name, unit, data],[name, unit, data]], [data source, [name, unit, data],
     [name, unit, data]]]."""
-    print('Importing flight data')
     # Creates an empty list for all the data.
     values_list = []
     # Checks through all the data frames
@@ -1030,7 +1015,6 @@ def graph_function(plot_information, values_list, x_limits=["x_min", "x_max"],
                     xy_pairs.append([x_data[1], y_data[1]])
     if plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude'\
             and map_modules_imported is True:
-        """WORK IN PROGRESS"""
         # Plots a map behind latitude and longitude data.
         # Assigns data to variables
         lat = y[2]
@@ -1113,7 +1097,6 @@ def graph_function(plot_information, values_list, x_limits=["x_min", "x_max"],
         plt.title(final_title[:-1], y=1.05)
         plt.show()
         return
-        """END WORK IN PROGRESS"""
 
     elif plot_info == 1:
         plt.plot(x[2], y[2])
@@ -2209,3 +2192,24 @@ def arduino_micro_frame(flight_data_file_path, arduino_flight_data_name):
     # Reads CSV
     frame = pd.read_csv(file_path)
     return(frame)
+
+
+def compile_and_compress(flight_data_file_path, flight_data_file_name,
+                         arduino_data_file_path, arduino_data_file_name):
+
+    # Excell Sheets
+    frame_list = flight_data(flight_data_file_path, flight_data_file_name)
+    # NOTE: UNUSED? A list containing the date first and then the flight number
+    # date_and_flight_number = date_and_flight_number(frame_list)
+    # Retrieves arduino flight data
+    arduino_flight_data_frame = arduino_micro_frame(arduino_data_file_path,
+                                                    arduino_data_file_name)
+    # Appends audino frame to flight data from pixhawk
+    frame_list.append(arduino_flight_data_frame)
+    # Sorts frames by time
+    sorted_frames = flight_data_time_sorter(frame_list)
+    # Creates a list of all the values.
+    values_list = flight_data_and_axis(sorted_frames)
+    compressed_data_file_path = flight_data_file_path +\
+        flight_data_file_name[:-4] + ".pkl"
+    pk.dump(values_list, open(compressed_data_file_path, "wb"))
