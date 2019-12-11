@@ -6,11 +6,12 @@ import numpy as np
 import pickle as pk
 from metar import Metar as mtr
 from requests import get, HTTPError
-from pyproj import Proj, transform
+
 
 try:
     import geopandas as gpd
     import contextily as ctx
+    from pyproj import Proj, transform
     map_modules_imported = True
 except ImportError:
     map_modules_imported = False
