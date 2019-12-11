@@ -227,7 +227,7 @@ def flight_log_maker(template_file_path, template_file_name,
     # Creates a new flight log from the contents
     flight_log_creator(contents, flight_log_file_path, flight_date,
                        flight_number, flight_log_file_name_header)
-    print('Compressing data')
+    print('Pickling data')
     # Compresses the flight data for faster loading
     compile_and_compress(flight_data_file_path, flight_data_file_name,
                          arduino_flight_data_file_path,
@@ -884,6 +884,7 @@ def graph_function(plot_information, values_list, x_limits=["x_min", "x_max"],
     # List of data to plot returns plot data which has structure:
     # [axis, [data_source, column]]
     plot_data = []
+    plt.rcParams["figure.figsize"] = (15, 3)
     for data in plot_information:
         values_list_index = 0
         # sets value_found to a defult of False
@@ -1019,6 +1020,7 @@ def graph_function(plot_information, values_list, x_limits=["x_min", "x_max"],
     if plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude'\
             and map_modules_imported is True:
         # Plots a map behind latitude and longitude data.
+        plt.rcParams["figure.figsize"] = (15, 15)
         # Assigns data to variables
         lat = y[2]
         long = x[2]
@@ -1327,6 +1329,7 @@ def multiaxis_graph_function(plot_information_left, plot_information_right,
     # [axis, [data_source, column]]
     plot_information = [plot_information_left, plot_information_right]
     plot_list = []
+    plt.rcParams["figure.figsize"] = (15, 3)
     # Goes through all the elements in the left list
     for element in plot_information_left:
         # If the element contains an x value and is not already in the right

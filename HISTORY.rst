@@ -1,6 +1,17 @@
 =======
 History
 =======
+1.0.7 (2019-12-11)
+------------------
+
+* Figure sizes changed
+
+1.0.6 (2019-12-11)
+------------------
+
+* Fixed minor issues
+* Added better map package installation instructions
+
 1.0.5 (2019-12-10)
 ------------------
 

@@ -25,9 +25,12 @@ TODO:
     Axis variables in plots only take round numbers.
     Calculate wind speed/vector/plot.
     Add flight duration from arm/disarm or vibration data.
+    Add a 3D map image to summarise flight.
+    Change the code to use .xlsx instead of .xls
+    Remove warnings in the Jupyter Notebook
+    Hide code in the Jupyter Notebook once it has run?
+    Rename graph_function and multi_graph_function as they are not functions.
 DONE:
-    Pickle data for a faster notebook running.
-    Remove the code from the Jupyter template and move it out of sight.
 """
 
 
