@@ -1100,7 +1100,14 @@ def graph_function(plot_information, values_list, x_limits=["x_min", "x_max"],
         plt.title(final_title[:-1], y=1.05)
         plt.show()
         return
-
+    elif plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude'\
+            and map_modules_imported is False:
+        # Print the following if the map modules are not installed.
+        print('Backplotting map modules not installed. Check that geopandas, '
+              + 'contextily and pyproj are installed correctly for this '
+              + 'feature. Information on installing these packages can be '
+              + 'found on: \n'
+              + 'https://autoflpy.readthedocs.io/en/latest/installation.html')
     elif plot_info == 1:
         plt.plot(x[2], y[2])
         # plots x name with unit in brackets.
