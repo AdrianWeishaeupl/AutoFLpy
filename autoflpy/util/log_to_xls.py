@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import xlwt
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter as get_letter
 import os
 
 
@@ -20,7 +21,9 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
     print('Starting log reader')
     print('Creating new work book')
     # Creates a new workbook
-    workbook = xlwt.Workbook()
+    workbook = Workbook()
+
+
     # Opens log file
     print('Reading log file')
     log_opened = open(log_file_path, "r")
@@ -67,8 +70,11 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
                     break
             if data[3] != "FMT" and data[3] != "UNIT" and data[3] != "FMTU" \
                     and data_available is True and data[3] in data_sources:
+                
                 # Creates a new worksheet for all of the data.
-                worksheet = workbook.add_sheet(data[3])
+                worksheet = workbook.create_sheet(title=data[3])
+                
+                
                 # Sets an index for the columns, starts at 0 and increments by
                 # 1.
                 column_index = 0
@@ -104,8 +110,13 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
                     # Creates heading from data
                     heading = heading + "_" + unit + data[3] + "_" + \
                         flight_date + "_Flight" + flight_number
+                    
+                    print(heading)
                     # writes to worksheet
-                    worksheet.write(0, column_index, heading)
+                    cell = get_letter(column_index + 1)    + "1"
+                    worksheet[cell] = heading
+                    
+                    
                     # Increments column index
                     column_index += 1
                     # Sets row index to 1
@@ -121,13 +132,22 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
                         # Goes through all data in line, starting from the
                         # column after the time column
                         for recorded_data in line_data[2:]:
+                            
+                            
                             # Adds data to worksheet
-                            worksheet.write(row_index, column_index,
-                                            recorded_data)
+                            cell = get_letter(column_index + 1) + str(row_index + 1)
+                            worksheet[cell] = recorded_data
+                            
+                            
                             # Increments column index
                             column_index += 1
+                        
+                        
                         # appends time column to end of list
-                        worksheet.write(row_index, column_index, line_data[1])
+                        cell = get_letter(column_index + 1) + str(row_index + 1)
+                        worksheet[cell] = line_data[1]
+                        
+                        
                         # Increments row index
                         row_index += 1
         else:
@@ -135,5 +155,5 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
             break
     # Saves file
     print('Saving workbook')
-    workbook.save(excel_file_path + os.sep + excel_file_name + ".xls")
+    workbook.save(filename=(excel_file_path + os.sep + excel_file_name + ".xlsx"))
     print('Log reader finished')

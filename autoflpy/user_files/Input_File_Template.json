@@ -1,5 +1,5 @@
 {
-	"log_to_xls_input": {
+	"log_to_xlsx_input": {
 		"log_file_name": "Your log file to be run",
 		"log_file_path": "Set to your storage location. If blank, uses the file path of the sample data. NOTE: file paths need // as separators.",
         "excel_data_file_path": "Destination for the generated excel data. If blank, creates folder in the current directory",

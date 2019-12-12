@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Unit tests for the flight_log_code.py and the log_to_xls.py
+Unit tests for the flight_log_code.py and the log_to_xlsx.py
 codes. *** WORK IN PROGRESS ***
 No tests are currently written for the GUI.
 
@@ -49,7 +49,7 @@ def notebook_sample_code(flight_data_file_path, flight_data_file_name,
     # file_path of the flight data.
     # flight_data_file_path = base_path
     # Excel File name
-    # flight_data_file_name = "test_xls.xls"
+    # flight_data_file_name = "test_xlsx.xlsx"
     # Arduino File name
     # arduino_flight_data_name = "test_arduino.CSV"
     # Arduino Data file path
@@ -88,7 +88,7 @@ class Test_flight_log_code(unittest.TestCase):
             data = json.load(file)
         # Defines variables
         flight_data_file_path = base_path
-        flight_data_file_name = "test_xls.xls"
+        flight_data_file_name = "test_xlsx.xlsx"
         arduino_flight_data_file_path = base_path + data[
                 "flight_log_generator_input"]["arduino_flight_data_file_path"]
         arduino_flight_data_name = data["flight_log_generator_input"
@@ -111,15 +111,15 @@ class Test_flight_log_code(unittest.TestCase):
         # Imports data from template.
         with open(self.base_path + 'test_Input_File.json') as file:
             self.data = json.load(file)
-        self.flight_number = self.data["log_to_xls_input"]["flight_number"]
-        self.flight_date = self.data["log_to_xls_input"]["date"]
+        self.flight_number = self.data["log_to_xlsx_input"]["flight_number"]
+        self.flight_date = self.data["log_to_xlsx_input"]["date"]
         self.template_file_path = self.base_path
         self.template_file_name = self.data["flight_log_generator_input"][
                 "template_file_name"]
         self.flight_log_file_path = self.base_path + self.data[
                 "flight_log_generator_input"]["flight_log_destination"]
-        self.flight_data_file_path = self.base_path  # Path to xls file
-        self.flight_data_file_name = "test_xls.xls"
+        self.flight_data_file_path = self.base_path  # Path to xlsx file
+        self.flight_data_file_name = "test_xlsx.xlsx"
         self.arduino_flight_data_file_path = self.base_path + self.data[
                 "flight_log_generator_input"]["arduino_flight_data_file_path"]
         self.arduino_flight_data_name = self.data["flight_log_generator_input"
@@ -194,7 +194,8 @@ class Test_flight_log_code(unittest.TestCase):
         else:
             # Raises a fault if the length of the frame_list is not as
             # expected.
-            self.assertEqual(1, 2)
+            raise ValueError('Frame list length is not as expected: {0} != 8'
+                             .format(len(frame_list)))
 
     def test_checklist_finder(self):
         # Loads a checklist

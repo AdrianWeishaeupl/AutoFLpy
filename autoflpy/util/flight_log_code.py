@@ -20,7 +20,7 @@ except ImportError:
 Flight Log Generation Code.
 This code creates a GUI and should be launched from the "Automatic Flight Log
 Maker.ipynb file (opened through Jupyter Notebook). It takes flight data in
-the form of an .xls document (generated from a .log file in a previous step
+the form of an .xlsx document (generated from a .log file in a previous step
 in the same Jupyter Notebook) and plots and formats the data to be displayed
 using a template .ipynb file.
 
@@ -71,10 +71,10 @@ def flight_log_maker(template_file_path, template_file_name,
                         arduino_flight_data_name) is True and
          len(arduino_flight_data_file_path + os.sep +
          arduino_flight_data_name) > 1):
-        print('Importing xls data')
+        print('Importing xlsx data')
         # Assigns file name based on excel data
         compressed_data_file_path = flight_data_file_path +\
-            flight_data_file_name[:-4] + ".pkl"
+            flight_data_file_name[:-5] + ".pkl"
         # This replaces the file path with the necessary information
         contents = contents.replace("PYTHON_FILE_PATH", "\\\"" +
                                     os.getcwd().replace("\\", jupyter_sep) +

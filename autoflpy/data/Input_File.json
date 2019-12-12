@@ -1,6 +1,6 @@
 {
-	"log_to_xls_input": {
-		"log_file_name": "test_log_to_xls.log",
+	"log_to_xlsx_input": {
+		"log_file_name": "test_log_to_xlsx.log",
 		"log_file_path": "",
 		"excel_data_file_path": "",
 		"date": "20190110",

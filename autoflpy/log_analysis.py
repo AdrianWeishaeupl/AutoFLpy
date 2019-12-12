@@ -1,5 +1,5 @@
 """
-This modules allows for the running of the log to xls converter and the
+This modules allows for the running of the log to xlsx converter and the
 automatic flight log generator.
 """
 
@@ -9,7 +9,7 @@ import autoflpy.util.name_generator as name_generator
 import os
 import json
 import autoflpy.util.flight_log_code as flight_log_code
-import autoflpy.util.log_to_xls as log_to_xls
+import autoflpy.util.log_to_xlsx as log_to_xlsx
 import autoflpy.util.nearest_ICAO_finder as nearest_ICAO_finder
 from shutil import copyfile
 
@@ -26,11 +26,11 @@ TODO:
     Calculate wind speed/vector/plot.
     Add flight duration from arm/disarm or vibration data.
     Add a 3D map image to summarise flight.
-    Change the code to use .xlsx instead of .xls
     Remove warnings in the Jupyter Notebook
     Hide code in the Jupyter Notebook once it has run?
     Rename graph_function and multi_graph_function as they are not functions.
 DONE:
+    Change the code to use .xlsx instead of .xls
 """
 
 
@@ -71,17 +71,17 @@ def autoflpy(input_file='Input_File.json'):
 
     # Sets  variables from the input file to be used.
     # If no log file path has been entered, go to the standard log path.
-    if data["log_to_xls_input"]["log_file_path"] != "" and os.path.exists(
-            data["log_to_xls_input"]["log_file_path"]) is True:
-        log_file_path = (data["log_to_xls_input"][
-            "log_file_path"] + os.sep + data["log_to_xls_input"][
+    if data["log_to_xlsx_input"]["log_file_path"] != "" and os.path.exists(
+            data["log_to_xlsx_input"]["log_file_path"]) is True:
+        log_file_path = (data["log_to_xlsx_input"][
+            "log_file_path"] + os.sep + data["log_to_xlsx_input"][
             "log_file_name"])
     else:
         # Creates a new directory to look for files.
         log_file_base_path = (default_storage_path + "log_files" + os.sep
                               )
         log_file_path = (log_file_base_path + os.sep + data[
-                "log_to_xls_input"]["log_file_name"])
+                "log_to_xlsx_input"]["log_file_name"])
         try:
             os.makedirs(log_file_base_path)
             # Raises error and gives advice on how to continue.
@@ -92,15 +92,15 @@ def autoflpy(input_file='Input_File.json'):
         except OSError:
             print('Log file path found.')
             # Copies the example data file into the log storage
-            copyfile(base_path + 'test_log_to_xls.log', log_file_base_path +
-                     'test_log_to_xls.log')
+            copyfile(base_path + 'test_log_to_xlsx.log', log_file_base_path +
+                     'test_log_to_xlsx.log')
 
     name_converter_file_path = base_path + 'Name_converter_list.txt'
     # If no excel data file path has been entered, go to the standard path.
-    if data["log_to_xls_input"]["excel_data_file_path"] != "" and \
+    if data["log_to_xlsx_input"]["excel_data_file_path"] != "" and \
         os.path.exists(
-            data["log_to_xls_input"]["excel_data_file_path"]) is True:
-        excel_file_path = (data["log_to_xls_input"][
+            data["log_to_xlsx_input"]["excel_data_file_path"]) is True:
+        excel_file_path = (data["log_to_xlsx_input"][
             "excel_data_file_path"])
     else:
         # Makes a directory in the current working path to be used.
@@ -109,23 +109,23 @@ def autoflpy(input_file='Input_File.json'):
             os.makedirs(excel_file_path)
         except OSError:
             print("Excel folder found. Will use this folder to store generated"
-                  " xls files.")
+                  " xlsx files.")
 
-    flight_date = data["log_to_xls_input"]["date"]
-    flight_number = data["log_to_xls_input"]["flight_number"]
+    flight_date = data["log_to_xlsx_input"]["date"]
+    flight_number = data["log_to_xlsx_input"]["flight_number"]
     name_generator.excel_file_name_updater(flight_date, flight_number)
     # Generates an appropriate file name
     excel_file_name = name_generator.generated_file_name
 
-    # Runs the xls converter
+    # Runs the xlsx converter
 
-    log_to_xls.log_reader(log_file_path,
-                          name_converter_file_path,
-                          data_sources_path,
-                          excel_file_path,
-                          excel_file_name,
-                          flight_date,
-                          flight_number)
+    log_to_xlsx.log_reader(log_file_path,
+                           name_converter_file_path,
+                           data_sources_path,
+                           excel_file_path,
+                           excel_file_name,
+                           flight_date,
+                           flight_number)
 
     # Assigns variables - checks if any information is entered into the input
     # file for the directories before creating new directories in the current
@@ -166,7 +166,7 @@ def autoflpy(input_file='Input_File.json'):
             print("Flight log folder found. Will use this folder to store "
                   "generated flight log files.")
     flight_data_file_path = (excel_file_path + os.sep)
-    flight_data_file_name = excel_file_name + ".xls"
+    flight_data_file_name = excel_file_name + ".xlsx"
     if data["flight_log_generator_input"][
             "arduino_flight_data_file_path"] != "" and \
         os.path.exists(data["flight_log_generator_input"]

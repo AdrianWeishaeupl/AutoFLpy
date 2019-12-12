@@ -23,7 +23,7 @@ class Testnearest_ICAO_finder(unittest.TestCase):
         self.base_path = base_path.replace(os.sep, "/")
         # Define the variables
         self.excel_file_path = self.base_path
-        self.excel_file_name = "test_xls.xls"
+        self.excel_file_name = "test_xlsx.xlsx"
 
     def test_icao_finder(self):
         # Runs icao_finder function
