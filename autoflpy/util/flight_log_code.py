@@ -2211,7 +2211,7 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
                          arduino_data_file_path, arduino_data_file_name,
                          compressed_data_file_path):
 
-    # Excell Sheets
+    # Excel Sheets
     frame_list = flight_data(flight_data_file_path, flight_data_file_name)
     # Retrieves arduino flight data
     arduino_flight_data_frame = arduino_micro_frame(arduino_data_file_path,
@@ -2222,5 +2222,5 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     sorted_frames = flight_data_time_sorter(frame_list)
     # Creates a list of all the values.
     values_list = flight_data_and_axis(sorted_frames)
-    # Compresses (pickels) the data and saves it in the excel files folder.
+    # Compresses (pickles) the data and saves it in the excel files folder.
     pk.dump(values_list, open(compressed_data_file_path, "wb"))
