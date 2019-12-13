@@ -6,6 +6,7 @@ import numpy as np
 import pickle as pk
 from metar import Metar as mtr
 from requests import get, HTTPError
+from openpyxl import load_workbook
 
 
 try:
@@ -239,17 +240,16 @@ def flight_data(file_path, file_name):
     """This imports the data excel using pandas"""
     # Excel file.
     file_path_with_name = file_path + file_name
-    # Tidies up the base path for python.
-    file_path_with_name = file_path_with_name
-    file = pd.ExcelFile(file_path_with_name)
-    # Finds list of sheet names.
-    sheet_list = file.sheet_names
+    print('Loading data')
+    data = load_workbook(file_path_with_name, read_only=True)
+    sheet_list = data.sheetnames
     # Creates empty list for frames.
     frame_list = []
     # Extracts data from each sheet.
     for sheet in sheet_list:
-        frame = pd.read_excel(file_path + os.sep + file_name, sheet_name=sheet)
+        frame = pd.read_excel(file_path_with_name, sheet_name=sheet)
         frame_list.append(frame)
+    print('Data loaded')
     return(frame_list)
 
 
@@ -2224,3 +2224,4 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     values_list = flight_data_and_axis(sorted_frames)
     # Compresses (pickles) the data and saves it in the excel files folder.
     pk.dump(values_list, open(compressed_data_file_path, "wb"))
+    print('Pickling finished')
