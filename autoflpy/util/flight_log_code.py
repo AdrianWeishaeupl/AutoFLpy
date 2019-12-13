@@ -240,16 +240,14 @@ def flight_data(file_path, file_name):
     """This imports the data excel using pandas"""
     # Excel file.
     file_path_with_name = file_path + file_name
-    print('Loading data')
     data = load_workbook(file_path_with_name, read_only=True)
     sheet_list = data.sheetnames
     # Creates empty list for frames.
     frame_list = []
     # Extracts data from each sheet.
     for sheet in sheet_list:
-        frame = pd.read_excel(file_path_with_name, sheet_name=sheet)
+        frame = pd.read_excel(data, sheet_name=sheet, engine='openpyxl')
         frame_list.append(frame)
-    print('Data loaded')
     return(frame_list)
 
 
