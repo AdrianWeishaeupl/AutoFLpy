@@ -101,9 +101,11 @@ ENV/
 /data
 
 # Test files
-!/tests/test_files/test_log_to_xls.log
-
+!/tests/test_files/test_log_to_xlsx.log
 
 # Images
 autoflpy/data/images/
 !autoflpy/data/images/Logo here.png
+
+# Code under development
+autoflpy/util/unused/*
