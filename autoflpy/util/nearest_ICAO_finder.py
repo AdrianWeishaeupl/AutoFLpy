@@ -12,7 +12,7 @@ runways.csv downloaded from https://github.com/sobester/ADRpy/blob/master/ADRpy
 import numpy as np
 import os
 import pandas as pd
-import xlrd
+from openpyxl import load_workbook
 
 
 def icao_finder(file_path, file_name):
@@ -25,7 +25,7 @@ def icao_finder(file_path, file_name):
     nearest_icao = closest_icao(uav_location, np.array([airport_data[:, 1],
                                                        airport_data[:, 2]]))
     icao = airport_data[nearest_icao, 0]
-    print(' Nearest ICAO = ' + str(icao))
+    print('Nearest ICAO = ' + str(icao))
     return(icao)
 
 
@@ -68,13 +68,13 @@ def uav_lat_long(file_path, file_name):
     (from the log files)"""
     # Reads from the xls document
     print('Finding UAV position')
-    uav_log_file = xlrd.open_workbook(file_path + file_name)
+    uav_log_file = load_workbook(file_path + file_name, read_only=True)
     # Finds the GPS spreadsheet
-    sheet = uav_log_file.sheet_by_name('GPS')
+    sheet = uav_log_file['GPS']
     # Finds the first entry for the latitude and longitude
     # NOTE: this might be unreliable for different input formats.
-    uav_lat = float(sheet.cell(1, 5).value)
-    uav_long = float(sheet.cell(1, 6).value)
+    uav_lat = float(sheet['F2'].value)
+    uav_long = float(sheet['G2'].value)
     uav_position = np.array([[uav_lat], [uav_long]])
     print('UAV position = ' + str(uav_position))
     return uav_position
