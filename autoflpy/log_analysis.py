@@ -30,7 +30,7 @@ TODO:
     Hide code in the Jupyter Notebook once it has run?
     Rename graph_function and multi_graph_function as they are not functions.
 DONE:
-    Change the code to use .xlsx instead of .xls
+    Speed up xlsx writing/reading - remove xlrd from all functions.
 """
 
 

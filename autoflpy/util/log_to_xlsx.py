@@ -2,6 +2,7 @@
 
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter as get_letter
+from openpyxl.cell import WriteOnlyCell
 import os
 
 
@@ -20,10 +21,8 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
     """Creates a formated excell 95 file from a log file. """
     print('Starting log reader')
     print('Creating new work book')
-    # Creates a new workbook
-    workbook = Workbook()
-    # Removes initial blank sheet
-    workbook.remove(workbook.active)
+    # Creates a new write only workbook for faster writing
+    workbook = Workbook(write_only=True)
     # Opens log file
     print('Reading log file')
     log_opened = open(log_file_path, "r")
@@ -49,6 +48,7 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
     name_list = name_list_text.split("\n")[1:]
     # splits log contents about each new line
     log_contents = log_contents_text.split("\n")
+
     # Goes through each line
     print('Populating work book')
     for line in log_contents:
@@ -71,12 +71,12 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
             if data[3] != "FMT" and data[3] != "UNIT" and data[3] != "FMTU" \
                     and data_available is True and data[3] in data_sources:
 
+                # Defines line for titles and resets this for every sheet
+                heading_line = []
+
                 # Creates a new worksheet for all of the data.
                 worksheet = workbook.create_sheet(title=data[3])
 
-                # Sets an index for the columns, starts at 0 and increments by
-                # 1.
-                column_index = 0
                 # Excludes the first time column and puts it at the end.
                 data_list_time_end = data[-1].split(",")[1:]
                 # Appends time column at the end.
@@ -110,41 +110,29 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
                     heading = heading + "_" + unit + data[3] + "_" + \
                         flight_date + "_Flight" + flight_number
 
-                    # writes to worksheet
-                    cell = get_letter(column_index + 1) + "1"
-                    worksheet[cell] = heading
+                    # Creates the heading line
+                    heading_cell = WriteOnlyCell(worksheet, value=heading)
+                    heading_line.append(heading_cell)
 
-                    # Increments column index
-                    column_index += 1
-                    # Sets row index to 1
-                    row_index = 1
+                # Writes heading line to the worksheet
+                worksheet.append(heading_line)
+
                 # Goes through all data searching for a match
                 for lines in log_contents:
                     # Splits line data
                     line_data = lines.split(", ")
                     #  Checks to see if data name is the one being searched.
                     if line_data[0] == data[3]:
-                        # Resets column index to 0
-                        column_index = 0
+                        # Resets row to be written
+                        row = []
                         # Goes through all data in line, starting from the
                         # column after the time column
                         for recorded_data in line_data[2:]:
-
-                            # Adds data to worksheet
-                            cell = get_letter(column_index + 1) +\
-                                str(row_index + 1)
-                            worksheet[cell] = recorded_data
-
-                            # Increments column index
-                            column_index += 1
-
-                        # appends time column to end of list
-                        cell = get_letter(column_index + 1)\
-                            + str(row_index + 1)
-                        worksheet[cell] = line_data[1]
-
-                        # Increments row index
-                        row_index += 1
+                            row.append(recorded_data)
+                        # Appends time data for the row
+                        row.append(line_data[1])
+                        # Writes the row to the worksheet
+                        worksheet.append(row)
         else:
             # Ends for loop and so saves code
             break
