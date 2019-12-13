@@ -9,9 +9,10 @@ No tests are currently written for the GUI.
 
 from autoflpy.util import log_to_xlsx
 import unittest
-import xlrd
 import os
 import json
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
 
 
 class Testlog_to_xlsx(unittest.TestCase):
@@ -51,12 +52,14 @@ class Testlog_to_xlsx(unittest.TestCase):
             A function to check the values of specified cells in a workbook.
             """
             # Opens workbook created from test log file.
-            test_workbook = xlrd.open_workbook(self.base_path +
-                                               "/test_xlsx.xlsx")
+            test_workbook = load_workbook(self.base_path +
+                                          "/test_xlsx.xlsx", read_only=True)
             # Find the RCIN sheet and a cell (chosen to be mid flight).
-            test_worksheet = test_workbook.sheet_by_name(sheet)
+            test_worksheet = test_workbook[sheet]
+            # Defines the cell in the excel naming convention
+            cell = get_column_letter(cell[1] + 1) + str(cell[0] + 1)
             # Checks a cell in the time column (unique).
-            test_cell = test_worksheet.cell(cell[0], cell[1])
+            test_cell = test_worksheet[cell]
             self.assertEqual(str(test_cell.value), str(expected_answer))
 
         sheetlist = ["GPS", "RCIN", "BARO", "ARSP", "ATT", "VIBE", "CTUN",
