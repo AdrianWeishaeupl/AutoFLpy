@@ -12,7 +12,7 @@ from openpyxl import load_workbook
 try:
     import geopandas as gpd
     import contextily as ctx
-    from pyproj import Proj, transform
+    from pyproj import Proj as proj, transform
     map_modules_imported = True
 except ImportError:
     map_modules_imported = False
@@ -876,7 +876,7 @@ def flight_log_graph_contents_replacer(contents):
 
 
 def graph_function(plot_information, values_list, x_limits=["x_min", "x_max"],
-                   y_limits=["y_min", "y_max"]):
+                   y_limits=["y_min", "y_max"], scale=0.01):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source]"""
     # List of data to plot returns plot data which has structure:
@@ -1022,84 +1022,11 @@ def graph_function(plot_information, values_list, x_limits=["x_min", "x_max"],
         # Assigns data to variables
         lat = y[2]
         long = x[2]
-        # Sets titles for the data frame
-        column_titles = np.array(['index', 'lat, long'])
-        index = range(len(lat))
-        points = []
-        # Formats the location data in the correct way to make the data frame
-        for point in range(len(lat)):
-            points.append([long[point], lat[point]])
-        # Creates a correctly formatted numpy array
-        path_data_array = (np.array([index, points])).T
-        # Turns this array into a pandas data frame
-        path_data = pd.DataFrame(path_data_array,
-                                 columns=column_titles)
-        # Creates a GeoDataFrame to be used with the map and sets the geometry
-        # and coordinate system (epsg 4326) - latitude and longitude
-        geo_data_frame = gpd.GeoDataFrame(
-                path_data,
-                geometry=gpd.points_from_xy(long, lat),
-                crs={'init': 'epsg:4326'})
-        # Renames the GeoDataFrame
-        path_data_geo = geo_data_frame
-        # Changes the data's coordinate system to epsg 3857 (needed for the
-        # maps)
-        path_data_geo = path_data_geo.to_crs(epsg=3857)
-        # Plots the data points
-        mapplot = path_data_geo.plot(markersize=1)
-
-        # To get the axis lables correctly:
-        # Find max and min lat and long.
-        extreme_lat = [max(lat), min(lat)]
-        extreme_long = [max(long), min(long)]
-        # Round mins down, round max up
-        extreme_lat_rounded = [round(extreme_lat[0], 3), round(
-                extreme_lat[1], 3) - 1e-3]
-        extreme_long_rounded = [round(extreme_long[0], 3), round(
-                extreme_long[1], 3) - 1e-3]
-        # Create intermediate points with linspace spaced at 0.001
-        lat_values = np.arange(extreme_lat_rounded[1],
-                               extreme_lat_rounded[0], 1e-3)
-        long_values = np.linspace(extreme_long_rounded[1],
-                                  extreme_long_rounded[0], len(lat_values))
-        # Convert to epsg3857 - from https://gis.stackexchange.com/questions/
-        # 78838/converting-projected-coordinates-to-lat-lon-using-python
-        inProj = Proj(init='epsg:4326')
-        outProj = Proj(init='epsg:3857')
-        long_values_3857, lat_values_3857 = transform(inProj, outProj,
-                                                      long_values, lat_values)
-        # Use xticks and yticks to replace with original values
-        plt.xticks(long_values_3857, np.round(long_values, 4))
-        plt.yticks(lat_values_3857, np.round(lat_values, 4))
-
-        try:
-            # Tries to plot a Statem terrain map
-            ctx.add_basemap(mapplot, url=ctx.sources.ST_TERRAIN)
-        except HTTPError:
-            # If the resolution is not good enough, plots an OpenStreetMap
-            # instead
-            print('Location does not have high resolution Stamen terrain'
-                  ' map data. Defaulting to OpenStreetMap data.')
-            ctx.add_basemap(mapplot, url=ctx.sources.OSM_A)
-        # plots x name with unit in brackets.
-        plt.xlabel(x[0] + " (" + x[1] + ")")
-        # plots y name with unit in brackets.
-        plt.ylabel(y[0] + " (" + y[1] + ")")
-        # plots title for graph.
-        title = y[0] + " (" + y[1] + ") plotted against " + x[0] + " (" +\
-            x[1] + ")"
-
-        # Splits title if its width exceeds 60
-        wraped_title = textwrap.wrap(title, width=60)
-        # Creates an empty string for the final title
-        final_title = ""
-        # Goes through each line in the title and joins them together with a
-        # new line character between each line.
-        for title_line in wraped_title:
-            final_title += title_line + "\n"
-        plt.title(final_title[:-1], y=1.05)
-        plt.show()
+        # Plots map with data
+        backplt_map(lat, long)
+        backplt_map(lat, long, scale=1/scale)
         return
+
     elif plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude'\
             and map_modules_imported is False:
         # Print the following if the map modules are not installed.
@@ -1108,6 +1035,7 @@ def graph_function(plot_information, values_list, x_limits=["x_min", "x_max"],
               + 'feature. Information on installing these packages can be '
               + 'found on: \n'
               + 'https://autoflpy.readthedocs.io/en/latest/installation.html')
+        title = "Latitude (degrees) plotted against Longitude (degrees)"
     elif plot_info == 1:
         plt.plot(x[2], y[2])
         # plots x name with unit in brackets.
@@ -2223,3 +2151,112 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     # Compresses (pickles) the data and saves it in the excel files folder.
     pk.dump(values_list, open(compressed_data_file_path, "wb"))
     print('Pickling finished')
+
+
+def backplt_map(lat, long, scale=1):
+    # Sets titles for the data frame
+    column_titles = np.array(['index', 'lat, long'])
+    index = range(len(lat))
+    points = []
+    # Formats the location data in the correct way to make the data frame
+    for point in range(len(lat)):
+        points.append([long[point], lat[point]])
+    # Creates a correctly formatted numpy array
+    path_data_array = (np.array([index, points])).T
+    # Turns this array into a pandas data frame
+    path_data = pd.DataFrame(path_data_array,
+                             columns=column_titles)
+    # Creates a GeoDataFrame to be used with the map and sets the geometry
+    # and coordinate system (epsg 4326) - latitude and longitude
+    geo_data_frame = gpd.GeoDataFrame(
+            path_data,
+            geometry=gpd.points_from_xy(long, lat),
+            crs={'init': 'epsg:4326'})
+    # Renames the GeoDataFrame
+    path_data_geo = geo_data_frame
+    # Changes the data's coordinate system to epsg 3857 (needed for the
+    # maps)
+    path_data_geo = path_data_geo.to_crs(epsg=3857)
+
+    # To get the axis lables correctly:
+    # Find max and min lat and long.
+    in_proj = proj(init='epsg:4326')
+    out_proj = proj(init='epsg:3857')
+
+    scale_factor = 1*scale
+
+    # Finds the centre point
+    centre_pnt = [(max(lat) + min(lat))/2., (max(long) + min(long))/2.]
+    # Finds distances to the corner points from the center point
+    corner_dist = [max(lat) - centre_pnt[0], min(lat) - centre_pnt[0],
+                   max(long) - centre_pnt[1], min(long) - centre_pnt[1]]
+
+    # Assigns and scales corner points of the plot
+    extreme_lat = [centre_pnt[0] + corner_dist[0]*scale_factor,
+                   centre_pnt[0] + corner_dist[1]*scale_factor]
+    extreme_long = [centre_pnt[1] + corner_dist[2]*scale_factor,
+                    centre_pnt[1] + corner_dist[3]*scale_factor]
+    fig, ax = plt.subplots(1, 1)
+
+    # Transforms extreme x and y coordinates
+    trans_extreme_lat = [0, 0]
+    trans_extreme_long = [0, 0]
+
+    trans_extreme_long[0], trans_extreme_lat[0] = transform(in_proj, out_proj,
+                                                            extreme_long[0],
+                                                            extreme_lat[0])
+    trans_extreme_long[1], trans_extreme_lat[1] = transform(in_proj, out_proj,
+                                                            extreme_long[1],
+                                                            extreme_lat[1])
+    # Sets x and y limits from the corner points
+    ax.set_xlim(trans_extreme_long[1], trans_extreme_long[0])
+    ax.set_ylim(trans_extreme_lat[1], trans_extreme_lat[0])
+
+    # Plots the data points
+    mapplot = path_data_geo.plot(markersize=1, ax=ax, color='red')
+
+    # Round mins down, round max up
+    extreme_lat_rounded = [round(extreme_lat[0], 3), round(
+            extreme_lat[1], 3) - 1e-3]
+    extreme_long_rounded = [round(extreme_long[0], 3), round(
+            extreme_long[1], 3) - 1e-3]
+    # Create intermediate points with linspace spaced at 0.001*scale_factor
+    lat_values = np.arange(extreme_lat_rounded[1],
+                           extreme_lat_rounded[0], 1e-3*scale_factor)
+    long_values = np.linspace(extreme_long_rounded[1],
+                              extreme_long_rounded[0], len(lat_values))
+    # Convert to epsg3857 - from https://gis.stackexchange.com/questions/
+    # 78838/converting-projected-coordinates-to-lat-lon-using-python
+    long_values_3857, lat_values_3857 = transform(in_proj, out_proj,
+                                                  long_values, lat_values)
+    # Use xticks and yticks to replace with original values
+    plt.xticks(long_values_3857, np.round(long_values, 4))
+    plt.yticks(lat_values_3857, np.round(lat_values, 4))
+
+    try:
+        # Tries to plot a Statem terrain map
+        ctx.add_basemap(mapplot, url=ctx.sources.ST_TERRAIN)
+    except HTTPError:
+        # If the resolution is not good enough, plots an OpenStreetMap
+        # instead
+        print('Location does not have high resolution Stamen terrain'
+              ' map data. Defaulting to OpenStreetMap data.')
+        ctx.add_basemap(mapplot, url=ctx.sources.OSM_A)
+    # plots x name with unit in brackets.
+    plt.xlabel('Longitude' + " (degrees)")
+    # plots y name with unit in brackets.
+    plt.ylabel('Latitude' + " (degrees)")
+    # plots title for graph.
+    title = "Latitude (degrees) plotted against Longitude (degrees)"
+
+    # Splits title if its width exceeds 60
+    wraped_title = textwrap.wrap(title, width=60)
+    # Creates an empty string for the final title
+    final_title = ""
+    # Goes through each line in the title and joins them together with a
+    # new line character between each line.
+    for title_line in wraped_title:
+        final_title += title_line + "\n"
+    plt.title(final_title[:-1], y=1.05)
+    plt.show()
+    return
