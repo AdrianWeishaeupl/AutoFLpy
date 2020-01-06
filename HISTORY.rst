@@ -1,6 +1,13 @@
 =======
 History
 =======
+
+1.0.9 (2020-01-06)
+------------------
+
+* Repaired map backplotting functions
+* Added scale factor to map
+
 1.0.8 (2019-12-12)
 ------------------
 
