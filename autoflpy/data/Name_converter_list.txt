@@ -98,7 +98,7 @@ RCIN, C2, elevator_CH2, us
 RCIN, C3, throttle_CH3, us
 RCIN, C4, rudder_CH4, us
 RCIN, C5, flap_CH5, us
-RCIN, C6, subdeploy_CH6, us
+RCIN, C6, CH6, us
 RCIN, C7, CH7, us
 RCIN, C8, CH8, us
 RCIN, C9, CH9, us
