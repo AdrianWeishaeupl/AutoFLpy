@@ -7,6 +7,7 @@ import pickle as pk
 from metar import Metar as mtr
 from requests import get, HTTPError
 from openpyxl import load_workbook
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 try:
@@ -878,7 +879,11 @@ def flight_log_graph_contents_replacer(contents):
 def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
                   y_limits=["y_min", "y_max"], scale=0.01):
     """ Goes through graph data, finds source and gets required data from
-    values. plot information structure, [x, name, data_source]"""
+    values. plot information structure, [x, name, data_source].
+
+    scale represents the amount of zoom on the second latitude longitude plot
+    if this is present.
+    """
     # List of data to plot returns plot data which has structure:
     # [axis, [data_source, column]]
     plot_data = []
@@ -1015,8 +1020,8 @@ def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
                     # Appends which x values and y values that can be plotted
                     # against each other.
                     xy_pairs.append([x_data[1], y_data[1]])
-    if plot_info == 1 or plot_info == 2 and x[0] == 'Longitude' and\
-        y[0] == 'Latitude' and map_modules_imported is True:
+    if plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude'\
+            and map_modules_imported is True:
         # Plots a map behind latitude and longitude data.
         plt.rcParams["figure.figsize"] = (15, 15)
         # Assigns data to variables
@@ -1025,8 +1030,6 @@ def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
         # Plots map with data
         backplt_map(lat, long)
         backplt_map(lat, long, scale=1/scale)
-        
-        
         return
 
     elif plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude'\
@@ -2214,23 +2217,15 @@ def backplt_map(lat, long, scale=1):
     ax.set_xlim(trans_extreme_long[1], trans_extreme_long[0])
     ax.set_ylim(trans_extreme_lat[1], trans_extreme_lat[0])
 
-
-
-
     # Retrieves data from the dataframe
     geometry_data = [path_data_geo['geometry'].x,
                      path_data_geo['geometry'].y]
-    
-    
+
     # plots the geometry data using matplotlib
     plt.plot(geometry_data[0], geometry_data[1], 'r', zorder=1, linewidth=0.5)
     mapplot = plt.scatter(geometry_data[0], geometry_data[1],
                           c=path_data_geo['index'], marker='.', cmap='gnuplot',
                           zorder=2)
-    # TODO NOTE:
-    # Needs to be sized properly
-#    if scale == 1:
-#        plt.colorbar(shrink=0.5, ax='INSERT AXIS NAME HERE')
 
     # Round mins down, round max up
     extreme_lat_rounded = [round(extreme_lat[0], 3), round(
@@ -2279,5 +2274,16 @@ def backplt_map(lat, long, scale=1):
     for title_line in wraped_title:
         final_title += title_line + "\n"
     plt.title(final_title[:-1], y=1.05)
+
+    # Adds a colour bar to a plot if the scale is not out of bounds.
+    if 1 <= scale <= 5:
+        # Formats location of the colour bar
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.1)
+        # Plots the colour map
+        cbar = plt.colorbar(mapplot, cax=cax)
+        # Adds a label to the colour bar
+        cbar.ax.set_ylabel('Chronological Data Order', rotation=90)
+
     plt.show()
     return
