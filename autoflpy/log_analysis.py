@@ -29,8 +29,6 @@ TODO:
     Fix aspect ratio for map plots. Add secondary map zoomed out further.
     Hide code in the Jupyter Notebook once it has run?
 DONE:
-    Rename graph_function and multi_graph_function as they are not functions.
-    Remove warnings in the Jupyter Notebook
 """
 
 

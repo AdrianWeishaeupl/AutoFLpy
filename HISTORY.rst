@@ -2,6 +2,13 @@
 History
 =======
 
+1.0.10 (2020-01-07)
+------------------
+
+* Removed warnings in the jupyter notebook
+* Improved the map backplotting function
+* Renamed *graph_function to *graph_plotter
+
 1.0.9 (2020-01-06)
 ------------------
 
