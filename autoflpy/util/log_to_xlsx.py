@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from openpyxl import Workbook
-from openpyxl.utils import get_column_letter as get_letter
 from openpyxl.cell import WriteOnlyCell
 import os
 

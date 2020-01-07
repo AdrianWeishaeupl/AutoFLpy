@@ -828,7 +828,7 @@ def flight_log_graph_contents_replacer(contents):
             "   \"outputs\": [],\n   \"source\": [\n" +\
             "   \"x_limits=[\\\"x_min\\\", \\\"x_max\\\"]\\n\",\n" +\
             "   \"y_limits=[\\\"y_min\\\", \\\"y_max\\\"]\\n\",\n" +\
-            "   \"graph_function(["
+            "   \"graph_plotter(["
         for axis in data:
             line += axis + ", "
         line = line[:-2]
@@ -875,8 +875,8 @@ def flight_log_graph_contents_replacer(contents):
     return(contents)
 
 
-def graph_function(plot_information, values_list, x_limits=["x_min", "x_max"],
-                   y_limits=["y_min", "y_max"], scale=0.01):
+def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
+                  y_limits=["y_min", "y_max"], scale=0.01):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source]"""
     # List of data to plot returns plot data which has structure:
@@ -1186,7 +1186,7 @@ def flight_log_multiaxis_graph_contents_replacer(contents):
             "   \"y_limits_left=[\\\"y_min\\\", \\\"y_max\\\"]\\n\",\n" +\
             "   \"y_limits_right=[\\\"y_min\\\", \\\"y_max\\\"]\\n\",\n" +\
             "   \"legend_location=1\\n\",\n" +\
-            "   \"multiaxis_graph_function(["
+            "   \"multiaxis_graph_plotter(["
         # Inputs data for the left axis.
         for axis_left in data[0]:
             line += axis_left + ", "
@@ -1242,11 +1242,11 @@ def flight_log_multiaxis_graph_contents_replacer(contents):
     return(contents)
 
 
-def multiaxis_graph_function(plot_information_left, plot_information_right,
-                             values_list, x_limits=["x_min", "x_max"],
-                             y_limits_left=["y_min", "y_max"],
-                             y_limits_right=["y_min", "y_max"],
-                             legend_location=1):
+def multiaxis_graph_plotter(plot_information_left, plot_information_right,
+                            values_list, x_limits=["x_min", "x_max"],
+                            y_limits_left=["y_min", "y_max"],
+                            y_limits_right=["y_min", "y_max"],
+                            legend_location=1):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source], plots data on
     left and right axis as specified as inputs, legend location will specifiy

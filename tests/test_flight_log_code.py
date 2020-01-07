@@ -236,10 +236,10 @@ class Test_flight_log_code(unittest.TestCase):
         # Checks for values replaced by the function
         check_x_lim = check_str_in_content('x_limits', contents)
         check_y_lim = check_str_in_content('y_limits', contents)
-        check_graph_function = check_str_in_content('graph_function', contents)
+        check_graph_plotter = check_str_in_content('graph_plotter', contents)
         self.assertEqual(26, check_x_lim)
         self.assertEqual(26, check_y_lim)
-        self.assertEqual(13, check_graph_function)
+        self.assertEqual(13, check_graph_plotter)
 
     def test_flight_log_multiaxis_graph_contents_replacer(self):
         # Function being tested is expected to replace all fields with
@@ -253,10 +253,10 @@ class Test_flight_log_code(unittest.TestCase):
         # Checks for values replaced by the function
         check_x_lim = check_str_in_content('x_limits', contents)
         check_y_lim = check_str_in_content('y_limits', contents)
-        check_graph_function = check_str_in_content('graph_function', contents)
+        check_graph_plotter = check_str_in_content('graph_plotter', contents)
         self.assertEqual(6, check_x_lim)
         self.assertEqual(12, check_y_lim)  # Note: multiple y axis inputs.
-        self.assertEqual(3, check_graph_function)
+        self.assertEqual(3, check_graph_plotter)
 
     def test_cell_remover(self):
         # Defines keys to be tested in the cell remover
