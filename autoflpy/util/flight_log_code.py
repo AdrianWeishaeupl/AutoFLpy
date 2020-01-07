@@ -1025,6 +1025,8 @@ def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
         # Plots map with data
         backplt_map(lat, long)
         backplt_map(lat, long, scale=1/scale)
+        
+        
         return
 
     elif plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude'\
@@ -2213,7 +2215,12 @@ def backplt_map(lat, long, scale=1):
     ax.set_ylim(trans_extreme_lat[1], trans_extreme_lat[0])
 
     # Plots the data points
-    mapplot = path_data_geo.plot(markersize=1, ax=ax, color='red')
+    #print(path_data_geo)
+    mapplot = path_data_geo.plot(column='index', markersize=1, ax=ax,
+                                 cmap='gnuplot')
+
+
+
 
     # Round mins down, round max up
     extreme_lat_rounded = [round(extreme_lat[0], 3), round(
