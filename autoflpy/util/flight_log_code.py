@@ -2242,6 +2242,10 @@ def backplt_map(lat, long, scale=1):
         print('Location does not have high resolution Stamen terrain'
               ' map data. Defaulting to OpenStreetMap data.')
         ctx.add_basemap(mapplot, url=ctx.sources.OSM_A)
+    except ConnectionError:
+        # If there is no internet connection present, the map can't be called.
+        print('Map unavailable when offline. Try again once an internet '
+              'connection has been established.')
     # plots x name with unit in brackets.
     plt.xlabel('Longitude' + " (degrees)")
     # plots y name with unit in brackets.
