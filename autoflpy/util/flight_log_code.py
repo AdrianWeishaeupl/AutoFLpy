@@ -1015,8 +1015,8 @@ def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
                     # Appends which x values and y values that can be plotted
                     # against each other.
                     xy_pairs.append([x_data[1], y_data[1]])
-    if plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude'\
-            and map_modules_imported is True:
+    if plot_info == 1 or plot_info == 2 and x[0] == 'Longitude' and\
+        y[0] == 'Latitude' and map_modules_imported is True:
         # Plots a map behind latitude and longitude data.
         plt.rcParams["figure.figsize"] = (15, 15)
         # Assigns data to variables
@@ -2214,13 +2214,23 @@ def backplt_map(lat, long, scale=1):
     ax.set_xlim(trans_extreme_long[1], trans_extreme_long[0])
     ax.set_ylim(trans_extreme_lat[1], trans_extreme_lat[0])
 
-    # Plots the data points
-    #print(path_data_geo)
-    mapplot = path_data_geo.plot(column='index', markersize=1, ax=ax,
-                                 cmap='gnuplot')
 
 
 
+    # Retrieves data from the dataframe
+    geometry_data = [path_data_geo['geometry'].x,
+                     path_data_geo['geometry'].y]
+    
+    
+    # plots the geometry data using matplotlib
+    plt.plot(geometry_data[0], geometry_data[1], 'r', zorder=1, linewidth=0.5)
+    mapplot = plt.scatter(geometry_data[0], geometry_data[1],
+                          c=path_data_geo['index'], marker='.', cmap='gnuplot',
+                          zorder=2)
+    # TODO NOTE:
+    # Needs to be sized properly
+#    if scale == 1:
+#        plt.colorbar(shrink=0.5, ax='INSERT AXIS NAME HERE')
 
     # Round mins down, round max up
     extreme_lat_rounded = [round(extreme_lat[0], 3), round(
@@ -2242,13 +2252,13 @@ def backplt_map(lat, long, scale=1):
 
     try:
         # Tries to plot a Statem terrain map
-        ctx.add_basemap(mapplot, url=ctx.sources.ST_TERRAIN)
+        ctx.add_basemap(ax, url=ctx.sources.ST_TERRAIN)
     except HTTPError:
         # If the resolution is not good enough, plots an OpenStreetMap
         # instead
         print('Location does not have high resolution Stamen terrain'
               ' map data. Defaulting to OpenStreetMap data.')
-        ctx.add_basemap(mapplot, url=ctx.sources.OSM_A)
+        ctx.add_basemap(ax, url=ctx.sources.OSM_A)
     except ConnectionError:
         # If there is no internet connection present, the map can't be called.
         print('Map unavailable when offline. Try again once an internet '
