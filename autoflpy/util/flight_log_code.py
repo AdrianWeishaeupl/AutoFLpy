@@ -1029,7 +1029,7 @@ def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
         long = x[2]
         # Plots map with data
         backplt_map(lat, long)
-        backplt_map(lat, long, scale=1/scale)
+        backplt_map(lat, long, scale_factor=1/scale)
         return
 
     elif plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude'\
@@ -2158,7 +2158,7 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     print('Pickling finished')
 
 
-def backplt_map(lat, long, scale=1):
+def backplt_map(lat, long, scale_factor=1):
     # Sets titles for the data frame
     column_titles = np.array(['index', 'lat, long'])
     index = range(len(lat))
@@ -2188,50 +2188,45 @@ def backplt_map(lat, long, scale=1):
     in_proj = proj(init='epsg:4326')
     out_proj = proj(init='epsg:3857')
 
-    scale_factor = 1*scale
-
-    # Finds the centre point
+    # Finds the centre point of the plot
     centre_pnt = [(max(lat) + min(lat))/2., (max(long) + min(long))/2.]
     # Finds distances to the corner points from the center point
     corner_dist = [max(lat) - centre_pnt[0], min(lat) - centre_pnt[0],
                    max(long) - centre_pnt[1], min(long) - centre_pnt[1]]
 
-    # Assigns and scales corner points of the plot
+    # Assigns and scales corner distances of the plot
     extreme_lat = [centre_pnt[0] + corner_dist[0]*scale_factor,
                    centre_pnt[0] + corner_dist[1]*scale_factor]
     extreme_long = [centre_pnt[1] + corner_dist[2]*scale_factor,
                     centre_pnt[1] + corner_dist[3]*scale_factor]
     fig, ax = plt.subplots(1, 1)
 
-    # Transforms extreme x and y coordinates
-    trans_extreme_lat = [0, 0]
-    trans_extreme_long = [0, 0]
-
-    trans_extreme_long[0], trans_extreme_lat[0] = transform(in_proj, out_proj,
-                                                            extreme_long[0],
-                                                            extreme_lat[0])
-    trans_extreme_long[1], trans_extreme_lat[1] = transform(in_proj, out_proj,
-                                                            extreme_long[1],
-                                                            extreme_lat[1])
-    # Sets x and y limits from the corner points
-    ax.set_xlim(trans_extreme_long[1], trans_extreme_long[0])
-    ax.set_ylim(trans_extreme_lat[1], trans_extreme_lat[0])
-
     # Retrieves data from the dataframe
     geometry_data = [path_data_geo['geometry'].x,
                      path_data_geo['geometry'].y]
 
-    # plots the geometry data using matplotlib
-    plt.plot(geometry_data[0], geometry_data[1], 'r', zorder=1, linewidth=0.5)
-    mapplot = plt.scatter(geometry_data[0], geometry_data[1],
-                          c=path_data_geo['index'], marker='.', cmap='gnuplot',
-                          zorder=2)
+    # Chooses what to plot. For a small scale map only a point is plotted.
+    if scale_factor <= 200:
+        # plots the geometry data using matplotlib
+        plt.plot(geometry_data[0], geometry_data[1], 'r', zorder=1,
+                 linewidth=0.5)
+        # TODO NOTE: this is where the colour of the plot can be changed with
+        # with regards to a separate variable:
+        # c=variable
+        mapplot = plt.scatter(geometry_data[0], geometry_data[1],
+                              c=path_data_geo['index'], marker='.',
+                              cmap='gnuplot', zorder=2)
+    else:
+        # Plots a point simbolising the mean of the data.
+        mapplot = plt.scatter(np.mean(geometry_data[0]),
+                              np.mean(geometry_data[1]),
+                              c='r', marker='o', s=100, zorder=2)
 
-    # Round mins down, round max up
-    extreme_lat_rounded = [round(extreme_lat[0], 3), round(
-            extreme_lat[1], 3) - 1e-3]
-    extreme_long_rounded = [round(extreme_long[0], 3), round(
-            extreme_long[1], 3) - 1e-3]
+    # Round mins down, round max up for the lables
+    extreme_lat_rounded = [np.ceil(extreme_lat[0]*1e3)/1e3, np.floor(
+            extreme_lat[1]*1e3)/1e3]
+    extreme_long_rounded = [np.ceil(extreme_long[0]*1e3)/1e3, np.floor(
+            extreme_long[1]*1e3)/1e3]
     # Create intermediate points with linspace spaced at 0.001*scale_factor
     lat_values = np.arange(extreme_lat_rounded[1],
                            extreme_lat_rounded[0], 1e-3*scale_factor)
@@ -2241,9 +2236,41 @@ def backplt_map(lat, long, scale=1):
     # 78838/converting-projected-coordinates-to-lat-lon-using-python
     long_values_3857, lat_values_3857 = transform(in_proj, out_proj,
                                                   long_values, lat_values)
+
     # Use xticks and yticks to replace with original values
     plt.xticks(long_values_3857, np.round(long_values, 4))
     plt.yticks(lat_values_3857, np.round(lat_values, 4))
+
+    # Transforms extreme x and y coordinates to the map reference frame
+    trans_extreme_lat = [0, 0]
+    trans_extreme_long = [0, 0]
+
+    trans_extreme_long[0], trans_extreme_lat[0] =\
+        transform(in_proj, out_proj, extreme_long_rounded[0],
+                  extreme_lat_rounded[0])
+    trans_extreme_long[1], trans_extreme_lat[1] =\
+        transform(in_proj, out_proj, extreme_long_rounded[1],
+                  extreme_lat_rounded[1])
+
+    # Sets x and y limits from the corner points
+    trans_height = trans_extreme_lat[0] - trans_extreme_lat[1]
+    trans_width = trans_extreme_long[0] - trans_extreme_long[1]
+
+    # Makes the map plot square by changing the corner distances to the
+    # maximum values.
+    trans_height = max(trans_height, trans_width)
+    trans_width = trans_height
+
+    # Finds the new center location. This is different to the previous center
+    # due to the earth (round) being flattened.
+    trans_centre = [(trans_extreme_lat[0] + trans_extreme_lat[1])/2,
+                    (trans_extreme_long[0] + trans_extreme_long[1])/2]
+
+    # Sets the limits for the axes.
+    ax.set_xlim(trans_centre[1] - trans_width/2,
+                trans_centre[1] + trans_width/2)
+    ax.set_ylim(trans_centre[0] - trans_height/2,
+                trans_centre[0] + trans_height/2)
 
     try:
         # Tries to plot a Statem terrain map
@@ -2276,7 +2303,7 @@ def backplt_map(lat, long, scale=1):
     plt.title(final_title[:-1], y=1.05)
 
     # Adds a colour bar to a plot if the scale is not out of bounds.
-    if 1 <= scale <= 5:
+    if scale_factor <= 5:
         # Formats location of the colour bar
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="5%", pad=0.1)
