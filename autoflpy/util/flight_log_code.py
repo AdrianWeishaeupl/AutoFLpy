@@ -4,11 +4,16 @@ import textwrap
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle as pk
-from metar import Metar as mtr
 from requests import get, HTTPError
 from openpyxl import load_workbook
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
+try:
+    from metar import Metar as mtr
+except ImportError:
+    print('METAR module not installed correctly')
+    raise Exception('Please install the metar module before continuing.'
+                    ' BASH command: $ pip install metar')
 
 try:
     import geopandas as gpd
@@ -20,16 +25,16 @@ except ImportError:
 
 """
 Flight Log Generation Code.
-This code creates a GUI and should be launched from the "Automatic Flight Log
-Maker.ipynb file (opened through Jupyter Notebook). It takes flight data in
-the form of an .xlsx document (generated from a .log file in a previous step
-in the same Jupyter Notebook) and plots and formats the data to be displayed
-using a template .ipynb file.
+This code takes flight data in the form of an .xlsx document (generated from a
+.log file in a previous step in the same Jupyter Notebook) and plots and
+formats the data to be displayed using a template .ipynb file.
+
+It also contains the code used to generate the plots.
 
 @author Adrian Weishaeupl
 aw6g15@soton.ac.uk 2019
 
-based on work done by Samuel Pearson (sp1g18@soton.ac.uk) (06-08/2019)
+Based on work done by Samuel Pearson (sp1g18@soton.ac.uk) (06-08/2019)
 
 """
 

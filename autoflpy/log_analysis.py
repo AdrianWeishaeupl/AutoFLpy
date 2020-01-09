@@ -26,10 +26,10 @@ TODO:
     Calculate wind speed/vector/plot.
     Add flight duration from arm/disarm or vibration data.
     Add a 3D map image to summarise flight.
-    Fix aspect ratio for map plots.
     Hide code in the Jupyter Notebook once it has run?
+    
 DONE:
-     Add secondary map zoomed out further.
+
 """
 
 
