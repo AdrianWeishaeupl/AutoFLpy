@@ -315,7 +315,7 @@ class Test_flight_log_code(unittest.TestCase):
         # Checks if the METAR data exists. If it doesn't, it gets it from the
         # API. NOTE: API has a limit and so the original METAR file is not
         # deleted before every run.
-        flight_log_code.METAR_finder('DGTK', '2019', '01', '23', '01', '23',
+        flight_log_code.metar_finder('DGTK', '2019', '01', '23', '01', '23',
                                      '9', '10', self.base_path)
         # Checks if the file path exists.
         metar_data_exists = os.path.exists(self.base_path + 'METAR_DGTK_2019'
@@ -332,11 +332,11 @@ class Test_flight_log_code(unittest.TestCase):
                                                          content)
         self.assertEqual(1, metar_information_present)
         # Gets METAR data
-        metar_data = flight_log_code.METAR_finder('DGTK', '2019', '01', '23',
+        metar_data = flight_log_code.metar_finder('DGTK', '2019', '01', '23',
                                                   '01', '23', '9', '10',
                                                   self.base_path)
         # Runs METAR returner
-        content = flight_log_code.METAR_returner(metar_data, content, 1,
+        content = flight_log_code.metar_returner(metar_data, content, 1,
                                                  2019,
                                                  replace_key="METAR_"
                                                  "INFORMATION")
@@ -356,7 +356,7 @@ class Test_flight_log_code(unittest.TestCase):
                                                          content)
         self.assertEqual(1, metar_information_present)
         # Runs no_METAR_returner code
-        content = flight_log_code.no_METAR_returner('DGTK', '2019', '01', '23',
+        content = flight_log_code.no_metar_returner('DGTK', '2019', '01', '23',
                                                     '01', '23', '9', '10',
                                                     content, replace_key="META"
                                                     "R_INFORMATION")
@@ -377,7 +377,7 @@ class Test_flight_log_code(unittest.TestCase):
                                                          content)
         self.assertEqual(1, metar_information_present)
         # Runs METAR_quota_returner
-        content = flight_log_code.METAR_quota_returner(content, 'test20190123',
+        content = flight_log_code.metar_quota_returner(content, 'test20190123',
                                                        'DGTK', '2019', '01',
                                                        '23', '01', '23', '9',
                                                        '10', self.base_path,
@@ -400,7 +400,7 @@ class Test_flight_log_code(unittest.TestCase):
                                                          content)
         self.assertEqual(1, metar_information_present)
         # Run the METAR_replacer
-        content = flight_log_code.METAR_replacer(self.template_file_path,
+        content = flight_log_code.metar_replacer(self.template_file_path,
                                                  template_temp_name,
                                                  'DGTK', '2019', '01', '23',
                                                  '01', '23', '9', '10',

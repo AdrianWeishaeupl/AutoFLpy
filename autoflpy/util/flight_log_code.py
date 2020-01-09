@@ -19,6 +19,7 @@ try:
     import geopandas as gpd
     import contextily as ctx
     from pyproj import Proj as proj, transform
+
     map_modules_imported = True
 except ImportError:
     map_modules_imported = False
@@ -38,7 +39,7 @@ Based on work done by Samuel Pearson (sp1g18@soton.ac.uk) (06-08/2019)
 
 """
 
-# Checsk to see if os.sep is \\
+# Checks to see if os.sep is \\
 if os.sep == "\\":
     # If it is then it sets the jupyter sep to be \\\\\\\\ eight slashes so \\
     jupyter_sep = "\\\\\\\\"
@@ -51,21 +52,21 @@ def flight_log_maker(template_file_path, template_file_name,
                      flight_data_file_name, arduino_flight_data_file_path,
                      arduino_flight_data_name, flight_date, flight_number,
                      flight_log_file_name_header, checklist_file_path,
-                     log_code_version, ICAO_airfield,
+                     log_code_version, icao_airfield,
                      start_time_hours, end_time_hours, metar_file_path):
     """This code will edit a specified template and return the result that has
     been produced after the substitution of data into the template."""
     print('Starting Flight Log Maker')
-    # loads contents.
+    # loads contents_checklist_rm.
     contents = contents_opener(template_file_path, template_file_name)
     # Replaces the key for the flight log code version with the text
     contents = contents.replace("FLIGHT_LOG_CODE_VERSION",
                                 log_code_version)
-    # Inserts the date into the contents.
+    # Inserts the date into the contents_checklist_rm.
     contents = contents.replace("FLIGHT_DATE", (str(flight_date)[6:] + "/" +
                                                 str(flight_date)[4:6] + "/" +
                                                 str(flight_date)[:4]))
-    # Inserts the flight number into the contents.
+    # Inserts the flight number into the contents_checklist_rm.
     contents = contents.replace("FLIGHT_NUMBER", str(flight_number))
     # Checks to see wether there is graph data or arduino data that can be
     # used to plot graphs by checking if the path exists and if the path has a
@@ -73,15 +74,14 @@ def flight_log_maker(template_file_path, template_file_name,
     if (os.path.exists(flight_data_file_path + os.sep + flight_data_file_name)
         is True and
         len(flight_data_file_path + os.sep + flight_data_file_name) > 1) \
-        or\
+        or \
         (os.path.exists(arduino_flight_data_file_path + os.sep +
                         arduino_flight_data_name) is True and
          len(arduino_flight_data_file_path + os.sep +
-         arduino_flight_data_name) > 1):
+             arduino_flight_data_name) > 1):
         print('Importing xlsx data')
         # Assigns file name based on excel data
-        compressed_data_file_path = flight_data_file_path +\
-            flight_data_file_name[:-5] + ".pkl"
+        compressed_data_file_path = flight_data_file_path + flight_data_file_name[:-5] + ".pkl"
         # This replaces the file path with the necessary information
         contents = contents.replace("PYTHON_FILE_PATH", "\\\"" +
                                     os.getcwd().replace("\\", jupyter_sep) +
@@ -112,10 +112,10 @@ def flight_log_maker(template_file_path, template_file_name,
         # removes graph lines from cell
         contents = line_remover(contents, "GRAPH_LINE")
 
-    def remove_checklist_line_from_template(contents):
-        contents = line_remover(contents, "CHECKLIST_LINE")
-        contents = cell_remover(contents, "CHECKLIST_INFORMATION")
-        return contents
+    def remove_checklist_line_from_template(contents_checklist_rm):
+        contents_checklist_rm = line_remover(contents_checklist_rm, "CHECKLIST_LINE")
+        contents_checklist_rm = cell_remover(contents_checklist_rm, "CHECKLIST_INFORMATION")
+        return contents_checklist_rm
 
     # Creates a list of all nominal frames from the nominal checklist.
     if checklist_file_path != "data" or checklist_file_path != "":
@@ -173,25 +173,24 @@ def flight_log_maker(template_file_path, template_file_name,
         hours_valid = False
     # Checks to see if ICAO code is valid, if not then the Metar information is
     # removed
-    if (ICAO_airfield != "data" or ICAO_airfield != "")\
-            and hours_valid is True:
+    if (icao_airfield != "data" or icao_airfield != "") and hours_valid is True:
         # Retrieves METAR data.
-        metar_data = METAR_finder(ICAO_airfield, str(flight_date)[:4],
+        metar_data = metar_finder(icao_airfield, str(flight_date)[:4],
                                   str(flight_date)[4:6], str(flight_date)[6:8],
                                   str(flight_date)[4:6], str(flight_date)[6:8],
                                   start_time_hours, end_time_hours,
                                   metar_file_path)
-        # Checks to see if METAR data is avilable.
+        # Checks to see if METAR data is available.
         if len(metar_data) != 0:
             # Checks to see if the quota limit has been reached.
             if metar_data[0] == "Quota limit reached.":
                 # If the limit has been reached then it puts in a line of code
                 # to re-try when the quota limit has been reached.
-                contents = METAR_quota_returner(contents,
+                contents = metar_quota_returner(contents,
                                                 flight_log_file_name_header +
                                                 str(flight_date) + "_" +
                                                 str(flight_number) +
-                                                ".ipynb", ICAO_airfield,
+                                                ".ipynb", icao_airfield,
                                                 str(flight_date)[:4],
                                                 str(flight_date)[4:6],
                                                 str(flight_date)[6:8],
@@ -201,13 +200,13 @@ def flight_log_maker(template_file_path, template_file_name,
                                                 end_time_hours,
                                                 metar_file_path,
                                                 replace_key="METAR_" +
-                                                "INFORMATION")
+                                                            "INFORMATION")
                 # Replaces JFLTS METAR text with nothing if data is available.
                 contents = contents.replace("METAR_LINE", "")
                 contents = contents.replace("METAR_TEXT", "")
             else:
-                # Includes METAR data into the contents.
-                contents = METAR_returner(metar_data, contents,
+                # Includes METAR data into the contents_checklist_rm.
+                contents = metar_returner(metar_data, contents,
                                           int(str(flight_date)[4:6]),
                                           int(str(flight_date)[:4]),
                                           replace_key="METAR_INFORMATION")
@@ -215,7 +214,7 @@ def flight_log_maker(template_file_path, template_file_name,
                 contents = contents.replace("METAR_LINE", "")
                 contents = contents.replace("METAR_TEXT", "")
         else:
-            contents = no_METAR_returner(ICAO_airfield, str(flight_date)[:4],
+            contents = no_metar_returner(icao_airfield, str(flight_date)[:4],
                                          str(flight_date)[4:6],
                                          str(flight_date)[6:8],
                                          str(flight_date)[4:6],
@@ -231,7 +230,7 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = cell_remover(contents, "METAR_INFORMATION")
         contents = line_remover(contents, "METAR_LINE")
         contents = cell_remover(contents, "METAR_TEXT")
-    # Creates a new flight log from the contents
+    # Creates a new flight log from the contents_checklist_rm
     flight_log_creator(contents, flight_log_file_path, flight_date,
                        flight_number, flight_log_file_name_header)
     print('Pickling data')
@@ -254,7 +253,7 @@ def flight_data(file_path, file_name):
     for sheet in sheet_list:
         frame = pd.read_excel(data, sheet_name=sheet, engine='openpyxl')
         frame_list.append(frame)
-    return(frame_list)
+    return frame_list
 
 
 def checklist_finder(frame_list, flight_number, date):
@@ -292,17 +291,17 @@ def checklist_finder(frame_list, flight_number, date):
     # Creates a list with times
     times = flight_number_filtered[flight_number_filtered.columns[2]].tolist()
     # Creates an empty list of rows to be removed
-    Rows = []
+    rows = []
     # For the items in index, the time is converted to the same format as the
     # date and if they are not equal, then that index is added to rows to be
     # removed.
     for a in range(len(index)):
         if str(times[a]).split(" ")[0].replace("-", "") == str(date):
-            Rows.append(index[a])
+            rows.append(index[a])
     # Removes row if its index equals a row to be removed.
     filtered_frame = flight_number_filtered[
-            flight_number_filtered.index.isin(Rows)]
-    return(filtered_frame)
+        flight_number_filtered.index.isin(rows)]
+    return filtered_frame
 
 
 def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
@@ -317,9 +316,9 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
     # Separates lines out.
     filtered_nominal = filtered_frame_nominal
     # Nominal_Checklist
-    checklists_actioned =\
+    checklists_actioned = \
         filtered_nominal[filtered_nominal.columns[5]].tolist()
-    checklist_actioned_by =\
+    checklist_actioned_by = \
         filtered_nominal[filtered_nominal.columns[4]].tolist()
     end_date_time = filtered_nominal[filtered_nominal.columns[2]].tolist()
     start_date_time = filtered_nominal[filtered_nominal.columns[1]].tolist()
@@ -344,17 +343,17 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
             str(version_completed).replace(")", "")
     # Emergency Checklist
     filtered_emergency = filtered_frame_emergency
-    emergency_checklists_actioned =\
+    emergency_checklists_actioned = \
         filtered_emergency[filtered_emergency.columns[5]].tolist()
-    emergency_checklist_actioned_by =\
+    emergency_checklist_actioned_by = \
         filtered_emergency[filtered_emergency.columns[4]].tolist()
-    emergency_end_date_time =\
+    emergency_end_date_time = \
         filtered_emergency[filtered_emergency.columns[2]].tolist()
-    emergency_start_date_time =\
+    emergency_start_date_time = \
         filtered_emergency[filtered_emergency.columns[1]].tolist()
     emergency_notes = filtered_emergency["Notes"].tolist()
     for column in filtered_emergency.columns:
-        # If a columnn contains the word Checklist (VER  and the word
+        # If a column contains the word Checklist (VER  and the word
         # checklist has not previously appeared then b is set to 1 to stop the
         # loops and record the frame.
         if "Checklist (VER " in column:
@@ -381,15 +380,15 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
         # checklists actioned, who actioned them, when they were actioned and
         # the notes or damage that was recorded with them.
         for index in range(len(checklists_actioned)):
-            text = "\n    \"The " + checklists_actioned[index] +\
-                " was implemented by " + checklist_actioned_by[index] +\
-                " starting at " + str(start_date_time[index]) + " and " +\
-                "ending at " + str(end_date_time[index]) + "."
+            text = "\n    \"The " + checklists_actioned[index] + \
+                   " was implemented by " + checklist_actioned_by[index] + \
+                   " starting at " + str(start_date_time[index]) + " and " + \
+                   "ending at " + str(end_date_time[index]) + "."
             # If there are notes, then append them to the text with the
             # following text.
             if str(notes[index]) != "nan":
-                text += " The notes recorded on this checklist were: " +\
-                    "<i>" + notes[index]
+                text += " The notes recorded on this checklist were: " + \
+                        "<i>" + notes[index]
             # Adds full stop to end if required.
             if text[-1:] != "." and text[-1:] != "!" and text[-1:] != "?":
                 text += "."
@@ -397,15 +396,15 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
             # If there is damage recorded, then append them to the text with
             # the following text.
             if str(damage[index]) != "nan":
-                text = text + " Damage was reported on this flight as/" +\
-                    " the report can be found at: <i>" + damage[index]
+                text = text + " Damage was reported on this flight as/" + \
+                       " the report can be found at: <i>" + damage[index]
                 # Adds full stop to end if required.
                 if text[-1:] != "." and text[-1:] != "!" and text[-1:] != "?":
                     text += "."
                 text += "</i>"
             if str(battery[index]) != "nan":
-                text = text + " The Battery voltages of each battery are/ " +\
-                    "can be found at: <i>" + str(battery[index])
+                text = text + " The Battery voltages of each battery are/ " + \
+                       "can be found at: <i>" + str(battery[index])
                 # Adds full stop to end if required.
                 if text[-1:] != "." and text[-1:] != "!" and text[-1:] != "?":
                     text += "."
@@ -424,16 +423,16 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
         # all the emergency checklists actioned, who actioned them, when they
         # were actioned and the notes that were recorded with them.
         for index in range(len(emergency_checklists_actioned)):
-            text = "\n    \"The " + emergency_checklists_actioned[index] +\
-                " was implemented by " +\
-                emergency_checklist_actioned_by[index] +\
-                " starting at " + str(emergency_start_date_time[index]) +\
-                " and ending at " + str(emergency_end_date_time[index]) + "."
+            text = "\n    \"The " + emergency_checklists_actioned[index] + \
+                   " was implemented by " + \
+                   emergency_checklist_actioned_by[index] + \
+                   " starting at " + str(emergency_start_date_time[index]) + \
+                   " and ending at " + str(emergency_end_date_time[index]) + "."
             # If there are notes, then append them to the text with the
             # following text.
             if str(emergency_notes[index]) != "nan":
-                text += " The notes recorded on this checklist were: " +\
-                    "<i>" + emergency_notes[index]
+                text += " The notes recorded on this checklist were: " + \
+                        "<i>" + emergency_notes[index]
             # Adds full stop to end if required.
             if text[-1:] != "." and text[-1:] != "!" and text[-1:] != "?":
                 text += "."
@@ -465,15 +464,14 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
     for column in filtered_frame_nominal.columns:
         if "Flight Duration" in column:
             flight_duration_columns.append(
-                    filtered_frame_nominal[column].tolist())
+                filtered_frame_nominal[column].tolist())
     # This finds the contents of the columns and who made them and appends that
     # data to the list flight_duration_data
     for column in flight_duration_columns:
         for index in range(len(column)):
-            if str(column[index]) != "nan" and \
-                    str(column[index]).lower != "Null":
+            if str(column[index]) != "nan" and str(column[index]).lower != "Null":
                 flight_duration_data.append([checklist_actioned_by[index],
-                                            column[index]])
+                                             column[index]])
     # This clears the flight duration column list so the emergency data can be
     # checked.
     flight_duration_columns = []
@@ -482,7 +480,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
     for column in filtered_frame_emergency.columns:
         if "Flight Duration" in range(len(column)):
             flight_duration_columns.append(
-                    filtered_frame_emergency[column].tolist())
+                filtered_frame_emergency[column].tolist())
     # This clears the flight duration column list so the emergency data can be
     # checked.
     flight_duration_columns = []
@@ -490,17 +488,16 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
     # data to the list flight_duration_data
     for column in flight_duration_columns:
         for index in column:
-            if str(column[index]) != "nan" and \
-                    str(column[index]).lower != "Null":
+            if str(column[index]) != "nan" and str(column[index]).lower != "Null":
                 flight_duration_data.append(
-                        [emergency_checklist_actioned_by[index],
-                         column[index]])
+                    [emergency_checklist_actioned_by[index],
+                     column[index]])
     if len(flight_duration_data) == 0:
-        # FDI stands for Flight Duration Info and it is there to show if the
+        # fdi stands for Flight Duration Info and it is there to show if the
         # Flight Duration was recorded.
-        FDI = 0
+        fdi = 0
     else:
-        FDI = 1
+        fdi = 1
     text_list = []
     # uses data to find which checklists have been run.
     for checklist_item in checklist_list:
@@ -550,7 +547,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                     # This removes the Oxford comma.
                 text = text[:-2] + " "
                 # This does the last item in the list of checklists
-                text = text + "and " + checklist_and_number[-1:][0][0] +\
+                text = text + "and " + checklist_and_number[-1:][0][0] + \
                     checklist_item[1] + " checklists were implemented"
                 # This checks the last item in the list checklist_and_number to
                 # see if it should appear in the list with items that appear
@@ -561,21 +558,21 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                     number_greater_than_1.append([short_1, short_2])
                 # Checks to see if the list has length 1.
                 if len(number_greater_than_1) == 1:
-                    text = text + " and " + number_greater_than_1[0][0] +\
-                        " was implemented " + str(number_greater_than_1[0][1])\
-                        + " times."
+                    text = text + " and " + number_greater_than_1[0][0] + \
+                           " was implemented " + str(number_greater_than_1[0][1]) \
+                           + " times."
                 # if it does not then it loops through the lists.
                 else:
                     if len(number_greater_than_1) != 0:
                         text = text + " and "
                         for repeat in number_greater_than_1[:-1]:
-                            text = text + repeat[0] + " was implemented " +\
-                                str(repeat[1]) + " times, "
+                            text = text + repeat[0] + " was implemented " + \
+                                   str(repeat[1]) + " times, "
                             # This removes the Oxford comma.
                         text = text[:-2] + " "
-                        text = text + "and " +\
-                            number_greater_than_1[-1:][0][0] +\
-                            " was implemented " +\
+                        text = text + "and " + \
+                            number_greater_than_1[-1:][0][0] + \
+                            " was implemented " + \
                             str(number_greater_than_1[-1:][0][1]) + " times."
                     else:
                         text = text + "."
@@ -584,22 +581,22 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
             # Checks if that checklist is repeated multiple times and then it
             # will state how many times it was repeated.
             if checklist_and_number[0][1] == 1:
-                text = "The " + checklist_and_number[0][0] + checklist_item[1]\
-                    + " checklist was implemented."
+                text = "The " + checklist_and_number[0][0] + checklist_item[1] \
+                       + " checklist was implemented."
             else:
-                text = "The " + checklist_and_number[0][0] + checklist_item[1]\
-                    + " checklist was implemented " +\
-                    str(checklist_and_number[0][1]) + " times."
+                text = "The " + checklist_and_number[0][0] + checklist_item[1] \
+                       + " checklist was implemented " + \
+                       str(checklist_and_number[0][1]) + " times."
         text_list.append(text)
     # Checks to see if the emergency checklist is available and replaces it
     # with a blank space if it is not
-    if FDI == 1:
+    if fdi == 1:
         flight_duration_text = ""
         for data in flight_duration_data:
             flight_duration_text = flight_duration_text + "\n    \"The " + \
-                "flight Duration was recorded as / can be found at: " + \
-                str(data[1]) + ", this data was recorded by " +\
-                str(data[0]) + ".\\n\",\n    \"\\n\","
+                                   "flight Duration was recorded as / can be found at: " + \
+                                   str(data[1]) + ", this data was recorded by " + \
+                                   str(data[0]) + ".\\n\",\n    \"\\n\","
     else:
         flight_duration_text = ""
     if eme == 0:
@@ -610,14 +607,14 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
         text_list.insert(0, "")
     # If nominal checklists were used then show the version number.
     if nom == 1:
-        version_completed_text = "\n    \"The checklist " +\
-            "version used was " + version_completed + ".\\n\""
+        version_completed_text = "\n    \"The checklist " + \
+                                 "version used was " + version_completed + ".\\n\""
     else:
         version_completed_text = ""
     # If emergency checklists were used then show the version number.
     if eme == 1:
         version_completed_emergency_text = "\n    \"The emergency " + \
-            "checklist version used was " + version_completed_emergency + ".\""
+                                           "checklist version used was " + version_completed_emergency + ".\""
         # if nominal checklist are to be displayed, add a comma to the end
         if nom == 1:
             version_completed_text = version_completed_text + ","
@@ -631,26 +628,25 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                             "   ]\n" + \
                             "  },"
     checklist_information = "  {\n " + \
-        "  \"cell_type\": \"markdown\",\n" + \
-        "   \"metadata\": {},\n" + \
-        "   \"source\": [\n" + \
-        "    \"<h1>Checklist Information</h1><a class=\\\"anchor\\\" " +\
-        "id=\\\"Checklist-Information\\\"></a>\\n\",\n    \"\\n\",\n" + \
-        "    \"" + text_list[0] + " " + text_list[1] + "\\n\",\n    " +\
-        "\"\\n\"," + flight_duration_text + checklist_actioned_text +\
-        emergency_checklist_actioned_text + version_completed_text +\
-        version_completed_emergency_text +\
-        "\n   ]\n" + \
-        "  },"
-    # Checks to see if there is any relavent checklists and removes them if
+                            "  \"cell_type\": \"markdown\",\n" + \
+                            "   \"metadata\": {},\n" + \
+                            "   \"source\": [\n" + \
+                            "    \"<h1>Checklist Information</h1><a class=\\\"anchor\\\" " + \
+                            "id=\\\"Checklist-Information\\\"></a>\\n\",\n    \"\\n\",\n" + \
+                            "    \"" + text_list[0] + " " + text_list[1] + "\\n\",\n    " + \
+                            "\"\\n\"," + flight_duration_text + checklist_actioned_text + \
+                            emergency_checklist_actioned_text + version_completed_text + \
+                            version_completed_emergency_text + \
+                            "\n   ]\n" + \
+                            "  },"
+    # Checks to see if there is any relevant checklists and removes them if
     # there is not.
     checklist_exist = True
-    if filtered_frame_nominal.shape[0] == 0 and \
-            filtered_frame_emergency.shape[0] == 0:
+    if filtered_frame_nominal.shape[0] == 0 and filtered_frame_emergency.shape[0] == 0:
         checklist_information = ""
         checklist_exist = False
     contents = contents.replace(checklist_replacement, checklist_information)
-    return(contents, checklist_exist)
+    return contents, checklist_exist
 
 
 def contents_opener(file_path, file_name):
@@ -661,7 +657,7 @@ def contents_opener(file_path, file_name):
     contents = file.read()
     # Closes the file.
     file.close()
-    return(contents)
+    return contents
 
 
 def flight_data_and_axis(new_frames):
@@ -718,7 +714,7 @@ def flight_data_and_axis(new_frames):
                             # Increment a
                             a += 1
                             # If the name has more than one word in it, use
-                            # a space as a seperator
+                            # a space as a separator
                             if a <= 0:
                                 name += " "
                     else:
@@ -763,11 +759,11 @@ def flight_data_and_axis(new_frames):
                 # unit list.
                 for denominator in denominators:
                     # Puts units in format with powers
-                    unit = unit + denominator[0] + "$^{-" +\
+                    unit = unit + denominator[0] + "$^{-" + \
                            str(denominator[1]) + "}$"
             data_lists.append([name, unit, y])
         values_list.append(data_lists)
-    return(values_list)
+    return values_list
 
 
 def flight_log_graph_contents_replacer(contents):
@@ -829,12 +825,12 @@ def flight_log_graph_contents_replacer(contents):
         graph_data_index += 1
     notebook_lines = []
     for data in graph_list:
-        line = "  {\n   \"cell_type\": \"code\",\n" +\
-            "   \"execution_count\": null,\n   \"metadata\": {},\n" +\
-            "   \"outputs\": [],\n   \"source\": [\n" +\
-            "   \"x_limits=[\\\"x_min\\\", \\\"x_max\\\"]\\n\",\n" +\
-            "   \"y_limits=[\\\"y_min\\\", \\\"y_max\\\"]\\n\",\n" +\
-            "   \"graph_plotter(["
+        line = "  {\n   \"cell_type\": \"code\",\n" + \
+               "   \"execution_count\": null,\n   \"metadata\": {},\n" + \
+               "   \"outputs\": [],\n   \"source\": [\n" + \
+               "   \"x_limits=[\\\"x_min\\\", \\\"x_max\\\"]\\n\",\n" + \
+               "   \"y_limits=[\\\"y_min\\\", \\\"y_max\\\"]\\n\",\n" + \
+               "   \"graph_plotter(["
         for axis in data:
             line += axis + ", "
         line = line[:-2]
@@ -874,15 +870,15 @@ def flight_log_graph_contents_replacer(contents):
             end = ",\n"
         else:
             end = "\n"
-        # Replaces exisitng text with graphs
+        # Replaces existing text with graphs
         contents = contents.replace(old_cell_text, notebook_lines[index] + end)
         # increments the index so that the next set of data is included.
         index += 1
-    return(contents)
+    return contents
 
 
-def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
-                  y_limits=["y_min", "y_max"], scale=0.01):
+def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
+                  y_limits=("y_min", "y_max"), scale=0.01):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source].
 
@@ -950,18 +946,18 @@ def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
                     # Check if this is the first x value unit that has been
                     # evaluated.
                     if first_x_unit is True:
-                        # If it is then it sets it to be the referance unit
-                        referance_x_unit = xy_data[1][1]
-                        # Sets a referance heading for the x data.
-                        referance_x_heading = xy_data[1][0]
+                        # If it is then it sets it to be the reference unit
+                        reference_x_unit = xy_data[1][1]
+                        # Sets a reference heading for the x data.
+                        reference_x_heading = xy_data[1][0]
                         first_x_unit = False
                     else:
                         # Sets the unit of the next item
                         unit = xy_data[1][1]
                         # Sets the heading of the next item
                         heading = xy_data[1][0]
-                        if referance_x_unit == unit and \
-                                referance_x_heading == heading:
+                        if reference_x_unit == unit and \
+                            reference_x_heading == heading:
                             plot_info = 2
                         else:
                             # Removes graph if the x values provided have
@@ -982,14 +978,14 @@ def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
             if xy_data[0] == "y":
                 # Check if this is the first unit
                 if first_y_unit is True:
-                    # If it is then it sets it to be the referance unit.
-                    referance_y_unit = xy_data[1][1]
+                    # If it is then it sets it to be the reference unit.
+                    reference_y_unit = xy_data[1][1]
                     first_y_unit = False
                 else:
                     # If this is the second y value found.
                     unit = xy_data[1][1]
                     # If the units are constant then plot them together
-                    if referance_y_unit == unit:
+                    if reference_y_unit == unit:
                         plot_info = 2
                     else:
                         plot_info = 3
@@ -1015,18 +1011,20 @@ def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
                 y_list.append(xy_data)
     # Checks through each x_data item.
     xy_pairs = []
+    xy_pairs_units = []
     if plot_info == 2 or plot_info == 3:
         for x_data in x_list:
             # Checks through each y data item.
             for y_data in y_list:
                 # if the x and y data have the same source then they can be
-                # plottted together
+                # plotted together
                 if x_data[2] == y_data[2]:
                     # Appends which x values and y values that can be plotted
                     # against each other.
                     xy_pairs.append([x_data[1], y_data[1]])
-    if plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude'\
-            and map_modules_imported is True:
+
+    if plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude' \
+        and map_modules_imported is True:
         # Plots a map behind latitude and longitude data.
         plt.rcParams["figure.figsize"] = (15, 15)
         # Assigns data to variables
@@ -1034,18 +1032,17 @@ def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
         long = x[2]
         # Plots map with data
         backplt_map(lat, long)
-        backplt_map(lat, long, scale_factor=1/scale)
+        backplt_map(lat, long, scale_factor=1. / scale)
         return
 
-    elif plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude'\
-            and map_modules_imported is False:
+    elif plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude' and map_modules_imported is False:
         # Print the following if the map modules are not installed.
         print('Backplotting map modules not installed. Check that geopandas, '
               + 'contextily and pyproj are installed correctly for this '
               + 'feature. Information on installing these packages can be '
               + 'found on: \n'
               + 'https://autoflpy.readthedocs.io/en/latest/installation.html')
-        title = "Latitude (degrees) plotted against Longitude (degrees)"
+        title = "Latitude (degrees) v Longitude (degrees)"
     elif plot_info == 1:
         plt.plot(x[2], y[2])
         # plots x name with unit in brackets.
@@ -1053,8 +1050,8 @@ def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
         # plots y name with unit in brackets.
         plt.ylabel(y[0] + " (" + y[1] + ")")
         # plots title for graph.
-        title = y[0] + " (" + y[1] + ") plotted against " + x[0] + " (" +\
-            x[1] + ")"
+        title = y[0] + " (" + y[1] + ") v " + x[0] + " (" + \
+                x[1] + ")"
     # If y units have the same unit then this will format the graphs as
     # required.
     if plot_info == 2:
@@ -1074,14 +1071,13 @@ def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
         # Plots X label.
         plt.xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
-        title = text + " plotted against " + xy_pairs[0][0][0]
+        title = text + " v " + xy_pairs[0][0][0]
     # If y units do not have the same unit then this will format the graphs
     # as required.
     if plot_info == 3:
         for pair in xy_pairs:
             # plots x against y values.
-            plt.plot(pair[0][2], pair[1][2], label=pair[1][0] +
-                     " (" + pair[1][1] + ")")
+            plt.plot(pair[0][2], pair[1][2], label=pair[1][0] + " (" + pair[1][1] + ")")
         # Puts in first item.
         text = xy_pairs[0][1][0]
         for pair in xy_pairs[1:-1]:
@@ -1093,18 +1089,18 @@ def graph_plotter(plot_information, values_list, x_limits=["x_min", "x_max"],
         # Plots X label.
         plt.xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
-        title = text + " plotted against " + xy_pairs[0][0][0]
+        title = text + " v " + xy_pairs[0][0][0]
     # if plot info is equal to 0 then nothing is returned
     if plot_info == 0:
         print('No data present or variables entered incorrectly.')
         return
     # Splits title if its width exceeds 60
-    wraped_title = textwrap.wrap(title, width=60)
+    wrapped_title = textwrap.wrap(title, width=60)
     # Creates an empty string for the final title
     final_title = ""
     # Goes through each line in the title and joins them together with a new
     # line character between each line.
-    for title_line in wraped_title:
+    for title_line in wrapped_title:
         final_title += title_line + "\n"
     # Removes new line at end
     plt.title(final_title[:-1], y=1.05)
@@ -1175,7 +1171,7 @@ def flight_log_multiaxis_graph_contents_replacer(contents):
                 axis = 1
                 ignore = True
             line = line.lower()
-            # replace spaces with speach marks for jupyter
+            # replace spaces with speech marks for jupyter
             line = line.replace(" ", "\\\", \\\"")
             # If the name has more than one word in it then replace the
             # underscore with a space.
@@ -1189,14 +1185,14 @@ def flight_log_multiaxis_graph_contents_replacer(contents):
         graph_data_index += 1
     notebook_lines = []
     for data in graph_list:
-        line = "  {\n   \"cell_type\": \"code\",\n" +\
-            "   \"execution_count\": null,\n   \"metadata\": {},\n" +\
-            "   \"outputs\": [],\n   \"source\": [\n" +\
-            "   \"x_limits=[\\\"x_min\\\", \\\"x_max\\\"]\\n\",\n" +\
-            "   \"y_limits_left=[\\\"y_min\\\", \\\"y_max\\\"]\\n\",\n" +\
-            "   \"y_limits_right=[\\\"y_min\\\", \\\"y_max\\\"]\\n\",\n" +\
-            "   \"legend_location=1\\n\",\n" +\
-            "   \"multiaxis_graph_plotter(["
+        line = "  {\n   \"cell_type\": \"code\",\n" + \
+               "   \"execution_count\": null,\n   \"metadata\": {},\n" + \
+               "   \"outputs\": [],\n   \"source\": [\n" + \
+               "   \"x_limits=[\\\"x_min\\\", \\\"x_max\\\"]\\n\",\n" + \
+               "   \"y_limits_left=[\\\"y_min\\\", \\\"y_max\\\"]\\n\",\n" + \
+               "   \"y_limits_right=[\\\"y_min\\\", \\\"y_max\\\"]\\n\",\n" + \
+               "   \"legend_location=1\\n\",\n" + \
+               "   \"multiaxis_graph_plotter(["
         # Inputs data for the left axis.
         for axis_left in data[0]:
             line += axis_left + ", "
@@ -1208,8 +1204,8 @@ def flight_log_multiaxis_graph_contents_replacer(contents):
             line += axis_right + ", "
         # Removes last comma and space.
         line = line[:-2]
-        line += "], values_list, x_limits, y_limits_left, y_limits_right," +\
-            " legend_location)\"\n   ]\n  }"
+        line += "], values_list, x_limits, y_limits_left, y_limits_right," + \
+                " legend_location)\"\n   ]\n  }"
         notebook_lines.append(line)
     # Goes through each element in the line list
     index = 0
@@ -1245,17 +1241,17 @@ def flight_log_multiaxis_graph_contents_replacer(contents):
             end = ",\n"
         else:
             end = "\n"
-        # Replaces exisitng text with graphs
+        # Replaces existing text with graphs
         contents = contents.replace(old_cell_text, notebook_lines[index] + end)
         # increments the index so that the next set of data is included.
         index += 1
-    return(contents)
+    return contents
 
 
 def multiaxis_graph_plotter(plot_information_left, plot_information_right,
-                            values_list, x_limits=["x_min", "x_max"],
-                            y_limits_left=["y_min", "y_max"],
-                            y_limits_right=["y_min", "y_max"],
+                            values_list, x_limits=("x_min", "x_max"),
+                            y_limits_left=("y_min", "y_max"),
+                            y_limits_right=("y_min", "y_max"),
                             legend_location=1):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source], plots data on
@@ -1341,17 +1337,17 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                         # evaluated.
                         if first_x_unit is True:
                             # If it is then it sets it to be the referance unit
-                            referance_x_unit = xy_data[1][1]
+                            reference_x_unit = xy_data[1][1]
                             # Sets a referance heading for the x data.
-                            referance_x_heading = xy_data[1][0]
+                            reference_x_heading = xy_data[1][0]
                             first_x_unit = False
                         else:
                             # Sets the unit of the next item
                             unit = xy_data[1][1]
                             # Sets the heading of the next item
                             heading = xy_data[1][0]
-                            if referance_x_unit == unit and \
-                                    referance_x_heading == heading:
+                            if reference_x_unit == unit and \
+                                reference_x_heading == heading:
                                 plot_info = 2
                             else:
                                 # Removes graph if the x values provided have
@@ -1373,13 +1369,13 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                     # Check if this is the first unit
                     if first_y_unit is True:
                         # If it is then it sets it to be the referance unit.
-                        referance_y_unit = xy_data[1][1]
+                        reference_y_unit = xy_data[1][1]
                         first_y_unit = False
                     else:
                         # If this is the second y value found.
                         unit = xy_data[1][1]
                         # If the units are constant then plot them together
-                        if referance_y_unit == unit:
+                        if reference_y_unit == unit:
                             plot_info = 2
                         else:
                             plot_info = 3
@@ -1432,8 +1428,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # plots y name with unit in brackets.
         axis_1.set_ylabel(y[0] + " (" + y[1] + ")")
         # plots title for graph.
-        title = y[0] + " (" + y[1] + ") plotted against " + x[0] + " (" +\
-            x[1] + ")"
+        title = y[0] + " (" + y[1] + ") v " + x[0] + " (" + x[1] + ")"
         line_count = 1
         lines += line
     # If y units have the same unit then this will format the graphs as
@@ -1441,8 +1436,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     if plot_info == 2:
         for pair in xy_pairs:
             # plots x against y values.
-            line = axis_1.plot(pair[0][2], pair[1][2], label=pair[1][0] +
-                               " (" + pair[1][1] + ")",
+            line = axis_1.plot(pair[0][2], pair[1][2], label=pair[1][0] + " (" + pair[1][1] + ")",
                                color="C" + str(line_count))
             # Increments line count
             line_count += 1
@@ -1461,14 +1455,13 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # Plots X label.
         axis_1.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
-        title = text + " plotted against " + xy_pairs[0][0][0]
+        title = text + " v " + xy_pairs[0][0][0]
     # If y units do not have the same unit then this will format the graphs
     # as required.
     if plot_info == 3:
         for pair in xy_pairs:
             # plots x against y values.
-            line = axis_1.plot(pair[0][2], pair[1][2], label=pair[1][0] +
-                               " (" + pair[1][1] + ")",
+            line = axis_1.plot(pair[0][2], pair[1][2], label=pair[1][0] + " (" + pair[1][1] + ")",
                                color="C" + str(line_count))
             # Increments line count
             line_count += 1
@@ -1484,7 +1477,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # Plots X label.
         axis_1.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
-        title = text + " plotted against " + xy_pairs[0][0][0]
+        title = text + " v " + xy_pairs[0][0][0]
     # Records plot info for the left axis
     plot_info_left = plot_info
     # Renames data to make it compatible with older code.
@@ -1533,8 +1526,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # plots y name with unit in brackets.
         axis_2.set_ylabel(y[0] + " (" + y[1] + ")")
         # plots title for graph.
-        text = y[0] + " (" + y[1] + ") plotted against " + x[0] + " (" +\
-            x[1] + ")"
+        text = y[0] + " (" + y[1] + ") v " + x[0] + " (" + x[1] + ")"
     # If y units have the same unit then this will format the graphs as
     # required.
     if plot_info == 2:
@@ -1584,8 +1576,8 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         return
     if plot_info != 0 and plot_info_left != 0:
         # Plots the title.
-        full_title = title + " and " + text + " plotted against " +\
-            xy_pairs[0][0][0]
+        full_title = title + " and " + text + " v " + \
+                     xy_pairs[0][0][0]
     elif plot_info == 0:
         # Plots the title.
         full_title = title
@@ -1593,8 +1585,8 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         axis_2.set_yticks([])
     else:
         # Creates a title.
-        full_title = text + " plotted against " +\
-            xy_pairs[0][0][0]
+        full_title = text + " v " + \
+                     xy_pairs[0][0][0]
         # Hides left axis if data is missing.
         axis_1.set_yticks([])
         print('Left axis data missing or entered incorrectly.')
@@ -1631,8 +1623,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         axis_1.set_ylim(y_limits_left)
         # Checks to see if plot limts have been set for the y values on the
         # right axis.
-    if isinstance(y_limits_right[0], int) and \
-            isinstance(y_limits_right[1], int):
+    if isinstance(y_limits_right[0], int) and isinstance(y_limits_right[1], int):
         axis_2.set_ylim(y_limits_right)
     plt.show()
 
@@ -1683,9 +1674,9 @@ def cell_remover(contents, key):
             kernel_spec_index = index
             # Ends check as it has found what is looking for
             break
-    # Sets kernal_spec_text to contain nothing.
+    # Sets kernel_spec_text to contain nothing.
     kernel_spec_text = ""
-    # Goes throught the lines after the lines containing kernal_spec
+    # Goes through the lines after the lines containing kernel_spec
     for line in reversed(lines[:kernel_spec_index]):
         # If the last line is as it should be then return the contents.
         if line == "  }":
@@ -1704,7 +1695,7 @@ def cell_remover(contents, key):
                 # If not at the end then more lines are appeneded.
                 kernel_spec_text = line + "\n" + kernel_spec_text
     # Returns the new contents.
-    return(contents)
+    return contents
 
 
 def line_remover(contents, key):
@@ -1724,7 +1715,7 @@ def line_remover(contents, key):
             if line[-1:] != ",":
                 contents = contents[:-2]
     # Returns the new contents.
-    return(contents)
+    return contents
 
 
 def flight_log_creator(contents, file_path, date, flight_number,
@@ -1752,7 +1743,7 @@ def flight_data_time_sorter(frame_list):
     # Empty list for new frames to fill.
     new_frames = []
     # Edits one frame at a time.
-    for frame in (frame_list):
+    for frame in frame_list:
         # Empty list to be populated by columns that contain time more than
         # once.
         frame_columns_list = []
@@ -1767,7 +1758,7 @@ def flight_data_time_sorter(frame_list):
                 # If time appears then it is apended to the list time_columns.
                 time_columns.append(column)
                 # Divides column by 1*10^6 to return it to seconds.
-                frame[column] = frame[column].div(10**6)
+                frame[column] = frame[column].div(10 ** 6)
                 # Adds columns in this data frame that contain the word time to
                 # a list.
                 frame_columns_list.append(column)
@@ -1794,9 +1785,9 @@ def flight_data_time_sorter(frame_list):
                 if c == 1:
                     # Removes columns from the frame_duplicate list
                     for column_drop in frame_copy.columns:
-                        frame_duplicate = frame_duplicate.\
-                                          drop(labels=column_drop, axis=1)
-                    # Checks if time appers in column being checked.
+                        frame_duplicate = frame_duplicate. \
+                            drop(labels=column_drop, axis=1)
+                    # Checks if time appears in column being checked.
                     new_frames.append(frame_duplicate)
                     b = c = 0
             else:
@@ -1809,9 +1800,8 @@ def flight_data_time_sorter(frame_list):
                 if c == 1:
                     # Removes columns from the frame_duplicate list
                     for column_drop in frame_copy.columns:
-                        frame_duplicate = frame_duplicate.\
-                                          drop(labels=column_drop, axis=1)
-                    # Checks if time appers in column being checked.
+                        frame_duplicate = frame_duplicate.drop(labels=column_drop, axis=1)
+                    # Checks if time appears in column being checked.
                     new_frames.append(frame_duplicate)
                     b = c = 0
     # Creates a blank list for the frames with the seconds unit fixed.
@@ -1822,7 +1812,7 @@ def flight_data_time_sorter(frame_list):
         frame.rename(columns=renamed_time_columns, inplace=True)
         # Appends the frame.
         arranged_frames.append(frame)
-    return(arranged_frames)
+    return arranged_frames
 
 
 def file_type_finder(file_path, extension):
@@ -1856,7 +1846,7 @@ def file_type_finder(file_path, extension):
         # files.
         if a == 1 and rev_file_extension == reversed_extension:
             required_files.append(file)
-    return(required_files)
+    return required_files
 
 
 def date_and_flight_number(frames):
@@ -1879,12 +1869,12 @@ def date_and_flight_number(frames):
                 # the Flight Number
                 flight_number = lines[a - 1][6:]
                 # Returns the Date and the Flight Number
-                return(date, flight_number)
+                return date, flight_number
 
 
-def METAR_finder(location, year, month, day, month_end, day_end,
+def metar_finder(location, year, month, day, month_end, day_end,
                  start_time_hours, end_time_hours, metar_file_path=""):
-    """This grabs URL if it is not already available."""
+    """This grabs url if it is not already available."""
     # End time to actual end time in hours
     print('Checking for METAR')
     end_time_hours = str(int(end_time_hours) - 1)
@@ -1893,9 +1883,9 @@ def METAR_finder(location, year, month, day, month_end, day_end,
         # Creates a list of all the files in the METAR_file_path
         file_list = os.listdir(metar_file_path)
         # Creates a file name based off input data
-        file_name = "METAR_" + location + "_" + year + month + day +\
-            "_" + year + month_end + day_end + "_" +\
-            start_time_hours + "_" + end_time_hours
+        file_name = "METAR_" + location + "_" + year + month + day + \
+                    "_" + year + month_end + day_end + "_" + \
+                    start_time_hours + "_" + end_time_hours
         # Goes through each of the files.
         for file in file_list:
             # Checks to see if there is a cached file that matches the current
@@ -1910,14 +1900,14 @@ def METAR_finder(location, year, month, day, month_end, day_end,
                 # Closes file.
                 metar_file.close()
                 metar_data = metar_data.split("\n")
-                return(metar_data)
+                return metar_data
     print('Getting METAR data from API')
-    URL = "https://www.ogimet.com/display_metars2.php?lang=en&lugar=" +\
-        location + "&tipo=ALL&ord=REV&nil=SI&fmt=html&ano=" + year +\
-        "&mes=" + month + "&day=" + day + "&hora=" + start_time_hours +\
-        "&anof=" + year + "&mesf=" + month_end + "&dayf=" + day_end +\
-        "&horaf=" + end_time_hours + "&minf=59&send=send"
-    request_data = get(URL)
+    url = "https://www.ogimet.com/display_metars2.php?lang=en&lugar=" + \
+          location + "&tipo=ALL&ord=REV&nil=SI&fmt=html&ano=" + year + \
+          "&mes=" + month + "&day=" + day + "&hora=" + start_time_hours + \
+          "&anof=" + year + "&mesf=" + month_end + "&dayf=" + day_end + \
+          "&horaf=" + end_time_hours + "&minf=59&send=send"
+    request_data = get(url)
     # Splits the data by line.
     metar_html = request_data.text.split("\n")
     # Goes through each of the lines of data.
@@ -1926,13 +1916,12 @@ def METAR_finder(location, year, month, day, month_end, day_end,
     # Goes through each of the lines.
     for line in metar_html:
         # If quota limit reached
-        if "#Sorry, Your quota limit for "\
-                in line:
+        if "#Sorry, Your quota limit for " in line:
             # Return the text, Quota limit reached if the quota limit has been
             # reached.
-            return(["Quota limit reached.", location, year, month, day,
-                    month_end, day_end, start_time_hours, end_time_hours,
-                    metar_file_path])
+            return (["Quota limit reached.", location, year, month, day,
+                     month_end, day_end, start_time_hours, end_time_hours,
+                     metar_file_path])
         # Checks to see if the lines contain that particular string.
         if "<td><font size=\"-1\"><b><pre>METAR" in line:
             # Appends data to line index.
@@ -1958,9 +1947,9 @@ def METAR_finder(location, year, month, day, month_end, day_end,
         text += metar + "\n"
     # If there is no METAR data then the empty list is returned.
     if len(metar_data) == 0:
-        return(metar_data)
-    # Adds URL to end
-    text += URL
+        return metar_data
+    # Adds url to end
+    text += url
     # Creates a new text file to locally store and append the data to.
     metar_file = open(metar_file_path + os.sep + file_name + ".txt", "w+")
     # Extracts contents.
@@ -1968,82 +1957,82 @@ def METAR_finder(location, year, month, day, month_end, day_end,
     # Closes the file.
     metar_file.close()
     # Returns the list.
-    metar_data.append(URL)
-    return(metar_data)
+    metar_data.append(url)
+    return metar_data
 
 
-def METAR_returner(metar_data, contents, month, year,
+def metar_returner(metar_data, contents, month, year,
                    replace_key="METAR_INFORMATION"):
     """Replaces the key word in a cell with METAR information from the day"""
     # finds the locations that the metars were recorded from.
-    metar_text = "    \"The METARs for " +\
-        str(mtr.Metar(metar_data[0], month=month, year=year))[9:13] +\
-        " were:\\n\",\n    \"\\n\",\n"
+    metar_text = "    \"The METARs for " + \
+                 str(mtr.Metar(metar_data[0], month=month, year=year))[9:13] + \
+                 " were:\\n\",\n    \"\\n\",\n"
     # Goes through the metars and creates a list of metars from that day.
     for metar in metar_data[:-1]:
         # Uses the metar function to get the data from the metar and display
         # the data labeled nicely
-        metar_text += "    \"" +\
-            str(mtr.Metar(metar[6:], month=month, year=year
-                          ))[14:].replace(
-                    "\n", "\\n\",\n    \"\\n\",\n    \"") +\
-            "\\n\",\n     \"<br><br><br><br>\\n\",\n"
+        metar_text += "    \"" + \
+                      str(mtr.Metar(metar[6:], month=month, year=year
+                                    ))[14:].replace(
+                          "\n", "\\n\",\n    \"\\n\",\n    \"") + \
+                      "\\n\",\n     \"<br><br><br><br>\\n\",\n"
     # Adds the metar data to the text file.
     metar_text += "    \"This METAR data was from:" + metar_data[-1] + "\""
     # Creates replacement text for the METAR key.
     metar_replacement = "\n  {\n " + \
-        "  \"cell_type\": \"markdown\",\n" + \
-        "   \"metadata\": {},\n" + \
-        "   \"source\": [\n" + \
-        "    \"" + replace_key + "\"\n" + \
-        "   ]\n" + \
-        "  },"
+                        "  \"cell_type\": \"markdown\",\n" + \
+                        "   \"metadata\": {},\n" + \
+                        "   \"source\": [\n" + \
+                        "    \"" + replace_key + "\"\n" + \
+                        "   ]\n" + \
+                        "  },"
     # Creates some text to replace the cell.
     metar_information = "  {\n " + \
-        "  \"cell_type\": \"markdown\",\n" + \
-        "   \"metadata\": {},\n" + \
-        "   \"source\": [\n" + \
-        "    \"<h1>METAR Information</h1><a class=\\\"anchor\\\" " +\
-        "id=\\\"METAR-Information\\\"></a>\\n\",\n    \"\\n\",\n" + \
-        metar_text +\
-        "\n   ]\n" + \
-        "  },"
+                        "  \"cell_type\": \"markdown\",\n" + \
+                        "   \"metadata\": {},\n" + \
+                        "   \"source\": [\n" + \
+                        "    \"<h1>METAR Information</h1><a class=\\\"anchor\\\" " + \
+                        "id=\\\"METAR-Information\\\"></a>\\n\",\n    \"\\n\",\n" + \
+                        metar_text + \
+                        "\n   ]\n" + \
+                        "  },"
     contents = contents.replace(metar_replacement, metar_information)
-    return(contents)
+    return contents
 
 
-def no_METAR_returner(location, year, month, day, month_end, day_end,
+def no_metar_returner(location, year, month, day, month_end, day_end,
                       start_time_hours, end_time_hours, contents,
                       replace_key="METAR_INFORMATION"):
     """Replaces the key word in a cell with note that no METAR information was
     available from the day"""
     # finds the locations that the metars were recorded from.
-    metar_text = "    \"No METARs for " + location + " for the date " + day +\
-        month + year + " from a starting time of " + start_time_hours +\
-        ":00 and an end time of " + str(int(end_time_hours) - 1) + ":59.\\n\""
+    metar_text = "    \"No METARs for " + location + " for the date " + day + \
+                 month + year + "to the date" + day_end + month_end + year + " from a starting time of " \
+                 + start_time_hours + ":00 and an end time of " + str(int(end_time_hours) - 1) + ":59.\\n\""
     # Creates replacement text for the METAR key.
     metar_replacement = "\n  {\n " + \
-        "  \"cell_type\": \"markdown\",\n" + \
-        "   \"metadata\": {},\n" + \
-        "   \"source\": [\n" + \
-        "    \"" + replace_key + "\"\n" + \
-        "   ]\n" + \
-        "  },"
+                        "  \"cell_type\": \"markdown\",\n" + \
+                        "   \"metadata\": {},\n" + \
+                        "   \"source\": [\n" + \
+                        "    \"" + replace_key + "\"\n" + \
+                        "   ]\n" + \
+                        "  },"
     # Creates some text to replace the cell.
     metar_information = "  {\n " + \
-        "  \"cell_type\": \"markdown\",\n" + \
-        "   \"metadata\": {},\n" + \
-        "   \"source\": [\n" + \
-        "    \"<h1>Metar Information <a class=\\\"anchor\\\" " +\
-        "id=\\\"Metar-Information\\\"></a></h1>\\n\",\n    \"\\n\",\n" + \
-        metar_text +\
-        "\n   ]\n" + \
-        "  },"
+                        "  \"cell_type\": \"markdown\",\n" + \
+                        "   \"metadata\": {},\n" + \
+                        "   \"source\": [\n" + \
+                        "    \"<h1>Metar Information <a class=\\\"anchor\\\" " + \
+                        "id=\\\"Metar-Information\\\"></a></h1>\\n\",\n    \"\\n\",\n" + \
+                        metar_text + \
+                        "\n   ]\n" + \
+                        "  },"
     contents = contents.replace(metar_replacement, metar_information)
-    return(contents)
+    return contents
 
 
-def METAR_quota_returner(contents, file_name, location, year,
+def metar_quota_returner(contents, file_name, location, year,
                          month, day, month_end, day_end, start_time_hours,
                          end_time_hours, metar_file_path,
                          replace_key="METAR_INFORMATION"):
@@ -2051,43 +2040,43 @@ def METAR_quota_returner(contents, file_name, location, year,
     """Replaces the key word in a cell with METAR information from the day"""
     # Creates replacement text for the METAR key.
     metar_replacement = "\n  {\n " + \
-        "  \"cell_type\": \"markdown\",\n" + \
-        "   \"metadata\": {},\n" + \
-        "   \"source\": [\n" + \
-        "    \"" + replace_key + "\"\n" + \
-        "   ]\n" + \
-        "  },"
+                        "  \"cell_type\": \"markdown\",\n" + \
+                        "   \"metadata\": {},\n" + \
+                        "   \"source\": [\n" + \
+                        "    \"" + replace_key + "\"\n" + \
+                        "   ]\n" + \
+                        "  },"
     # Creates some text to replace the cell.
     metar_information = "  {\n " + \
-        "  \"cell_type\": \"code\",\n" + \
-        "   \"execution_count\": null,\n" + \
-        "   \"metadata\": {},\n" + \
-        "   \"outputs\": [],\n" + \
-        "   \"source\": [\n" + \
-        "    \"# METAR REPLACER\\n\",\n    \"\\n\",\n" + \
-        "    \"METAR_replacer(os.getcwd(), \\\"" + file_name + "\\\", \\\"" +\
-        location + "\\\", \\\"" + year + "\\\", \\\"" + month + "\\\", \\\"" +\
-        day + "\\\", \\\"" + month_end + "\\\", \\\"" + day_end +\
-        "\\\", \\\"" + start_time_hours + "\\\", \\\"" + end_time_hours +\
-        "\\\", \\\"" + metar_file_path.replace("\\", jupyter_sep) +\
-        "\\\")\"\n   ]\n" + \
-        "  },"
+                        "  \"cell_type\": \"code\",\n" + \
+                        "   \"execution_count\": null,\n" + \
+                        "   \"metadata\": {},\n" + \
+                        "   \"outputs\": [],\n" + \
+                        "   \"source\": [\n" + \
+                        "    \"# METAR REPLACER\\n\",\n    \"\\n\",\n" + \
+                        "    \"METAR_replacer(os.getcwd(), \\\"" + file_name + "\\\", \\\"" + \
+                        location + "\\\", \\\"" + year + "\\\", \\\"" + month + "\\\", \\\"" + \
+                        day + "\\\", \\\"" + month_end + "\\\", \\\"" + day_end + \
+                        "\\\", \\\"" + start_time_hours + "\\\", \\\"" + end_time_hours + \
+                        "\\\", \\\"" + metar_file_path.replace("\\", jupyter_sep) + \
+                        "\\\")\"\n   ]\n" + \
+                        "  },"
     contents = contents.replace(metar_replacement, metar_information)
-    return(contents)
+    return contents
 
 
-def METAR_replacer(file_path, file_name, location, year, month, day,
+def metar_replacer(file_path, file_name, location, year, month, day,
                    month_end, day_end, start_time_hours, end_time_hours,
                    metar_file_path):
     """This will replace the code with the METAR data if available."""
     # finds metar data.
-    metar_data = METAR_finder(location, year, month, day, month_end, day_end,
+    metar_data = metar_finder(location, year, month, day, month_end, day_end,
                               start_time_hours, end_time_hours,
                               metar_file_path)
     if len(metar_data) == 0:
-        return("No METAR data found.")
+        return "No METAR data found."
     if metar_data[0] == "Quota limit reached.":
-        return("Sorry, Quota limit has been reached, try again later.")
+        return "Sorry, Quota limit has been reached, try again later."
     # Opens contents
     contents = contents_opener(file_path, file_name)
     # Splits contents into lines
@@ -2120,15 +2109,15 @@ def METAR_replacer(file_path, file_name, location, year, month, day,
     # Reassembles contents from lines
     for line in lines:
         contents += line + "\n"
-    contents = METAR_returner(metar_data, contents, int(month), int(year),
+    contents = metar_returner(metar_data, contents, int(month), int(year),
                               replace_key="METAR_INFORMATION")
     file = open(file_path + os.sep + file_name, "w+")
     # Extracts contents.
     file.write(contents)
     # Closes the file.
     file.close()
-    return("METAR data successfully included, please press save then reload" +
-           " and the METAR data should appear in place of this cell.")
+    return ("METAR data successfully included, please press save then reload" +
+            " and the METAR data should appear in place of this cell.")
 
 
 def arduino_micro_frame(flight_data_file_path, arduino_flight_data_name):
@@ -2137,16 +2126,15 @@ def arduino_micro_frame(flight_data_file_path, arduino_flight_data_name):
     # Creates file path from graph file path and file name
     file_path = flight_data_file_path + os.sep + arduino_flight_data_name
     if arduino_flight_data_name == "" or flight_data_file_path == "":
-        return(pd.DataFrame())
+        return pd.DataFrame()
     # Reads CSV
     frame = pd.read_csv(file_path)
-    return(frame)
+    return frame
 
 
 def compile_and_compress(flight_data_file_path, flight_data_file_name,
                          arduino_data_file_path, arduino_data_file_name,
                          compressed_data_file_path):
-
     # Excel Sheets
     frame_list = flight_data(flight_data_file_path, flight_data_file_name)
     # Retrieves arduino flight data
@@ -2179,9 +2167,9 @@ def backplt_map(lat, long, scale_factor=1):
     # Creates a GeoDataFrame to be used with the map and sets the geometry
     # and coordinate system (epsg 4326) - latitude and longitude
     geo_data_frame = gpd.GeoDataFrame(
-            path_data,
-            geometry=gpd.points_from_xy(long, lat),
-            crs={'init': 'epsg:4326'})
+        path_data,
+        geometry=gpd.points_from_xy(long, lat),
+        crs={'init': 'epsg:4326'})
     # Renames the GeoDataFrame
     path_data_geo = geo_data_frame
     # Changes the data's coordinate system to epsg 3857 (needed for the
@@ -2194,16 +2182,16 @@ def backplt_map(lat, long, scale_factor=1):
     out_proj = proj(init='epsg:3857')
 
     # Finds the centre point of the plot
-    centre_pnt = [(max(lat) + min(lat))/2., (max(long) + min(long))/2.]
+    centre_pnt = [(max(lat) + min(lat)) / 2., (max(long) + min(long)) / 2.]
     # Finds distances to the corner points from the center point
     corner_dist = [max(lat) - centre_pnt[0], min(lat) - centre_pnt[0],
                    max(long) - centre_pnt[1], min(long) - centre_pnt[1]]
 
     # Assigns and scales corner distances of the plot
-    extreme_lat = [centre_pnt[0] + corner_dist[0]*scale_factor,
-                   centre_pnt[0] + corner_dist[1]*scale_factor]
-    extreme_long = [centre_pnt[1] + corner_dist[2]*scale_factor,
-                    centre_pnt[1] + corner_dist[3]*scale_factor]
+    extreme_lat = [centre_pnt[0] + corner_dist[0] * scale_factor,
+                   centre_pnt[0] + corner_dist[1] * scale_factor]
+    extreme_long = [centre_pnt[1] + corner_dist[2] * scale_factor,
+                    centre_pnt[1] + corner_dist[3] * scale_factor]
     fig, ax = plt.subplots(1, 1)
 
     # Retrieves data from the dataframe
@@ -2228,13 +2216,13 @@ def backplt_map(lat, long, scale_factor=1):
                               c='r', marker='o', s=100, zorder=2)
 
     # Round mins down, round max up for the lables
-    extreme_lat_rounded = [np.ceil(extreme_lat[0]*1e3)/1e3, np.floor(
-            extreme_lat[1]*1e3)/1e3]
-    extreme_long_rounded = [np.ceil(extreme_long[0]*1e3)/1e3, np.floor(
-            extreme_long[1]*1e3)/1e3]
+    extreme_lat_rounded = [np.ceil(extreme_lat[0] * 1e3) / 1e3, np.floor(
+        extreme_lat[1] * 1e3) / 1e3]
+    extreme_long_rounded = [np.ceil(extreme_long[0] * 1e3) / 1e3, np.floor(
+        extreme_long[1] * 1e3) / 1e3]
     # Create intermediate points with linspace spaced at 0.001*scale_factor
     lat_values = np.arange(extreme_lat_rounded[1],
-                           extreme_lat_rounded[0], 1e-3*scale_factor)
+                           extreme_lat_rounded[0], 1e-3 * scale_factor)
     long_values = np.linspace(extreme_long_rounded[1],
                               extreme_long_rounded[0], len(lat_values))
     # Convert to epsg3857 - from https://gis.stackexchange.com/questions/
@@ -2250,10 +2238,10 @@ def backplt_map(lat, long, scale_factor=1):
     trans_extreme_lat = [0, 0]
     trans_extreme_long = [0, 0]
 
-    trans_extreme_long[0], trans_extreme_lat[0] =\
+    trans_extreme_long[0], trans_extreme_lat[0] = \
         transform(in_proj, out_proj, extreme_long_rounded[0],
                   extreme_lat_rounded[0])
-    trans_extreme_long[1], trans_extreme_lat[1] =\
+    trans_extreme_long[1], trans_extreme_lat[1] = \
         transform(in_proj, out_proj, extreme_long_rounded[1],
                   extreme_lat_rounded[1])
 
@@ -2268,14 +2256,14 @@ def backplt_map(lat, long, scale_factor=1):
 
     # Finds the new center location. This is different to the previous center
     # due to the earth (round) being flattened.
-    trans_centre = [(trans_extreme_lat[0] + trans_extreme_lat[1])/2,
-                    (trans_extreme_long[0] + trans_extreme_long[1])/2]
+    trans_centre = [(trans_extreme_lat[0] + trans_extreme_lat[1]) / 2,
+                    (trans_extreme_long[0] + trans_extreme_long[1]) / 2]
 
     # Sets the limits for the axes.
-    ax.set_xlim(trans_centre[1] - trans_width/2,
-                trans_centre[1] + trans_width/2)
-    ax.set_ylim(trans_centre[0] - trans_height/2,
-                trans_centre[0] + trans_height/2)
+    ax.set_xlim(trans_centre[1] - trans_width / 2,
+                trans_centre[1] + trans_width / 2)
+    ax.set_ylim(trans_centre[0] - trans_height / 2,
+                trans_centre[0] + trans_height / 2)
 
     try:
         # Tries to plot a Statem terrain map
@@ -2295,7 +2283,7 @@ def backplt_map(lat, long, scale_factor=1):
     # plots y name with unit in brackets.
     plt.ylabel('Latitude' + " (degrees)")
     # plots title for graph.
-    title = "Latitude (degrees) plotted against Longitude (degrees)"
+    title = "Latitude (degrees) v Longitude (degrees)"
 
     # Splits title if its width exceeds 60
     wraped_title = textwrap.wrap(title, width=60)
