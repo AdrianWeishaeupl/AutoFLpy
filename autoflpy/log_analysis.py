@@ -27,7 +27,6 @@ TODO:
     Add flight duration from arm/disarm or vibration data.
     Add a 3D map image to summarise flight.
     Hide code in the Jupyter Notebook once it has run?
-    
 DONE:
 
 """
@@ -71,16 +70,16 @@ def autoflpy(input_file='Input_File.json'):
     # Sets  variables from the input file to be used.
     # If no log file path has been entered, go to the standard log path.
     if data["log_to_xlsx_input"]["log_file_path"] != "" and os.path.exists(
-            data["log_to_xlsx_input"]["log_file_path"]) is True:
+        data["log_to_xlsx_input"]["log_file_path"]) is True:
         log_file_path = (data["log_to_xlsx_input"][
-            "log_file_path"] + os.sep + data["log_to_xlsx_input"][
-            "log_file_name"])
+                             "log_file_path"] + os.sep + data["log_to_xlsx_input"][
+                             "log_file_name"])
     else:
         # Creates a new directory to look for files.
         log_file_base_path = (default_storage_path + "log_files" + os.sep
                               )
         log_file_path = (log_file_base_path + os.sep + data[
-                "log_to_xlsx_input"]["log_file_name"])
+            "log_to_xlsx_input"]["log_file_name"])
         try:
             os.makedirs(log_file_base_path)
             # Raises error and gives advice on how to continue.
@@ -153,9 +152,9 @@ def autoflpy(input_file='Input_File.json'):
     if data["flight_log_generator_input"]["flight_log_destination"] != "" and \
         os.path.exists(
             data["flight_log_generator_input"][
-                    "flight_log_destination"]) is True:
+                "flight_log_destination"]) is True:
         flight_log_file_path = data["flight_log_generator_input"][
-                "flight_log_destination"]
+            "flight_log_destination"]
     else:
         # Makes a directory in the current working path to be used.
         flight_log_file_path = default_storage_path + "flight_logs_generated"
@@ -167,15 +166,14 @@ def autoflpy(input_file='Input_File.json'):
     flight_data_file_path = (excel_file_path + os.sep)
     flight_data_file_name = excel_file_name + ".xlsx"
     if data["flight_log_generator_input"][
-            "arduino_flight_data_file_path"] != "" and \
+        "arduino_flight_data_file_path"] != "" and \
         os.path.exists(data["flight_log_generator_input"]
                        ["arduino_flight_data_file_path"]) is True:
         arduino_flight_data_file_path = data[
             "flight_log_generator_input"]["arduino_flight_data_file_path"]
     else:
         # Makes a directory in the current working path to be used.
-        arduino_flight_data_file_path = (default_storage_path +
-                                         "arduino_flight_data" + os.sep
+        arduino_flight_data_file_path = (default_storage_path + "arduino_flight_data" + os.sep
                                          )
         try:
             os.makedirs(arduino_flight_data_file_path)
@@ -186,12 +184,12 @@ def autoflpy(input_file='Input_File.json'):
                  + 'test_arduino.CSV')
 
     arduino_flight_data_name = data["flight_log_generator_input"][
-            "arduino_flight_data_name"]
+        "arduino_flight_data_name"]
     flight_log_file_name_header = "Generated_flight_log_"
     if data["flight_log_generator_input"][
-            "checklist_data_file_path"] != "" and \
+        "checklist_data_file_path"] != "" and \
         os.path.exists(data[
-            "flight_log_generator_input"]["checklist_data_file_path"]) is True:
+                           "flight_log_generator_input"]["checklist_data_file_path"]) is True:
         checklist_file_path = data[
             "flight_log_generator_input"]["checklist_data_file_path"]
     else:
@@ -216,7 +214,7 @@ def autoflpy(input_file='Input_File.json'):
     start_time_hours = data["flight_log_generator_input"]["start_time_hours"]
     end_time_hours = data["flight_log_generator_input"]["end_time_hours"]
     if data["flight_log_generator_input"][
-            "metar_file_path"] != "" and \
+        "metar_file_path"] != "" and \
         os.path.exists(
             data["flight_log_generator_input"]["metar_file_path"]) is True:
         metar_file_path = data[
