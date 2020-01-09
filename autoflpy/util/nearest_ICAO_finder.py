@@ -26,21 +26,21 @@ def icao_finder(file_path, file_name):
                                                        airport_data[:, 2]]))
     icao = airport_data[nearest_icao, 0]
     print('Nearest ICAO = ' + str(icao))
-    return(icao)
+    return icao
 
 
-def closest_icao(UAV_lat_long, airport_lat_long):
+def closest_icao(uav_lat_long_clst, airport_lat_long_clst):
     # Finds the closest airport to the latitudes and longitude of the UAV's
     # start location.
     # NOTE: selected airport may not have reliable METAR information.
     # based on code from: https://codereview.stackexchange.com/questions/28207/
     # finding-the-closest-point-to-a-list-of-points
     # Turns the airport list into a numpy array.
-    airport_lat_long = np.asarray(airport_lat_long)
+    airport_lat_long_clst = np.asarray(airport_lat_long_clst)
     # Finds the square distance to the closest airport - this is in terms of
     # difference in latitude and longitude (always positive).
     print('Calculating closest distance')
-    dist_2 = np.sum((np.subtract(airport_lat_long, UAV_lat_long))**2, axis=0)
+    dist_2 = np.sum((np.subtract(airport_lat_long_clst, uav_lat_long_clst)) ** 2, axis=0)
     if np.min(dist_2) > 0.05:
         print('Nearest airport weather data is not reliable')
     # Returns the array index of the closest airport
@@ -60,7 +60,7 @@ def airport_lat_long():
     data = pd.read_csv(file_path)
     information = np.array([data['airport_ident'], data['le_latitude_deg'],
                             data['le_longitude_deg']])
-    return(np.transpose(information))
+    return np.transpose(information)
 
 
 def uav_lat_long(file_path, file_name):

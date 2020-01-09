@@ -33,7 +33,7 @@ class Testnearest_ICAO_finder(unittest.TestCase):
         self.assertEqual('DGTK', icao)
 
     def test_closest_icao(self):
-        # Runs the airport_lat_long function
+        # Runs the airport_lat_long_clst function
         airport_lat_long = nearest_ICAO_finder.airport_lat_long()
         # Arbitary latitude and longtitude for checking
         uav_lat_long_check = [[[51.067397], [-1.320574]],
@@ -52,7 +52,7 @@ class Testnearest_ICAO_finder(unittest.TestCase):
             self.assertEqual(result, expected_closest_icao[lat_long])
 
     def test_airport_lat_long(self):
-        # Runs the airport_lat_long function
+        # Runs the airport_lat_long_clst function
         airport_lat_long = nearest_ICAO_finder.airport_lat_long()
         # Creates lists of items and expected results
         item_check = [10, 100, 1000, 10000, 20000, 30000, 40488]
@@ -66,12 +66,12 @@ class Testnearest_ICAO_finder(unittest.TestCase):
             self.assertEqual(icao, expected_ICAO)
 
     def test_uav_lat_long(self):
-        # Runs the uav_lat_long function from the nearest_ICAO_finder.py
+        # Runs the uav_lat_long_clst function from the nearest_ICAO_finder.py
         uav_lat_long = nearest_ICAO_finder.uav_lat_long(self.excel_file_path,
                                                         self.excel_file_name)
         # Defines expected_results
         expected_lat_long = np.array([[0.0108352], [0.0308365]])
-        # Compares the uav_lat_long to the expected_lat_long, 0 = lat, 1 = long
+        # Compares the uav_lat_long_clst to the expected_lat_long, 0 = lat, 1 = long
         self.assertEqual(expected_lat_long[0], uav_lat_long[0])
         self.assertEqual(expected_lat_long[1], uav_lat_long[1])
 
