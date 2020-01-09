@@ -361,7 +361,7 @@ class Test_flight_log_code(unittest.TestCase):
                                                     content, replace_key="META"
                                                     "R_INFORMATION")
         # Assigns expected content
-        expected_content = 'No METARs for DGTK for the date 23012019 from a '\
+        expected_content = 'No METARs for DGTK for the date 23012019 to the date 23012019 from a '\
             'starting time of 9:00 and an end time of 9:59.'
         # Checks that the expected content is present in the content
         information_present = check_str_in_content(expected_content,
@@ -516,7 +516,7 @@ class Test_flight_log_code(unittest.TestCase):
         # Gets run in the Jupyter Notebook.
         # Loads the data generated previously
         flight_data_and_axis = notebook_results[4]
-        # Assogns expected titles
+        # Assigns expected titles
         expected_titles = ['GPS', 'RCIN', 'BARO', 'ARSP', 'ATT', 'VIBE',
                            'CTUN', 'AOA', 'ArduinoMicro']
         # Checks that the titles are present and in the correct palace
