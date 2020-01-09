@@ -2,6 +2,12 @@
 History
 =======
 
+1.0.11 (2020-01-09)
+-------------------
+
+* Improved code formatting.
+* Added improved map backplotting for greater speed
+
 1.0.10 (2020-01-07)
 -------------------
 
