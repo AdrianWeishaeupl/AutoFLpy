@@ -13,4 +13,5 @@ pandas>=0.25.3
 metar>=1.7.0
 pyproj==2.4.1
 openpyxl>=2.6.4, <3.0.2
+numpy>=1.18.1
 
