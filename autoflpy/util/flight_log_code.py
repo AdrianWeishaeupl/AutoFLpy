@@ -19,7 +19,6 @@ try:
     import geopandas as gpd
     import contextily as ctx
     from pyproj import Proj as proj, transform
-
     map_modules_imported = True
 except ImportError:
     map_modules_imported = False
@@ -68,7 +67,7 @@ def flight_log_maker(template_file_path, template_file_name,
                                                 str(flight_date)[:4]))
     # Inserts the flight number into the contents_checklist_rm.
     contents = contents.replace("FLIGHT_NUMBER", str(flight_number))
-    # Checks to see wether there is graph data or arduino data that can be
+    # Checks to see whether there is graph data or arduino data that can be
     # used to plot graphs by checking if the path exists and if the path has a
     # suitable length to that it is not just greater than 1.
     if (os.path.exists(flight_data_file_path + os.sep + flight_data_file_name)
@@ -103,11 +102,11 @@ def flight_log_maker(template_file_path, template_file_name,
     else:
         # Removes the cell importing the graph data.
         contents = cell_remover(contents, "# GRAPH_DATA_IMPORT")
-        # Removes the cells containg graph data.
+        # Removes the cells containing graph data.
         contents = cell_remover(contents, "\"MULTIAXIS_GRAPH\\n\"")
-        # Removes the cells containg graph data.
+        # Removes the cells containing graph data.
         contents = cell_remover(contents, "\"GRAPH\\n\"")
-        # Removes the cells containg graph related text.
+        # Removes the cells containing graph related text.
         contents = cell_remover(contents, "GRAPH_TEXT")
         # removes graph lines from cell
         contents = line_remover(contents, "GRAPH_LINE")
@@ -456,7 +455,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
     else:
         eme = 0
     flight_duration_columns = []
-    # Thie creates a list to contain the recorded flight duration and who
+    # This creates a list to contain the recorded flight duration and who
     # actioned them
     flight_duration_data = []
     # Goes through nominal dataframe and finds all columns that contain the
@@ -782,7 +781,7 @@ def flight_log_graph_contents_replacer(contents):
         b = 1
         # Creates a list for storing the index of the lines.
         local_graph_data = [index]
-        # Creates an infinite loop used to find the end of that particualar
+        # Creates an infinite loop used to find the end of that particular
         # cell in the notebook.
         while a == 0:
             # Checks through to see if lines no longer contain useful
@@ -805,7 +804,7 @@ def flight_log_graph_contents_replacer(contents):
         # Goes through each of the sub lists in the list graph_data and
         # processes the data
         for index in data[1:]:
-            # Sets line to equal the line at that particlar index.
+            # Sets line to equal the line at that particular index.
             line = lines[index]
             # Removes gap at front of line
             line = line.replace("    \"", "")
@@ -891,7 +890,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     plt.rcParams["figure.figsize"] = (15, 3)
     for data in plot_information:
         values_list_index = 0
-        # sets value_found to a defult of False
+        # sets value_found to a default of False
         # Checks to see if the 'data source' recorded in the graph list
         # matches the 'data sources' in the list structure values_list.
         for values_list_data in values_list:
@@ -956,8 +955,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                         unit = xy_data[1][1]
                         # Sets the heading of the next item
                         heading = xy_data[1][0]
-                        if reference_x_unit == unit and \
-                            reference_x_heading == heading:
+                        if reference_x_unit == unit and reference_x_heading == heading:
                             plot_info = 2
                         else:
                             # Removes graph if the x values provided have
@@ -1107,7 +1105,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     # Checks to see if plot limits have been set for the x values
     if isinstance(x_limits[0], int) and isinstance(x_limits[1], int):
         plt.xlim(x_limits)
-    # Checks to see if plot limts have been set for the y values
+    # Checks to see if plot limits have been set for the y values
     if isinstance(y_limits[0], int) and isinstance(y_limits[1], int):
         plt.ylim(y_limits)
     plt.show()
@@ -1155,7 +1153,7 @@ def flight_log_multiaxis_graph_contents_replacer(contents):
         # processes the data
         for index in data[1:]:
             ignore = False
-            # Sets line to equal the line at that particlar index.
+            # Sets line to equal the line at that particular index.
             line = lines[index]
             # Removes gap at front of line
             line = line.replace("    \"", "")
@@ -1255,7 +1253,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                             legend_location=1):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source], plots data on
-    left and right axis as specified as inputs, legend location will specifiy
+    left and right axis as specified as inputs, legend location will specify
     where the legend should go"""
     # List of data to plot returns plot data which has structure:
     # [axis, [data_source, column]]
@@ -1336,9 +1334,9 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                         # Check if this is the first x value unit that has been
                         # evaluated.
                         if first_x_unit is True:
-                            # If it is then it sets it to be the referance unit
+                            # If it is then it sets it to be the reference unit
                             reference_x_unit = xy_data[1][1]
-                            # Sets a referance heading for the x data.
+                            # Sets a reference heading for the x data.
                             reference_x_heading = xy_data[1][0]
                             first_x_unit = False
                         else:
@@ -1346,8 +1344,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                             unit = xy_data[1][1]
                             # Sets the heading of the next item
                             heading = xy_data[1][0]
-                            if reference_x_unit == unit and \
-                                reference_x_heading == heading:
+                            if reference_x_unit == unit and reference_x_heading == heading:
                                 plot_info = 2
                             else:
                                 # Removes graph if the x values provided have
@@ -1368,7 +1365,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                 if xy_data[0] == "y":
                     # Check if this is the first unit
                     if first_y_unit is True:
-                        # If it is then it sets it to be the referance unit.
+                        # If it is then it sets it to be the reference unit.
                         reference_y_unit = xy_data[1][1]
                         first_y_unit = False
                     else:
@@ -1380,7 +1377,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                         else:
                             plot_info = 3
                             break
-        # Apends data to list
+        # Appends data to list
         plot_list.append([plot_info, plot_data])
     # Plots data
     graph, axis_1 = plt.subplots()
@@ -1415,7 +1412,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # Checks through each y data item.
         for y_data in y_list:
             # if the x and y data have the same source then they can be
-            # plottted together
+            # plotted together
             if x_data[2] == y_data[2]:
                 # Appends which x values and y values that can be plotted
                 # against each other.
@@ -1511,7 +1508,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # Checks through each y data item.
         for y_data in y_list:
             # if the x and y data have the same source then they can be
-            # plottted together
+            # plotted together
             if x_data[2] == y_data[2]:
                 # Appends which x values and y values that can be plotted
                 # against each other.
@@ -1591,12 +1588,12 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         axis_1.set_yticks([])
         print('Left axis data missing or entered incorrectly.')
     # Splits title if its width exceeds 60
-    wraped_title = textwrap.wrap(full_title, width=60)
+    wrapped_title = textwrap.wrap(full_title, width=60)
     # Creates an empty string for the final title
     final_title = ""
-    # Goes through each line in the title and joins them together with a new
+    # Goes through the title and joins them together with a new
     # line character between each line.
-    for title_line in wraped_title:
+    for title_line in wrapped_title:
         final_title += title_line + "\n"
     # Removes new line at end
     plt.title(final_title[:-1], y=1.05)
@@ -1617,11 +1614,11 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     # Checks to see if plot limits have been set for the x values
     if isinstance(x_limits[0], int) and isinstance(x_limits[1], int):
         axis_1.set_xlim(x_limits)
-    # Checks to see if plot limts have been set for the y values on the left
+    # Checks to see if plot limits have been set for the y values on the left
     # axis.
     if isinstance(y_limits_left[0], int) and isinstance(y_limits_left[1], int):
         axis_1.set_ylim(y_limits_left)
-        # Checks to see if plot limts have been set for the y values on the
+        # Checks to see if plot limits have been set for the y values on the
         # right axis.
     if isinstance(y_limits_right[0], int) and isinstance(y_limits_right[1], int):
         axis_2.set_ylim(y_limits_right)
@@ -1665,7 +1662,7 @@ def cell_remover(contents, key):
                             old_cell_text = old_cell_text + lines_after + "\n"
             if a == 1:
                 break
-        # Replaces cells containg the word graph with blank text
+        # Replaces cells containing the word graph with blank text
         contents = contents.replace(old_cell_text, "")
     lines = contents.split("\n")
     # Finds the line numbers that contain the kernel spec key word
@@ -1682,7 +1679,7 @@ def cell_remover(contents, key):
         if line == "  }":
             break
         else:
-            # If the end of the lastr cell contains a comma then it must be
+            # If the end of the last cell contains a comma then it must be
             # removed.
             if line == "  },":
                 # Removes comma from the end of the last cell.
@@ -1692,7 +1689,7 @@ def cell_remover(contents, key):
                 # return the contents.
                 break
             else:
-                # If not at the end then more lines are appeneded.
+                # If not at the end then more lines are appended.
                 kernel_spec_text = line + "\n" + kernel_spec_text
     # Returns the new contents.
     return contents
@@ -1785,8 +1782,7 @@ def flight_data_time_sorter(frame_list):
                 if c == 1:
                     # Removes columns from the frame_duplicate list
                     for column_drop in frame_copy.columns:
-                        frame_duplicate = frame_duplicate. \
-                            drop(labels=column_drop, axis=1)
+                        frame_duplicate = frame_duplicate.drop(labels=column_drop, axis=1)
                     # Checks if time appears in column being checked.
                     new_frames.append(frame_duplicate)
                     b = c = 0
@@ -1879,6 +1875,7 @@ def metar_finder(location, year, month, day, month_end, day_end,
     print('Checking for METAR')
     end_time_hours = str(int(end_time_hours) - 1)
     # Checks to see if a metar file path is available.
+    file_name = ""
     if metar_file_path != "" or metar_file_path != "data":
         # Creates a list of all the files in the METAR_file_path
         file_list = os.listdir(metar_file_path)
@@ -1930,10 +1927,10 @@ def metar_finder(location, year, month, day, month_end, day_end,
         index += 1
     # Creates a blank list for the metar data.
     metar_data = []
-    # Goes through the list and replaces HTML at the begining and end of the
+    # Goes through the list and replaces HTML at the beginning and end of the
     # string.
     for index in line_index:
-        # Repalces HTML at the begining of the text.
+        # Replaces HTML at the beginning of the text.
         data = metar_html[index].replace("<td><font size=\"-1\"><b><pre>", "")
         # Replaces HTML at the end of the text.
         data = data.replace("=</pre></b></font></td>", "")
@@ -2140,7 +2137,7 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     # Retrieves arduino flight data
     arduino_flight_data_frame = arduino_micro_frame(arduino_data_file_path,
                                                     arduino_data_file_name)
-    # Appends audino frame to flight data from pixhawk
+    # Appends arduino frame to flight data from pixhawk
     frame_list.append(arduino_flight_data_frame)
     # Sorts frames by time
     sorted_frames = flight_data_time_sorter(frame_list)
@@ -2176,7 +2173,7 @@ def backplt_map(lat, long, scale_factor=1):
     # maps)
     path_data_geo = path_data_geo.to_crs(epsg=3857)
 
-    # To get the axis lables correctly:
+    # To get the axis labels correctly:
     # Find max and min lat and long.
     in_proj = proj(init='epsg:4326')
     out_proj = proj(init='epsg:3857')
@@ -2210,12 +2207,12 @@ def backplt_map(lat, long, scale_factor=1):
                               c=path_data_geo['index'], marker='.',
                               cmap='gnuplot', zorder=2)
     else:
-        # Plots a point simbolising the mean of the data.
+        # Plots a point symbolising the mean of the data.
         mapplot = plt.scatter(np.mean(geometry_data[0]),
                               np.mean(geometry_data[1]),
                               c='r', marker='o', s=100, zorder=2)
 
-    # Round mins down, round max up for the lables
+    # Round mins down, round max up for the labels
     extreme_lat_rounded = [np.ceil(extreme_lat[0] * 1e3) / 1e3, np.floor(
         extreme_lat[1] * 1e3) / 1e3]
     extreme_long_rounded = [np.ceil(extreme_long[0] * 1e3) / 1e3, np.floor(
