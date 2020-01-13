@@ -119,6 +119,9 @@ These are x and y graphs with multiple y values of the same unit. A legend is di
 Plot type 3
 These are x and y graphs with multiple y values with different units. The legend shows the names of the variables and their units. The y axis has no label or units.
 
+Mapplot
+This is a special case of the standard graph and is active when Latitdue and Longitude are plotted against each other. A map is plotted behind the data aid with flight visualisation.
+
 Multiaxis Graphs
 ----------------
 Multiaxis graphs will have left and right axis. These are like the normal graphs but the text to create the graph is MULTIAXIS_GRAPH. To state the data for the left axis the label is LEFT_AXIS and to state the data for the right axis, the label is RIGHT_AXIS.

@@ -8,6 +8,7 @@ Welcome to AutoFLpy's documentation!
    readme
    installation
    usage
+   examples
    modules
    contributing
    authors

@@ -109,6 +109,7 @@ ENV/
 # Images
 autoflpy/data/images/
 !autoflpy/data/images/Logo here.png
+docs/images/Unused
 
 # Code under development
 autoflpy/util/unused/*
