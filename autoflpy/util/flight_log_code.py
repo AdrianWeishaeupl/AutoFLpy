@@ -1543,7 +1543,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             text += ", " + pair[1][0]
         # Adds and to end of text
         if len(xy_pairs) != 1:
-            text += " and " + xy_pairs[len(xy_pairs) - 1][1][0] + " v " + xy_pairs[len(xy_pairs) - 1][0][0] +\
+            text += " and " + xy_pairs[len(xy_pairs) - 1][1][0] + " v " + xy_pairs[len(xy_pairs) - 1][0][0] + \
                     " (" + xy_pairs[len(xy_pairs) - 1][0][1] + ")"
         # Plots Y label.
         axis_2.set_ylabel(text + " (" + xy_pairs[0][1][1] + ")")
@@ -2216,24 +2216,11 @@ def backplt_map(lat, long, scale_factor=1):
                               np.mean(geometry_data[1]),
                               c='r', marker='o', s=100, zorder=2)
 
-    # Round mins down, round max up for the labels
+    # Round min down, round max up for the labels
     extreme_lat_rounded = [np.ceil(extreme_lat[0] * 1e3) / 1e3, np.floor(
         extreme_lat[1] * 1e3) / 1e3]
     extreme_long_rounded = [np.ceil(extreme_long[0] * 1e3) / 1e3, np.floor(
         extreme_long[1] * 1e3) / 1e3]
-    # Create intermediate points with linspace spaced at 0.001*scale_factor
-    lat_values = np.arange(extreme_lat_rounded[1],
-                           extreme_lat_rounded[0], 1e-3 * scale_factor)
-    long_values = np.linspace(extreme_long_rounded[1],
-                              extreme_long_rounded[0], len(lat_values))
-    # Convert to epsg3857 - from https://gis.stackexchange.com/questions/
-    # 78838/converting-projected-coordinates-to-lat-lon-using-python
-    long_values_3857, lat_values_3857 = transform(in_proj, out_proj,
-                                                  long_values, lat_values)
-
-    # Use xticks and yticks to replace with original values
-    plt.xticks(long_values_3857, np.round(long_values, 4))
-    plt.yticks(lat_values_3857, np.round(lat_values, 4))
 
     # Transforms extreme x and y coordinates to the map reference frame
     trans_extreme_lat = [0, 0]
@@ -2265,6 +2252,21 @@ def backplt_map(lat, long, scale_factor=1):
                 trans_centre[1] + trans_width / 2)
     ax.set_ylim(trans_centre[0] - trans_height / 2,
                 trans_centre[0] + trans_height / 2)
+
+    # Create intermediate points with linspace spaced at 6 increments.
+    trans_lat_values = np.arange(trans_centre[0] - trans_height / 2,
+                                 trans_centre[0] + trans_height / 2, (trans_height / 6))
+    trans_long_values = np.linspace(trans_centre[1] - trans_width / 2,
+                                    trans_centre[1] + trans_width / 2, len(trans_lat_values))
+
+    # Convert to epsg3857 - from https://gis.stackexchange.com/questions/
+    # 78838/converting-projected-coordinates-to-lat-lon-using-python
+    long_values_4326, lat_values_4326 = transform(out_proj, in_proj,
+                                                  trans_long_values, trans_lat_values)
+
+    # Use xticks and yticks to replace with original values
+    plt.xticks(trans_long_values, np.round(long_values_4326, 4))
+    plt.yticks(trans_lat_values, np.round(lat_values_4326, 4))
 
     try:
         # Tries to plot a Statem terrain map
