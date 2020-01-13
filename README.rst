@@ -22,9 +22,9 @@ Autoflpy (Automated flight log python) is an open source code to allow you to cr
 * Free software: GPLv3
 * Documentation: https://autoflpy.readthedocs.io.
 
-.. image:: images/SITL_flight_map.png
-	:width: 400
-	:alt: Image of a flight plotted over a map generated with AutoFLpy.
+.. image:: images/SITL_flight_spd.png
+	:width: 700
+	:alt: Image of a graph generated with AutoFLpy showing airspeed and groundspeed.
 
 Features
 --------
@@ -46,6 +46,9 @@ Features
 
 ** For this feature to work, both geopandas and contextily need to be installed on the local machine. This needs to be done by the user due to difficulty installing these on various operating systems. A short help guide is attached in the installation instructions.
 
+.. image:: images/SITL_flight_map.png
+	:width: 700
+	:alt: Image of a flight plotted over a map using AutoFLpy.
 
 Credits
 -------
