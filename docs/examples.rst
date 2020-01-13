@@ -1,10 +1,10 @@
-Autoflpy Examples
-=================
+Examples
+========
 
 The following section contains examples on how to use the Jupyter Notebook generated through AutoFLpy.
 
 Graph Plotter Examples
------------------------
+----------------------
 
 Once AutoFLpy has been run, a Jupyter Notebook is generated. This can be opened using Jupyter Notebook and run to generate the requested graphs.
 
@@ -41,6 +41,10 @@ This is a special feature of the graph plotter and allows for a top down visuali
 .. image:: images/Ex_map_1_code.png
 	:width: 900
 	:alt: Image of input to the graph plotter to gerenate a map.
+
+.. image:: images/SITL_flight_map.png
+	:width: 900
+	:alt: Image of zoomed in map generated using Software In The Loop.
 
 .. image:: images/SITL_flight_map_out.png
 	:width: 900
