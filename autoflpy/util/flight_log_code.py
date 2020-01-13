@@ -1022,8 +1022,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                     # against each other.
                     xy_pairs.append([x_data[1], y_data[1]])
 
-    if plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude' \
-        and map_modules_imported is True:
+    if plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude' and map_modules_imported is True:
         # Plots a map behind latitude and longitude data.
         plt.rcParams["figure.figsize"] = (15, 15)
         # Assigns data to variables
@@ -1070,7 +1069,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         # Plots X label.
         plt.xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
-        title = text + " v " + xy_pairs[0][0][0]
+        title = text + " v " + xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")"
     # If y units do not have the same unit then this will format the graphs
     # as required.
     if plot_info == 3:
@@ -1088,7 +1087,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         # Plots X label.
         plt.xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
-        title = text + " v " + xy_pairs[0][0][0]
+        title = text + " v " + xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")"
     # if plot info is equal to 0 then nothing is returned
     if plot_info == 0:
         print('No data present or variables entered incorrectly.')
@@ -1454,6 +1453,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         axis_1.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
         title = text + " v " + xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")"
+        print(title, 1)
     # If y units do not have the same unit then this will format the graphs
     # as required.
     if plot_info == 3:
@@ -1545,6 +1545,10 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         if len(xy_pairs) != 1:
             text += " and " + xy_pairs[len(xy_pairs) - 1][1][0] + " v " + xy_pairs[len(xy_pairs) - 1][0][0] + \
                     " (" + xy_pairs[len(xy_pairs) - 1][0][1] + ")"
+        else:
+            text += " v " + xy_pairs[0][0][0] + \
+                    " (" + xy_pairs[0][0][1] + ")"
+        print(text, 2)
         # Plots Y label.
         axis_2.set_ylabel(text + " (" + xy_pairs[0][1][1] + ")")
         # Plots X label.
@@ -1555,7 +1559,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         for pair in xy_pairs:
             # plots x against y values.
             line = axis_2.plot(pair[0][2], pair[1][2], label=pair[1][0] + " ("
-                                                             + pair[1][1] + ")", color="C" + str(line_count))
+                               + pair[1][1] + ")", color="C" + str(line_count))
             # Increments line count
             line_count += 1
             # Appends current line to list of lines.
@@ -1577,6 +1581,8 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         return
     if plot_info != 0 and plot_info_left != 0:
         # Plots the title.
+        print(title, 3)
+        print(text, 4)
         full_title = title + " and " + text
 
     elif plot_info == 0:

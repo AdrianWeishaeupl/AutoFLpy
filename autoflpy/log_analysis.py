@@ -21,14 +21,14 @@ TODO:
         input file.
     Allow for channel mapping in the flight log code.
     Throttle as a %??
-    Issue with multi-variable graph titles.
+
     Axis variables in plots only take round numbers.
     Calculate wind speed/vector/plot.
     Add flight duration from arm/disarm or vibration data.
     Add a 3D map image to summarise flight.
     Hide code in the Jupyter Notebook once it has run?
 DONE:
-
+    Issue with multi-variable graph titles.
 """
 
 
