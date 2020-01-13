@@ -22,9 +22,9 @@ Autoflpy (Automated flight log python) is an open source code to allow you to cr
 * Free software: GPLv3
 * Documentation: https://autoflpy.readthedocs.io.
 
-.. image:: path/docs/SITL_flight_map.png
+.. image:: path/docs/images/SITL_flight_map.png
 	:width: 400
-	:alt: Image of a flight plotted over a map.
+	:alt: Image of a flight plotted over a map generated with AutoFLpy.
 
 Features
 --------
