@@ -2084,7 +2084,7 @@ def metar_quota_returner(contents, file_name, location, year,
                          month, day, month_end, day_end, start_time_hours,
                          end_time_hours, metar_file_path,
                          replace_key="METAR_INFORMATION"):
-    """Puts METAR_replacer function in to replace METAR_INFORMATION cell"""
+    """Puts metar_replacer function in to replace METAR_INFORMATION cell"""
     """Replaces the key word in a cell with METAR information from the day"""
     # Creates replacement text for the METAR key.
     metar_replacement = "\n  {\n " + \
@@ -2102,7 +2102,7 @@ def metar_quota_returner(contents, file_name, location, year,
                         "   \"outputs\": [],\n" + \
                         "   \"source\": [\n" + \
                         "    \"# METAR REPLACER\\n\",\n    \"\\n\",\n" + \
-                        "    \"METAR_replacer(os.getcwd(), \\\"" + file_name + "\\\", \\\"" + \
+                        "    \"metar_replacer(os.getcwd(), \\\"" + file_name + "\\\", \\\"" + \
                         location + "\\\", \\\"" + year + "\\\", \\\"" + month + "\\\", \\\"" + \
                         day + "\\\", \\\"" + month_end + "\\\", \\\"" + day_end + \
                         "\\\", \\\"" + start_time_hours + "\\\", \\\"" + end_time_hours + \
