@@ -2,6 +2,12 @@
 History
 =======
 
+1.0.13 (2020-01-14)
+-------------------
+
+* Added the ability to change the map line colour through a separate variable
+* Previous demonstration data replaced with SITL generated data
+
 1.0.12 (2020-01-13)
 -------------------
 
