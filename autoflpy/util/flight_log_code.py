@@ -4,6 +4,7 @@ import textwrap
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle as pk
+import scipy.interpolate as interp
 from requests import get, HTTPError
 from openpyxl import load_workbook
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -878,12 +879,15 @@ def flight_log_graph_contents_replacer(contents):
 
 
 def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
-                  y_limits=("y_min", "y_max"), scale=0.01):
+                  y_limits=("y_min", "y_max"), scale=0.01, map_info=(["altitude", "gps"])):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source].
 
     scale represents the amount of zoom on the second latitude longitude plot
     if this is present.
+
+    map_info represents additional information requested by the user to be plotted as a colour bar on the map line.
+    The default is gps altitude data.
     """
     # List of data to plot returns plot data which has structure:
     # [axis, [data_source, column]]
@@ -907,6 +911,50 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                         # exits for loop if data has been appended.
                         break
             values_list_index += 1
+
+    # Checks if the plot in question is a map plot
+    if "Latitude" in [plot_data[0][1][0], plot_data[1][1][0]]:
+        if "Longitude" in [plot_data[0][1][0], plot_data[1][1][0]]:
+            mapplot_active = True
+        else:
+            mapplot_active = False
+    else:
+        mapplot_active = False
+
+    # Imports the map data used for colouring the line on the latitude-longitude plot.
+    if len(map_info) == 2 and mapplot_active is True:
+        # Adds data series to be called for the time of the map_info and GPS time (later used for interpolating
+        # the data)
+        map_info = [map_info, ["time", str(map_info[1])], ["time", "gps"]]
+        try:
+            data_map = []
+            plot_data_map = []
+            for index in map_info:
+                values_list_index = 0
+                # sets value_found to a default of False
+                # Checks to see if the 'data source' recorded in the graph list
+                # matches the 'data sources' in the list structure values_list.
+                for values_list_data in values_list:
+                    # Finds data source.
+                    if index[1] == values_list_data[0].lower():
+                        data_map.append(values_list_index)
+                    # Finds corresponding time source.
+                        # Goes through each column searching for a match.
+                        for column in values_list[values_list_index][1:]:
+                            # Checks to see if they have the same title.
+                            if column[0].lower() == index[0]:
+                                # if they do then the data is appended.
+                                plot_data_map.append(column)
+                                # exits for loop if data has been appended.
+                                break
+                    values_list_index += 1
+        except IndexError:
+            print('map_info input variables not found. Check the input spelling and that the variable exists.')
+    elif map_info != 2 and mapplot_active is True:
+        print('map_info variable entered incorrectly. Format should be: map_info=["data", "data_set"].')
+    else:
+        pass
+
     # Goes through the graph list and finds the matching values in the values_
     # list and then appends these values to a new list with x or y stated.
     # returns plot data which has structure: [axis, [data_source, column]]
@@ -1029,8 +1077,8 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         lat = y[2]
         long = x[2]
         # Plots map with data
-        backplt_map(lat, long)
-        backplt_map(lat, long, scale_factor=1. / scale)
+        backplt_map(lat, long, z_var=plot_data_map)
+        backplt_map(lat, long, z_var=plot_data_map, scale_factor=(1 / scale))
         return
 
     elif plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude' and map_modules_imported is False:
@@ -1755,14 +1803,14 @@ def flight_data_time_sorter(frame_list):
         for column in columns:
             # Checks to see if the word time appears in the column.
             if "time" in column.lower():
-                # If time appears then it is apended to the list time_columns.
+                # If time appears then it is appended to the list time_columns.
                 time_columns.append(column)
                 # Divides column by 1*10^6 to return it to seconds.
                 frame[column] = frame[column].div(10 ** 6)
                 # Adds columns in this data frame that contain the word time to
                 # a list.
                 frame_columns_list.append(column)
-                # appends replacment column to dictionary.
+                # appends replacement column to dictionary.
                 renamed_time_columns[column] = (column.replace("_US_", "_s_"))
         # Creates a copy of the columns to delete parts from.
         frame_copy = frame.copy()
@@ -2151,7 +2199,7 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     print('Pickling finished')
 
 
-def backplt_map(lat, long, scale_factor=1):
+def backplt_map(lat, long, z_var, scale_factor=1):
     # Sets titles for the data frame
     column_titles = np.array(['index', 'lat, long'])
     index = range(len(lat))
@@ -2198,16 +2246,26 @@ def backplt_map(lat, long, scale_factor=1):
     geometry_data = [path_data_geo['geometry'].x,
                      path_data_geo['geometry'].y]
 
-    # Chooses what to plot. For a small scale map only a point is plotted.
+
+    # Processes data for the colour scale:
+    # Interpolates the data for the colour series over the data's time scale
+    # z_var[1][2] = colour variable time data
+    # z_var[0][2] = colour variable data
+    z_var_interp = interp.interp1d(z_var[1][2], z_var[0][2])
+
+    # Creates the data series of same length as the latitude/longitude data:
+    # z_var[2][2] = gps time data
+    colour_data = []
+    for point in z_var[2][2]:
+        colour_data.append(z_var_interp(point))
+
     if scale_factor <= 200:
         # plots the geometry data using matplotlib
         plt.plot(geometry_data[0], geometry_data[1], 'r', zorder=1,
                  linewidth=0.5)
-        # TODO NOTE: this is where the colour of the plot can be changed with
-        # with regards to a separate variable:
-        # c=variable
+
         mapplot = plt.scatter(geometry_data[0], geometry_data[1],
-                              c=path_data_geo['index'], marker='.',
+                              c=colour_data, marker='.',
                               cmap='gnuplot', zorder=2)
     else:
         # Plots a point symbolising the mean of the data.
@@ -2305,7 +2363,9 @@ def backplt_map(lat, long, scale_factor=1):
         # Plots the colour map
         cbar = plt.colorbar(mapplot, cax=cax)
         # Adds a label to the colour bar
-        cbar.ax.set_ylabel('Chronological Data Order', rotation=90)
+        # z_var[0][0] = colour variable name
+        # z_var[0][1] = colour variable units
+        cbar.ax.set_ylabel(str(z_var[0][0]) + " (" + str(z_var[0][1]) + ")", rotation=90)
 
     plt.show()
     return
