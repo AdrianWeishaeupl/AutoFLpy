@@ -1,0 +1,4 @@
+METAR EGDR 230950Z 35014G25KT 9999 FEW023 SCT160 06/01 Q1005
+METAR EGDR 230926Z 35015G26KT 9999 FEW025 SCT160 06/00 Q1005
+METAR EGDR NIL
+https://www.ogimet.com/display_metars2.php?lang=en&lugar=EGDR&tipo=ALL&ord=REV&nil=SI&fmt=html&ano=2019&mes=01&day=23&hora=9&anof=2019&mesf=01&dayf=23&horaf=9&minf=59&send=send

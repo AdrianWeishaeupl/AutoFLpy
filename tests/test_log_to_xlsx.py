@@ -15,7 +15,7 @@ from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
 
 
-class Testlog_to_xlsx(unittest.TestCase):
+class TestLogToXlsx(unittest.TestCase):
 
     def setUp(self):
         # Create variables and assign directories before any test.
@@ -66,10 +66,10 @@ class Testlog_to_xlsx(unittest.TestCase):
                      "AOA"]
         # These values need to be adjusted if the
         # test_log_to_xlsx.log file gets changed.
-        cell = [[699, 12], [3499, 14], [1399, 7], [1449, 8], [3499, 8],
+        cell = [[699, 13], [3499, 14], [1399, 8], [1449, 9], [3499, 8],
                 [3499, 6], [3499, 8], [3499, 2]]
-        expected_answer = [210400613, 210661078, 210379062, 215459079,
-                           210660279, 210661130, 210661044, 210661024]
+        expected_answer = [156014236, 156314116, 156214156, 161213822,
+                           156314116, 156314116, 156314116, 156314116]
         """
         The following loop checks that a value in each .xlsx sheet is correct.
         The chosen values are time values and hence there should only be one

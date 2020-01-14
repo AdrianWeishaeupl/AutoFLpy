@@ -73,7 +73,7 @@ def notebook_sample_code(flight_data_file_path, flight_data_file_name,
            sorted_frames, values_list)
 
 
-class Test_flight_log_code(unittest.TestCase):
+class TestFlightLogCode(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -185,8 +185,8 @@ class Test_flight_log_code(unittest.TestCase):
                 self.flight_data_file_path,
                 self.flight_data_file_name)
         # Checks that the expected frame dimensions are the correct size.
-        frame_dimensions = [17693, 102030, 21784, 24498, 61218, 47614, 61218,
-                            20406]
+        frame_dimensions = [17780, 95220, 22860, 25400, 57141, 44436, 57132,
+                            19044]
         if len(frame_list) == 8:
             for frame in range(len(frame_list)):
                 self.assertEqual(frame_list[frame].size,
@@ -315,10 +315,10 @@ class Test_flight_log_code(unittest.TestCase):
         # Checks if the METAR data exists. If it doesn't, it gets it from the
         # API. NOTE: API has a limit and so the original METAR file is not
         # deleted before every run.
-        flight_log_code.metar_finder('DGTK', '2019', '01', '23', '01', '23',
+        flight_log_code.metar_finder('EGDR', '2019', '01', '23', '01', '23',
                                      '9', '10', self.base_path)
         # Checks if the file path exists.
-        metar_data_exists = os.path.exists(self.base_path + 'METAR_DGTK_2019'
+        metar_data_exists = os.path.exists(self.base_path + 'METAR_EGDR_2019'
                                            '0123_20190123_9_9.txt')
         self.assertTrue(metar_data_exists)
 
@@ -332,7 +332,7 @@ class Test_flight_log_code(unittest.TestCase):
                                                          content)
         self.assertEqual(1, metar_information_present)
         # Gets METAR data
-        metar_data = flight_log_code.metar_finder('DGTK', '2019', '01', '23',
+        metar_data = flight_log_code.metar_finder('EGDR', '2019', '01', '23',
                                                   '01', '23', '9', '10',
                                                   self.base_path)
         # Runs METAR returner
@@ -341,7 +341,7 @@ class Test_flight_log_code(unittest.TestCase):
                                                  replace_key="METAR_"
                                                  "INFORMATION")
         # Assigns expected metar information
-        metar_information = "METAR: DGTK 230900Z NIL"
+        metar_information = "type: routine report, cycle 9 (automatic report)"
         # Checks that the expected metar information is present
         metar_information_present = check_str_in_content(metar_information,
                                                          content)
@@ -356,12 +356,12 @@ class Test_flight_log_code(unittest.TestCase):
                                                          content)
         self.assertEqual(1, metar_information_present)
         # Runs no_METAR_returner code
-        content = flight_log_code.no_metar_returner('DGTK', '2019', '01', '23',
+        content = flight_log_code.no_metar_returner('EGDR', '2019', '01', '23',
                                                     '01', '23', '9', '10',
                                                     content, replace_key="META"
                                                     "R_INFORMATION")
         # Assigns expected content
-        expected_content = 'No METARs for DGTK for the date 23012019 to the date 23012019 from a '\
+        expected_content = 'No METARs for EGDR for the date 23012019 to the date 23012019 from a '\
             'starting time of 9:00 and an end time of 9:59.'
         # Checks that the expected content is present in the content
         information_present = check_str_in_content(expected_content,
@@ -378,12 +378,12 @@ class Test_flight_log_code(unittest.TestCase):
         self.assertEqual(1, metar_information_present)
         # Runs METAR_quota_returner
         content = flight_log_code.metar_quota_returner(content, 'test20190123',
-                                                       'DGTK', '2019', '01',
+                                                       'EGDR', '2019', '01',
                                                        '23', '01', '23', '9',
                                                        '10', self.base_path,
                                                        replace_key="METAR_INFO"
                                                        "RMATION")
-        expected_content = 'METAR_replacer(os.getcwd(),'
+        expected_content = 'metar_replacer(os.getcwd(),'
         content_present = check_str_in_content(expected_content, content)
         self.assertEqual(1, content_present)
 
@@ -402,7 +402,7 @@ class Test_flight_log_code(unittest.TestCase):
         # Run the METAR_replacer
         content = flight_log_code.metar_replacer(self.template_file_path,
                                                  template_temp_name,
-                                                 'DGTK', '2019', '01', '23',
+                                                 'EGDR', '2019', '01', '23',
                                                  '01', '23', '9', '10',
                                                  self.base_path)
         # Check information was replaced correctly
@@ -410,12 +410,12 @@ class Test_flight_log_code(unittest.TestCase):
         content = flight_log_code.contents_opener(self.template_file_path,
                                                   template_temp_name)
         # Checks that the METAR data is present
-        expected_content = 'METAR: DGTK 230900Z NIL'
+        expected_content = 'time: Wed Jan 23 09'
         metar_in_content = check_str_in_content(expected_content, content)
         # NOTE: also replaces the content of the METAR_INFORMATION cell, hence
         # 2 instances are present in this test. This is also only relevant to
         # the test template.
-        self.assertEqual(2, metar_in_content)
+        self.assertEqual(4, metar_in_content)
         # Removes the generated document
         generated_file_name = self.template_file_path + template_temp_name
         if os.path.exists(generated_file_name):

@@ -9,7 +9,7 @@ from autoflpy.util import name_generator
 import unittest
 
 
-class Testname_generator(unittest.TestCase):
+class TestNameGenerator(unittest.TestCase):
 
     def setUp(self):
         # Defines variables needed

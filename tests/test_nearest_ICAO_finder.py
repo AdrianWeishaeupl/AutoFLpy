@@ -12,7 +12,7 @@ import numpy as np
 import os
 
 
-class Testnearest_ICAO_finder(unittest.TestCase):
+class TestNearestICAOFinder(unittest.TestCase):
 
     def setUp(self):
         # Defines variables needed
@@ -30,7 +30,7 @@ class Testnearest_ICAO_finder(unittest.TestCase):
         icao = nearest_ICAO_finder.icao_finder(self.excel_file_path,
                                                self.excel_file_name)
         # Checks that the correct icao code is returned.
-        self.assertEqual('DGTK', icao)
+        self.assertEqual('EGDR', icao)
 
     def test_closest_icao(self):
         # Runs the airport_lat_long_clst function
@@ -70,7 +70,7 @@ class Testnearest_ICAO_finder(unittest.TestCase):
         uav_lat_long = nearest_ICAO_finder.uav_lat_long(self.excel_file_path,
                                                         self.excel_file_name)
         # Defines expected_results
-        expected_lat_long = np.array([[0.0108352], [0.0308365]])
+        expected_lat_long = np.array([[49.9543952], [-6.3688301]])
         # Compares the uav_lat_long_clst to the expected_lat_long, 0 = lat, 1 = long
         self.assertEqual(expected_lat_long[0], uav_lat_long[0])
         self.assertEqual(expected_lat_long[1], uav_lat_long[1])
