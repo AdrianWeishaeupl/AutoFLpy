@@ -442,7 +442,7 @@ class TestFlightLogCode(unittest.TestCase):
                                                  "CHECKLIST_INFORMATION",
                                                  content)[0]
         # Checks that the content has been changed
-        expected_content = 'The Initial Pre-Flight was implemented by Adria' +\
+        expected_content = 'The Initial Pre-Flight was actioned by Adria' +\
                            'n Weishaeupl starting at 2019-01-23 15:31:44 an' +\
                            'd ending at 2019-01-23 15:32:58. The notes reco' +\
                            'rded on this checklist were: <i>THIS IS A TEST.'
