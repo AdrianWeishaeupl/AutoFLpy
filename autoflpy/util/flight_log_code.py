@@ -382,7 +382,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
         # the notes or damage that was recorded with them.
         for index in range(len(checklists_actioned)):
             text = "\n    \"The " + checklists_actioned[index] + \
-                   " was implemented by " + checklist_actioned_by[index] + \
+                   " was actioned by " + checklist_actioned_by[index] + \
                    " starting at " + str(start_date_time[index]) + " and " + \
                    "ending at " + str(end_date_time[index]) + "."
             # If there are notes, then append them to the text with the
@@ -425,7 +425,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
         # were actioned and the notes that were recorded with them.
         for index in range(len(emergency_checklists_actioned)):
             text = "\n    \"The " + emergency_checklists_actioned[index] + \
-                   " was implemented by " + \
+                   " was actioned by " + \
                    emergency_checklist_actioned_by[index] + \
                    " starting at " + str(emergency_start_date_time[index]) + \
                    " and ending at " + str(emergency_end_date_time[index]) + "."
@@ -549,7 +549,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                 text = text[:-2] + " "
                 # This does the last item in the list of checklists
                 text = text + "and " + checklist_and_number[-1:][0][0] + \
-                       checklist_item[1] + " checklists were implemented"
+                    checklist_item[1] + " checklists were actioned"
                 # This checks the last item in the list checklist_and_number to
                 # see if it should appear in the list with items that appear
                 # more than once.
@@ -560,21 +560,20 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                 # Checks to see if the list has length 1.
                 if len(number_greater_than_1) == 1:
                     text = text + " and " + number_greater_than_1[0][0] + \
-                           " was implemented " + str(number_greater_than_1[0][1]) \
+                           " was actioned " + str(number_greater_than_1[0][1]) \
                            + " times."
                 # if it does not then it loops through the lists.
                 else:
                     if len(number_greater_than_1) != 0:
                         text = text + " and "
                         for repeat in number_greater_than_1[:-1]:
-                            text = text + repeat[0] + " was implemented " + \
+                            text = text + repeat[0] + " was actioned " + \
                                    str(repeat[1]) + " times, "
                             # This removes the Oxford comma.
                         text = text[:-2] + " "
                         text = text + "and " + \
-                               number_greater_than_1[-1:][0][0] + \
-                               " was implemented " + \
-                               str(number_greater_than_1[-1:][0][1]) + " times."
+                            number_greater_than_1[-1:][0][0] + " was actioned " + \
+                            str(number_greater_than_1[-1:][0][1]) + " times."
                     else:
                         text = text + "."
         # This else is for it it only has one item
@@ -583,10 +582,10 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
             # will state how many times it was repeated.
             if checklist_and_number[0][1] == 1:
                 text = "The " + checklist_and_number[0][0] + checklist_item[1] \
-                       + " checklist was implemented."
+                       + " checklist was actioned."
             else:
                 text = "The " + checklist_and_number[0][0] + checklist_item[1] \
-                       + " checklist was implemented " + \
+                       + " checklist was actioned " + \
                        str(checklist_and_number[0][1]) + " times."
         text_list.append(text)
     # Checks to see if the emergency checklist is available and replaces it
@@ -913,9 +912,12 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
             values_list_index += 1
 
     # Checks if the plot in question is a map plot
-    if "Latitude" in [plot_data[0][1][0], plot_data[1][1][0]]:
-        if "Longitude" in [plot_data[0][1][0], plot_data[1][1][0]]:
-            mapplot_active = True
+    if len(plot_data) != 0:
+        if "Latitude" in [plot_data[0][1][0], plot_data[1][1][0]]:
+            if "Longitude" in [plot_data[0][1][0], plot_data[1][1][0]]:
+                mapplot_active = True
+            else:
+                mapplot_active = False
         else:
             mapplot_active = False
     else:
@@ -938,7 +940,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                     # Finds data source.
                     if index[1] == values_list_data[0].lower():
                         data_map.append(values_list_index)
-                    # Finds corresponding time source.
+                        # Finds corresponding time source.
                         # Goes through each column searching for a match.
                         for column in values_list[values_list_index][1:]:
                             # Checks to see if they have the same title.
@@ -1466,7 +1468,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                 # against each other.
                 xy_pairs.append([x_data[1], y_data[1]])
     if plot_info == 1:
-        line = axis_1.plot(x[2], y[2], label=y[0] + " (" + y[1] + ")",
+        line = axis_1.plot(x[2], y[2], label=y[0],
                            color="C" + str(line_count))
         # plots x name with unit in brackets.
         axis_1.set_xlabel(x[0] + " (" + x[1] + ")")
@@ -1481,7 +1483,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     if plot_info == 2:
         for pair in xy_pairs:
             # plots x against y values.
-            line = axis_1.plot(pair[0][2], pair[1][2], label=pair[1][0] + " (" + pair[1][1] + ")",
+            line = axis_1.plot(pair[0][2], pair[1][2], label=pair[1][0],
                                color="C" + str(line_count))
             # Increments line count
             line_count += 1
@@ -1506,7 +1508,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     if plot_info == 3:
         for pair in xy_pairs:
             # plots x against y values.
-            line = axis_1.plot(pair[0][2], pair[1][2], label=pair[1][0] + " (" + pair[1][1] + ")",
+            line = axis_1.plot(pair[0][2], pair[1][2], label=pair[1][0],
                                color="C" + str(line_count))
             # Increments line count
             line_count += 1
@@ -1563,7 +1565,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                 # against each other.
                 xy_pairs.append([x_data[1], y_data[1]])
     if plot_info == 1:
-        line = axis_2.plot(x[2], y[2], label=y[0] + " (" + y[1] + ")",
+        line = axis_2.plot(x[2], y[2], label=y[0],
                            color="C" + str(line_count))
         # Increments line count
         line_count += 1
@@ -1601,8 +1603,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     if plot_info == 3:
         for pair in xy_pairs:
             # plots x against y values.
-            line = axis_2.plot(pair[0][2], pair[1][2], label=pair[1][0] + " ("
-                               + pair[1][1] + ")", color="C" + str(line_count))
+            line = axis_2.plot(pair[0][2], pair[1][2], label=pair[1][0], color="C" + str(line_count))
             # Increments line count
             line_count += 1
             # Appends current line to list of lines.
@@ -2246,7 +2247,6 @@ def backplt_map(lat, long, z_var, scale_factor=1):
     geometry_data = [path_data_geo['geometry'].x,
                      path_data_geo['geometry'].y]
 
-
     # Processes data for the colour scale:
     # Interpolates the data for the colour series over the data's time scale
     # z_var[1][2] = colour variable time data
@@ -2256,13 +2256,20 @@ def backplt_map(lat, long, z_var, scale_factor=1):
     # Creates the data series of same length as the latitude/longitude data:
     # z_var[2][2] = gps time data
     colour_data = []
-    for point in z_var[2][2]:
+    for point in [p for p in z_var[2][2] if min(z_var[1][2]) <= p <= max(z_var[1][2])]:
         colour_data.append(z_var_interp(point))
 
     if scale_factor <= 200:
         # plots the geometry data using matplotlib
         plt.plot(geometry_data[0], geometry_data[1], 'r', zorder=1,
                  linewidth=0.5)
+
+        # TODO THIS NEEDS FIXING IN A WAY THAT WORKS. NEED TO MATCH THE TIME STAMPS OF THE LOCATION DATA WITH THE
+        #  COLOUR DATA.
+        # Makes sure that the
+        if len(geometry_data[0]) != len(colour_data):
+            for point in colour_data[:(len(geometry_data) - 1)]:
+                colour_data.append(point)
 
         mapplot = plt.scatter(geometry_data[0], geometry_data[1],
                               c=colour_data, marker='.',
