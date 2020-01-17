@@ -1158,7 +1158,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     # Checks to see if plot limits have been set for the y values
     if isinstance(y_limits[0], int) and isinstance(y_limits[1], int):
         plt.ylim(y_limits)
-    plt.grid(which='both', axis='both', linewidth=0.5, color="0.1")
+    plt.grid(which='both', axis='both', linewidth=0.2, color="0.1")
     plt.show()
 
 
@@ -1675,7 +1675,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # right axis.
     if isinstance(y_limits_right[0], int) and isinstance(y_limits_right[1], int):
         axis_2.set_ylim(y_limits_right)
-    plt.grid(which='both', axis='both', linewidth=0.5, color="0.1")
+    plt.grid(which='both', axis='both', linewidth=0.2, color="0.1")
     plt.show()
 
 
@@ -2363,7 +2363,7 @@ def backplt_map(lat, long, z_var, scale_factor=1):
     for title_line in wraped_title:
         final_title += title_line + "\n"
     plt.title(final_title[:-1], y=1.05)
-    plt.grid(which='both', axis='both', linewidth=0.5, color="0.1")
+    plt.grid(which='both', axis='both', linewidth=0.2, color="0.1")
     # Adds a colour bar to a plot if the scale is not out of bounds.
     if scale_factor <= 5:
         # Formats location of the colour bar
