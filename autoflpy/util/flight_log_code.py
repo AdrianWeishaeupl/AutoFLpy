@@ -878,7 +878,7 @@ def flight_log_graph_contents_replacer(contents):
 
 
 def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
-                  y_limits=("y_min", "y_max"), scale=0.01, map_info=(["altitude", "gps"]), arm_data=True):
+                  y_limits=("y_min", "y_max"), scale=0.01, map_info=(["altitude", "gps"]), arm_data=False):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source].
 
@@ -918,15 +918,15 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                             # exits for loop if data has been appended.
                             break
                 values_list_index += 1
-
-    if len(arm_plot_data) != 0:
-        arm_data = True
-    else:
-        # Data has not been imported properly or is not present.
-        print("Arm data is not present or has not been imported properly. Make sure \"EV\" is present in the "
-              "Data_sources.txt file, then run autoflpy again to re-generate the data.")
-        # Sets arm_data to false.
-        arm_data = False
+    if arm_data is True:
+        if len(arm_plot_data) != 0:
+            arm_data = True
+        else:
+            # Data has not been imported properly or is not present.
+            print("Arm data is not present or has not been imported properly. Make sure \"EV\" is present in the "
+                  "Data_sources.txt file, then run autoflpy again to re-generate the data.")
+            # Sets arm_data to false.
+            arm_data = False
 
     for data in plot_information:
         values_list_index = 0
@@ -1368,7 +1368,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                             values_list, x_limits=("x_min", "x_max"),
                             y_limits_left=("y_min", "y_max"),
                             y_limits_right=("y_min", "y_max"),
-                            legend_location=1, arm_data=True):
+                            legend_location=1, arm_data=False):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source], plots data on
     left and right axis as specified as inputs, legend location will specify
@@ -1403,15 +1403,15 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                             # exits for loop if data has been appended.
                             break
                 values_list_index += 1
-
-    if len(arm_plot_data) != 0:
-        arm_data = True
-    else:
-        # Data has not been imported properly or is not present.
-        print("Arm data is not present or has not been imported properly. Make sure \"EV\" is present in the "
-              "Data_sources.txt file, then run autoflpy again to re-generate the data.")
-        # Sets arm_data to false.
-        arm_data = False
+    if arm_data is True:
+        if len(arm_plot_data) != 0:
+            arm_data = True
+        else:
+            # Data has not been imported properly or is not present.
+            print("Arm data is not present or has not been imported properly. Make sure \"EV\" is present in the "
+                  "Data_sources.txt file, then run autoflpy again to re-generate the data.")
+            # Sets arm_data to false.
+            arm_data = False
 
 
 
