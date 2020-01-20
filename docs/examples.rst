@@ -32,6 +32,12 @@ If two variables are from different data sets, there is a good chance that they 
 	:width: 900
 	:alt: Image of a graph generated with AutoFLpy showing altitude and airspeed v time.
 
+The arm and disarm times can be added to both multi-variable and standard graphs. This is done through the addition of the arm_data variable. The time between the arm and disarm will also be calculated:
+
+.. image:: images/Ex_alt_v_time_4.png
+	:width: 900
+	:alt: Image of a graph generated with AutoFLpy showing the altitude v time plot as well as the times when it was armed and disarmed.
+
 
 Plotting Maps
 -------------
@@ -48,5 +54,26 @@ This is a special feature of the graph plotter and allows for a top down visuali
 
 .. image:: images/SITL_flight_map_out.png
 	:width: 900
-	:alt: Image of zoomed out map generated using Software In The Loop.
+	:alt: Image of zoomed in map generated using Software In The Loop.
+
+The scale of the second plot can be changed through the addition of the scale variable:
+
+.. image:: images/Ex_map_2_code.png
+	:width: 900
+	:alt: Image of input to the graph plotter to gerenate a map with a scale defined.
+
+.. image:: images/SITL_flight_map_out_2.png
+	:width: 900
+	:alt: Image of zoomed in map generated using Software In The Loop.
+
+The colour of the additional variable on the map plot can be defined by any third varible for which data is present. This is done through the addition of the map_info variable. The following examplke demonstrates this with airspeed:
+
+.. image:: images/Ex_map_3_code.png
+	:width: 900
+	:alt: Image of input to the graph plotter to gerenate a map with airspeed on the colour axes.
+
+.. image:: images/SITL_flight_map_3.png
+	:width: 900
+	:alt: Image of zoomed in map generated using Software In The Loop showing airspeed on the colour axes.
+
 
