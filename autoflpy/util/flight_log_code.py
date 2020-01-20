@@ -2266,7 +2266,7 @@ def backplt_map(lat, long, z_var, scale_factor=1):
         plt.plot(geometry_data[0], geometry_data[1], 'r', zorder=1,
                  linewidth=0.5)
 
-        # TODO THIS NEEDS FIXING IN A WAY THAT WORKS. NEED TO MATCH THE TIME STAMPS OF THE LOCATION DATA WITH THE
+        # TODO: THIS NEEDS FIXING IN A WAY THAT WORKS. NEED TO MATCH THE TIME STAMPS OF THE LOCATION DATA WITH THE
         #  COLOUR DATA.
         # Makes sure that the
         if len(geometry_data[0]) != len(colour_data):

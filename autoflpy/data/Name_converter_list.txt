@@ -758,7 +758,7 @@ GRXS, TimeUS, Time, US
 GRXS, prMes, prMes, unavailable
 GRXS, cpMes, cpMes, unavailable
 GRXS, doMes, doMes, unavailable
-GRXS, gnss, gnss, unavailable
+GRXS, GPS, GPS, unavailable
 GRXS, sv, sv, unavailable
 GRXS, freq, freq, unavailable
 GRXS, lock, lock, unavailable
