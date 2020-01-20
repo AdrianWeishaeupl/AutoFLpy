@@ -28,8 +28,6 @@ TODO:
     Issue with multi-variable graph titles.
     Option to display time in UTC or time after flight start.
 DONE:
-    Add flight duration from arm/disarm
-    Allow for channel mapping in the flight log code.
 """
 
 
