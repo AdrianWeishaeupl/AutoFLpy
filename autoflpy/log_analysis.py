@@ -19,15 +19,17 @@ TODO:
         data.
     Find a way of allowing custom weather data to be added - add it into the
         input file.
-    Allow for channel mapping in the flight log code.
     Throttle as a %??
     Axis variables in plots only take round numbers.
     Calculate wind speed/vector/plot.
-    Add flight duration from arm/disarm or vibration data.
+    Add flight duration from vibration data.
     Add a 3D map image to summarise flight.
     Hide code in the Jupyter Notebook once it has run?
     Issue with multi-variable graph titles.
+    Option to display time in UTC or time after flight start.
 DONE:
+    Add flight duration from arm/disarm
+    Allow for channel mapping in the flight log code.
 """
 
 

@@ -17,7 +17,7 @@ Based on work done by Samuel Pearson (sp1g18@soton.ac.uk) (06-08/2019)
 
 def log_reader(log_file_path, name_converter_file_path, data_sources_path,
                excel_file_path, excel_file_name, flight_date, flight_number):
-    """Creates a formated excell 95 file from a log file. """
+    """Creates a formatted excel 95 file from a log file. """
     print('Starting log reader')
     print('Creating new work book')
     # Creates a new write only workbook for faster writing
@@ -54,7 +54,7 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
         # Splits data into columns
         data = line.split(", ")
         if data[0] == "FMT":
-            # Specifies wether data is available
+            # Specifies whether data is available
             data_available = False
             # Checks to see if data was recorded for a particular heading.
             for check_line in log_contents:
@@ -87,12 +87,12 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
                     unit = "unavailable_"
                     # heading name check code will go here.
                     heading = heading_name
-                    # Goes throught the names in the name_list to check the
+                    # Goes through the names in the name_list to check the
                     # units
                     for name_data in name_list:
                         # splits name list
                         name_info = name_data.split(", ")
-                        # Checks to see if the inforamtion in the list matches
+                        # Checks to see if the information in the list matches
                         # that being from the log file
                         if name_info[0] == data[3] and name_info[1] == \
                                 heading_name:

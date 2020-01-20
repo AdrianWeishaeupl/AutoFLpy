@@ -1203,3 +1203,5 @@ AETR, Elev, Elev, unavailable
 AETR, Thr, Thr, unavailable
 AETR, Rudd, Rudd, unavailable
 AETR, Flap, Flap, unavailable
+EV, TimeUS, Time, US
+EV, Event, Event, unavailable
