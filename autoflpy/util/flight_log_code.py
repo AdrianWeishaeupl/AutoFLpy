@@ -1137,8 +1137,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         # plots y name with unit in brackets.
         plt.ylabel(y[0] + " (" + y[1] + ")")
         # plots title for graph.
-        title = y[0] + " (" + y[1] + ") v " + x[0] + " (" + \
-                x[1] + ")"
+        title = y[0] + " v " + x[0]
     # If y units have the same unit then this will format the graphs as
     # required.
     if plot_info == 2:
@@ -1162,7 +1161,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         # Plots X label.
         plt.xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
-        title = text + " v " + xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")"
+        title = text + " v " + xy_pairs[0][0][0]
     # If y units do not have the same unit then this will format the graphs
     # as required.
     if plot_info == 3:
@@ -1180,7 +1179,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         # Plots X label.
         plt.xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
-        title = text + " v " + xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")"
+        title = text + " v " + xy_pairs[0][0][0]
     # if plot info is equal to 0 then nothing is returned
     if plot_info == 0:
         print('No data present or variables entered incorrectly.')
@@ -1548,7 +1547,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     # Counts how many lines are being drawn.
     line_count = 0
     # Creates a list with a label in it for the axis.
-    lines = axis_1.plot([], [], " ", label="Left hand axis")
+    lines = axis_1.plot([], [], " ", label="Left axis")
     # Counts number of x.
     x_list = []
     # Counts number of y.
@@ -1589,6 +1588,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         title = y[0]
         line_count = 1
         lines += line
+
     # If y units have the same unit then this will format the graphs as
     # required.
     if plot_info == 2:
@@ -1614,6 +1614,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         axis_1.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
         title = text
+
     # If y units do not have the same unit then this will format the graphs
     # as required.
     if plot_info == 3:
@@ -1645,7 +1646,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     axis_2 = axis_1.twinx()
     # If there is Y axis data for the Right hand axis then plot the label
     if plot_info != 0:
-        lines += axis_2.plot([], [], " ", label="Right hand axis")
+        lines += axis_2.plot([], [], " ", label="Right axis")
     # Counts number of x.
     x_list = []
     # Counts number of y.
@@ -1685,7 +1686,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # plots y name with unit in brackets.
         axis_2.set_ylabel(y[0] + " (" + y[1] + ")")
         # plots title for graph.
-        text = y[0] + " (" + y[1] + ") v " + x[0] + " (" + x[1] + ")"
+        text = y[0] + " v " + x[0]
     # If y units have the same unit then this will format the graphs as
     # required.
     if plot_info == 2:
@@ -1709,7 +1710,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # Plots X label.
         axis_2.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Adds the x variable for use in the title
-        text += " v " + xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")"
+        text += " v " + xy_pairs[0][0][0]
     # If y units do not have the same unit then this will format the graphs
     # as required.
     if plot_info == 3:
@@ -1726,8 +1727,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             text += ", " + pair[1][0]
         # Adds and to end of text
         if len(xy_pairs) != 1:
-            text += ", " + xy_pairs[len(xy_pairs) - 1][1][0] + " v " + xy_pairs[len(xy_pairs) - 1][0][0] + " (" + \
-                    xy_pairs[len(xy_pairs) - 1][0][1] + ")"
+            text += ", " + xy_pairs[len(xy_pairs) - 1][1][0] + " v " + xy_pairs[len(xy_pairs) - 1][0][0]
         # Plots X label.
         axis_2.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
     # If there is no valid data then return nothing.
