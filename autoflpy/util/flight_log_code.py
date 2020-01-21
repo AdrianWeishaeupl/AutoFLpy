@@ -380,6 +380,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
         # Goes through each of the checklists and creates a list of all the
         # checklists actioned, who actioned them, when they were actioned and
         # the notes or damage that was recorded with them.
+        # TODO: THE FOLLOWING TEXT NEEDS CLEARING UP:
         for index in range(len(checklists_actioned)):
             text = "\n    \"The " + checklists_actioned[index] + \
                    " was actioned by " + checklist_actioned_by[index] + \
@@ -424,6 +425,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
         # all the emergency checklists actioned, who actioned them, when they
         # were actioned and the notes that were recorded with them.
         for index in range(len(emergency_checklists_actioned)):
+            # TODO: THE FOLLOWING TEXT NEEDS CLEARING UP:
             text = "\n    \"The " + emergency_checklists_actioned[index] + \
                    " was actioned by " + \
                    emergency_checklist_actioned_by[index] + \
@@ -593,6 +595,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
     if fdi == 1:
         flight_duration_text = ""
         for data in flight_duration_data:
+            # TODO: THE FOLLOWING TEXT NEEDS CLEARING UP. Give a link to the checklist document?
             flight_duration_text = flight_duration_text + "\n    \"The " + \
                                    "flight Duration was recorded as / can be found at: " + \
                                    str(data[1]) + ", this data was recorded by " + \
@@ -1140,8 +1143,14 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     # required.
     if plot_info == 2:
         for pair in xy_pairs:
-            # plots x against y values.
-            plt.plot(pair[0][2], pair[1][2], label=pair[1][0])
+            if pair[1][0][:4] == "Vibe":
+                # plots log y values for vibration data.
+                plt.semilogy(pair[0][2], pair[1][2], label=pair[1][0])
+                print("VIBE")
+            else:
+                # plots x against y values.
+                plt.plot(pair[0][2], pair[1][2], label=pair[1][0])
+                print("PAIR", pair[1][0][:4])
         # Puts in first item.
         text = xy_pairs[0][1][0]
         for pair in xy_pairs[1:-1]:
@@ -1412,8 +1421,6 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                   "Data_sources.txt file, then run autoflpy again to re-generate the data.")
             # Sets arm_data to false.
             arm_data = False
-
-
 
     # Goes through all the elements in the left list
     for element in plot_information_left:
@@ -2513,3 +2520,62 @@ def backplt_map(lat, long, z_var, scale_factor=1):
         cbar.ax.set_ylabel(str(z_var[0][0]) + " (" + str(z_var[0][1]) + ")", rotation=90)
     plt.show()
     return
+
+
+def take_off_graph(values_list, take_off_time, arm_data=False):
+    """Plots the main variables over the take-off range of the flight on a multi-axis plot.
+
+    Variables plotted:
+    ["altitude", "gps"]
+    ["groundspeed", "gps"]
+
+    ["airspeed", "arsp"]
+    ["aoa", "aoa"]
+
+    ["pitch", "ctun"]
+    ["desired pitch", "att"]
+
+    ["throttle ch3", "rcin"]
+    ["flap ch5", "rcin"]
+    ["elevator ch2", "rcin"]
+    ["current", "bat"]
+
+    ["vibex", "vibe"]
+    ["vibey", "vibe"]
+    ["vibez", "vibe"]
+    """
+    # TODO: Finish this function:
+    # Needs to:
+    # Determine the take off point
+
+    x_limits = [int(float(take_off_time) - 10), int(float(take_off_time) + 15)]
+    y_limits_left = ["y_min", "y_max"]
+    y_limits_right = ["y_min", "y_max"]
+    y_limits = ["y_min", "y_max"]
+    legend_location = 1
+    multiaxis_graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]],
+                             [["y", "groundspeed", "gps"], ["x", "time", "gps"]], values_list, x_limits, y_limits_left,
+                             y_limits_right, legend_location, arm_data=arm_data)
+
+    multiaxis_graph_plotter([["y", "airspeed", "arsp"], ["x", "time", "arsp"]],
+                             [["y", "aoa", "aoa"], ["x", "time", "aoa"]], values_list, x_limits, y_limits_left,
+                             y_limits_right, legend_location, arm_data=arm_data)
+
+    multiaxis_graph_plotter([["y", "pitch", "ctun"], ["x", "time", "ctun"]],
+                             [["y", "desired pitch", "att"], ["x", "time", "att"]], values_list, x_limits,
+                             y_limits_left, y_limits_right, legend_location, arm_data=arm_data)
+
+    multiaxis_graph_plotter([["y", "throttle ch3", "rcin"], ["y", "flap ch5", "rcin"], ["y", "elevator ch2", "rcin"],
+                             ["x", "time", "rcin"]], [["y", "current", "bat"], ["x", "time", "bat"]],
+                            values_list, x_limits, y_limits_left, y_limits_right, legend_location, arm_data=arm_data)
+
+    graph_plotter([["x", "time", "vibe"], ["y", "vibex", "vibe"], ["y", "vibey", "vibe"], ["y", "vibez", "vibe"]],
+                  values_list, x_limits, y_limits, arm_data=arm_data)
+
+
+def take_off_point_finder():
+    """Finds the take-off point from the flight data"""
+    # TODO: write this function.
+    # Needs to work for tricycle, tail sitter, engine, motor, propeller, jet..
+    # Look into increase in GPS altitude.
+    pass
