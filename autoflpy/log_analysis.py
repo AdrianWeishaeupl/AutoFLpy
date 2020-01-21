@@ -83,8 +83,7 @@ def autoflpy(input_file='Input_File.json'):
             os.makedirs(log_file_base_path)
             # Raises error and gives advice on how to continue.
             print('No log file directory was entered. A new directory has been'
-                  ' made, please copy the file path of this directory into the'
-                  ' input file and place your log files into this directory.')
+                  ' made.')
             raise FileNotFoundError
         except OSError:
             print('Log file path found.')
@@ -199,7 +198,7 @@ def autoflpy(input_file='Input_File.json'):
             os.makedirs(checklist_file_path)
         except OSError:
             print('Checklists folder found.')
-        # Checks that the ckecklists are not already present in the folder
+        # Checks that the checklists are not already present in the folder
         if os.path.exists(checklist_file_path + 'Checklists_emergency.xlsx'
                           ) is False:
             # Copies sample checklists into the generated folder.

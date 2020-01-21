@@ -8,8 +8,7 @@ def excel_file_name_updater(date, flight_number):
     # Checks to see if the year data is in the right format
     date = str(date)
     if len(date) != 8:
-        print("The date is in an incorrect format. Format should be YYYYMMDD")
-        raise NameError
+        raise Exception("The date is in an incorrect format. Format should be YYYYMMDD")
     year = date[:4]
     month = date[4:6]
     day = date[6:]
@@ -62,15 +61,15 @@ def excel_file_name_updater(date, flight_number):
             text += flight_number
         else:
             # Error message explaining that data is required
-            print("Error", "Flight number is required for"
-                  " the automatic generation of the excel"
-                  " file name.")
+            raise Exception("Error", "Flight number is required for"
+                            " the automatic generation of the excel"
+                            " file name.")
             # Sets textbox to be blank.
             text = ""
     else:
-        print("Error", "The complete flight date is required"
-              " for the automatic generation of the excel"
-              " file name.")
+        raise Exception("Error", "The complete flight date is required"
+                        " for the automatic generation of the excel"
+                        " file name.")
         # Sets textbox to be blank.
         text = ""
     # If nothing entered, do not clear the text box.
