@@ -1586,7 +1586,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # plots y name with unit in brackets.
         axis_1.set_ylabel(y[0] + " (" + y[1] + ")")
         # plots title for graph.
-        title = y[0] + " (" + y[1] + ") v " + x[0] + " (" + x[1] + ")"
+        title = y[0]
         line_count = 1
         lines += line
     # If y units have the same unit then this will format the graphs as
@@ -1606,14 +1606,14 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             text += ", " + pair[1][0]
         # Adds and to end of text
         if len(xy_pairs) != 1:
-            text += " and " + xy_pairs[len(xy_pairs) - 1][1][0]
+            text += ", " + xy_pairs[len(xy_pairs) - 1][1][0]
         # Plots Legend.
         # Plots Y label.
         axis_1.set_ylabel(text + " (" + xy_pairs[0][1][1] + ")")
         # Plots X label.
         axis_1.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
-        title = text + " v " + xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")"
+        title = text
     # If y units do not have the same unit then this will format the graphs
     # as required.
     if plot_info == 3:
@@ -1631,11 +1631,11 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             text += ", " + pair[1][0]
         # Adds and to end of text
         if len(xy_pairs) != 1:
-            text += " and " + xy_pairs[len(xy_pairs) - 1][1][0]
+            text += ", " + xy_pairs[len(xy_pairs) - 1][1][0]
         # Plots X label.
         axis_1.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
-        title = text + " v " + xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")"
+        title = text
 
     # Records plot info for the left axis
     plot_info_left = plot_info
@@ -1703,12 +1703,13 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             text += ", " + pair[1][0]
         # Adds and to end of text
         if len(xy_pairs) != 1:
-            text += " and " + xy_pairs[len(xy_pairs) - 1][1][0]
-
+            text += ", " + xy_pairs[len(xy_pairs) - 1][1][0]
         # Plots Y label.
         axis_2.set_ylabel(text + " (" + xy_pairs[0][1][1] + ")")
         # Plots X label.
         axis_2.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
+        # Adds the x variable for use in the title
+        text += " v " + xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")"
     # If y units do not have the same unit then this will format the graphs
     # as required.
     if plot_info == 3:
@@ -1725,7 +1726,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             text += ", " + pair[1][0]
         # Adds and to end of text
         if len(xy_pairs) != 1:
-            text += " and " + xy_pairs[len(xy_pairs) - 1][1][0] + " v " + xy_pairs[len(xy_pairs) - 1][0][0] + " (" + \
+            text += ", " + xy_pairs[len(xy_pairs) - 1][1][0] + " v " + xy_pairs[len(xy_pairs) - 1][0][0] + " (" + \
                     xy_pairs[len(xy_pairs) - 1][0][1] + ")"
         # Plots X label.
         axis_2.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
@@ -1774,6 +1775,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # plotting.
         axis_2.legend(lines[1:], label[1:], loc=legend_location)
         print('Right axis data missing or entered incorrectly.')
+
     # Checks to see if plot limits have been set for the x values
     if isinstance(x_limits[0], int) and isinstance(x_limits[1], int):
         axis_1.set_xlim(x_limits)
