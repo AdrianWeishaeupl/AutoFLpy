@@ -1146,11 +1146,9 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
             if pair[1][0][:4] == "Vibe":
                 # plots log y values for vibration data.
                 plt.semilogy(pair[0][2], pair[1][2], label=pair[1][0])
-                print("VIBE")
             else:
                 # plots x against y values.
                 plt.plot(pair[0][2], pair[1][2], label=pair[1][0])
-                print("PAIR", pair[1][0][:4])
         # Puts in first item.
         text = xy_pairs[0][1][0]
         for pair in xy_pairs[1:-1]:
@@ -2548,11 +2546,13 @@ def take_off_graph(values_list, take_off_time, arm_data=False):
     # Needs to:
     # Determine the take off point
 
+    # Sets the range for all of the graphs.
     x_limits = [int(float(take_off_time) - 10), int(float(take_off_time) + 15)]
     y_limits_left = ["y_min", "y_max"]
     y_limits_right = ["y_min", "y_max"]
     y_limits = ["y_min", "y_max"]
     legend_location = 1
+    # Plots data mentioned above.
     multiaxis_graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]],
                              [["y", "groundspeed", "gps"], ["x", "time", "gps"]], values_list, x_limits, y_limits_left,
                              y_limits_right, legend_location, arm_data=arm_data)
