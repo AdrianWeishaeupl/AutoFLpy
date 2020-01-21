@@ -315,10 +315,10 @@ class TestFlightLogCode(unittest.TestCase):
         # Checks if the METAR data exists. If it doesn't, it gets it from the
         # API. NOTE: API has a limit and so the original METAR file is not
         # deleted before every run.
-        flight_log_code.metar_finder('EGDR', '2019', '01', '23', '01', '23',
+        flight_log_code.metar_finder('EGHE', '2019', '01', '23', '01', '23',
                                      '9', '10', self.base_path)
         # Checks if the file path exists.
-        metar_data_exists = os.path.exists(self.base_path + 'METAR_EGDR_2019'
+        metar_data_exists = os.path.exists(self.base_path + 'METAR_EGHE_2019'
                                            '0123_20190123_9_9.txt')
         self.assertTrue(metar_data_exists)
 
@@ -332,7 +332,7 @@ class TestFlightLogCode(unittest.TestCase):
                                                          content)
         self.assertEqual(1, metar_information_present)
         # Gets METAR data
-        metar_data = flight_log_code.metar_finder('EGDR', '2019', '01', '23',
+        metar_data = flight_log_code.metar_finder('EGHE', '2019', '01', '23',
                                                   '01', '23', '9', '10',
                                                   self.base_path)
         # Runs METAR returner
@@ -356,12 +356,12 @@ class TestFlightLogCode(unittest.TestCase):
                                                          content)
         self.assertEqual(1, metar_information_present)
         # Runs no_METAR_returner code
-        content = flight_log_code.no_metar_returner('EGDR', '2019', '01', '23',
+        content = flight_log_code.no_metar_returner('EGHE', '2019', '01', '23',
                                                     '01', '23', '9', '10',
                                                     content, replace_key="META"
                                                     "R_INFORMATION")
         # Assigns expected content
-        expected_content = 'No METARs for EGDR for the date 23012019 to the date 23012019 from a '\
+        expected_content = 'No METARs for EGHE for the date 23012019 to the date 23012019 from a '\
             'starting time of 9:00 and an end time of 9:59.'
         # Checks that the expected content is present in the content
         information_present = check_str_in_content(expected_content,
@@ -378,7 +378,7 @@ class TestFlightLogCode(unittest.TestCase):
         self.assertEqual(1, metar_information_present)
         # Runs METAR_quota_returner
         content = flight_log_code.metar_quota_returner(content, 'test20190123',
-                                                       'EGDR', '2019', '01',
+                                                       'EGHE', '2019', '01',
                                                        '23', '01', '23', '9',
                                                        '10', self.base_path,
                                                        replace_key="METAR_INFO"
@@ -402,7 +402,7 @@ class TestFlightLogCode(unittest.TestCase):
         # Run the METAR_replacer
         content = flight_log_code.metar_replacer(self.template_file_path,
                                                  template_temp_name,
-                                                 'EGDR', '2019', '01', '23',
+                                                 'EGHE', '2019', '01', '23',
                                                  '01', '23', '9', '10',
                                                  self.base_path)
         # Check information was replaced correctly

@@ -30,12 +30,12 @@ class TestNearestICAOFinder(unittest.TestCase):
         icao = nearest_ICAO_finder.icao_finder(self.excel_file_path,
                                                self.excel_file_name)
         # Checks that the correct icao code is returned.
-        self.assertEqual('EGDR', icao)
+        self.assertEqual('EGHE', icao)
 
     def test_closest_icao(self):
         # Runs the airport_lat_long_clst function
         airport_lat_long = nearest_ICAO_finder.airport_lat_long()
-        # Arbitary latitude and longtitude for checking
+        # Arbitrary latitude and longitude for checking
         uav_lat_long_check = [[[51.067397], [-1.320574]],
                               [[50.154234], [8.735601]],
                               [[49.721109], [-102.279640]],

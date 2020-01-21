@@ -1,0 +1,3 @@
+METAR COR EGHE 101550Z 02004KT 320V030 9999 FEW008 BKN020
+METAR EGHE 101520Z 03003KT 9999 BKN022 09/05 Q1032
+https://www.ogimet.com/display_metars2.php?lang=en&lugar=EGHE&tipo=ALL&ord=REV&nil=SI&fmt=html&ano=2019&mes=01&day=10&hora=15&anof=2019&mesf=01&dayf=10&horaf=15&minf=59&send=send

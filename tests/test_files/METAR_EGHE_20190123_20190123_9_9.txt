@@ -1,0 +1,3 @@
+METAR EGHE 230950Z 34017KT 9999 SCT025 08/03 Q1007
+METAR EGHE 230920Z 34017KT 9999 SCT022 08/02 Q1006
+https://www.ogimet.com/display_metars2.php?lang=en&lugar=EGHE&tipo=ALL&ord=REV&nil=SI&fmt=html&ano=2019&mes=01&day=23&hora=9&anof=2019&mesf=01&dayf=23&horaf=9&minf=59&send=send
