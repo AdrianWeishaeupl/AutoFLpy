@@ -317,56 +317,47 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
     # Separates lines out.
     filtered_nominal = filtered_frame_nominal
     # Nominal_Checklist
-    checklists_actioned = \
-        filtered_nominal[filtered_nominal.columns[5]].tolist()
-    checklist_actioned_by = \
-        filtered_nominal[filtered_nominal.columns[4]].tolist()
-    end_date_time = filtered_nominal[filtered_nominal.columns[2]].tolist()
-    start_date_time = filtered_nominal[filtered_nominal.columns[1]].tolist()
+    checklists_actioned = filtered_nominal["Nominal Checklist"].tolist()  # Checklist type e.g. Launch
+    checklist_actioned_by = filtered_nominal["Name"].tolist()  # Filled in by this person
+
+    start_date_time = filtered_nominal["Start time"].tolist()
+    end_date_time = filtered_nominal["End time"].tolist()
     damage = filtered_nominal["Damage"].tolist()
     battery = filtered_nominal["Battery Voltages"].tolist()
     notes = filtered_nominal["Notes"].tolist()
-
-    version_completed = None
+    version_completed = None  # The version number of the nominal checklist
     for column in filtered_nominal.columns:
-        # If a column contains the word Checklist and the word checklist
-        # has not previously appeared then b is set to 1 to stop the loops
-        # and record the frame.
-        if "Checklist (VER " in column:
+        # Iterate over all columns, find the checklist version column and then set version_completed
+        if "Checklist (VER" in column:
             version_completed = filtered_nominal[column].tolist()
             break
 
-    if len(version_completed) != 0:
-        version_completed = \
-            str(version_completed[0]).replace("Completed (", "")
-        version_completed = \
-            str(version_completed).replace(")", "")
+    if version_completed is not None:
+        version_completed.append("")  # Adds a default version value for no entered version values.
+        version_completed = [val for val in version_completed if type(val) is str][0]
+
+
     # Emergency Checklist
     filtered_emergency = filtered_frame_emergency
     emergency_checklists_actioned = \
-        filtered_emergency[filtered_emergency.columns[5]].tolist()
+        filtered_emergency["Emergency Checklist"].tolist()  # Which checklist was actioned e.g. Motor Failure
     emergency_checklist_actioned_by = \
-        filtered_emergency[filtered_emergency.columns[4]].tolist()
-    emergency_end_date_time = \
-        filtered_emergency[filtered_emergency.columns[2]].tolist()
-    emergency_start_date_time = \
-        filtered_emergency[filtered_emergency.columns[1]].tolist()
+        filtered_emergency["Name"].tolist()  # Who actioned the checklist (name)
+    emergency_start_date_time = filtered_emergency["Start time"].tolist()
+    emergency_end_date_time = filtered_emergency["End time"].tolist()
     emergency_notes = filtered_emergency["Notes"].tolist()
 
     version_completed_emergency = None
     for column in filtered_emergency.columns:
-        # If a column contains the word Checklist (VER  and the word
-        # checklist has not previously appeared then b is set to 1 to stop the
-        # loops and record the frame.
-        if "Checklist (VER " in column:
+        # Iterate over all columns, find the checklist version column and then set version completed
+        if "Checklist (VER" in column:
             version_completed_emergency = filtered_emergency[column].tolist()
             break
 
-    if len(version_completed_emergency) != 0:
-        version_completed_emergency = \
-            str(version_completed_emergency[0]).replace("Completed (", "")
-        version_completed_emergency = \
-            str(version_completed_emergency).replace(")", "")
+    if version_completed_emergency is not None:
+        version_completed_emergency.append("")  # Adds a default version value for no entered version values.
+        version_completed_emergency = [val for val in version_completed_emergency if type(val) is str][0]
+
     # This is a list that will have all the data appended to it for the nominal
     # checklists in the next section.
     checklist_actioned_text = ""
@@ -381,7 +372,6 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
         # Goes through each of the checklists and creates a list of all the
         # checklists actioned, who actioned them, when they were actioned and
         # the notes or damage that was recorded with them.
-        # TODO: THE FOLLOWING TEXT NEEDS CLEARING UP:
         for index in range(len(checklists_actioned)):
             text = "\n    \"The " + checklists_actioned[index] + \
                    " was actioned by " + checklist_actioned_by[index] + \
@@ -399,15 +389,14 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
             # If there is damage recorded, then append them to the text with
             # the following text.
             if str(damage[index]) != "nan":
-                text = text + " Damage was reported on this flight as/" + \
-                       " the report can be found at: <i>" + damage[index]
+                text = text + " Damage was reported on this flight as:" + \
+                       " <i>" + damage[index]
                 # Adds full stop to end if required.
                 if text[-1:] != "." and text[-1:] != "!" and text[-1:] != "?":
                     text += "."
                 text += "</i>"
             if str(battery[index]) != "nan":
-                text = text + " The Battery voltages of each battery are/ " + \
-                       "can be found at: <i>" + str(battery[index])
+                text = text + " The battery voltages of each battery are: <i>" + str(battery[index])
                 # Adds full stop to end if required.
                 if text[-1:] != "." and text[-1:] != "!" and text[-1:] != "?":
                     text += "."
@@ -426,7 +415,6 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
         # all the emergency checklists actioned, who actioned them, when they
         # were actioned and the notes that were recorded with them.
         for index in range(len(emergency_checklists_actioned)):
-            # TODO: THE FOLLOWING TEXT NEEDS CLEARING UP:
             text = "\n    \"The " + emergency_checklists_actioned[index] + \
                    " was actioned by " + \
                    emergency_checklist_actioned_by[index] + \
@@ -593,9 +581,9 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
     if fdi == 1:
         flight_duration_text = ""
         for data in flight_duration_data:
-            # TODO: THE FOLLOWING TEXT NEEDS CLEARING UP. Give a link to the checklist document?
+            # TODO: Give a link to the checklist document?
             flight_duration_text = flight_duration_text + "\n    \"The " + \
-                                   "flight Duration was recorded as / can be found at: " + \
+                                   "flight Duration was recorded as: " + \
                                    str(data[1]) + ", this data was recorded by " + \
                                    str(data[0]) + ".\\n\",\n    \"\\n\","
     else:
@@ -1406,7 +1394,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     left and right axis as specified as inputs, legend location will specify
     where the legend should go"""
 
-    # TODO: KEEP AN EYE ON THIS:
+    # TODO: KEEP AN EYE ON THESE:
     text = None
     title = None
     x = None
@@ -1906,7 +1894,6 @@ def cell_remover(contents, key):
         contents = contents.replace(old_cell_text, "")
     lines = contents.split("\n")
     # Finds the line numbers that contain the kernel spec key word
-    # TODO: KEEP AN EYE ON THIS:
     kernel_spec_index = None
     for index in range(len(lines)):
         if "\"kernelspec\": {" in lines[index]:
@@ -1916,23 +1903,24 @@ def cell_remover(contents, key):
     # Sets kernel_spec_text to contain nothing.
     kernel_spec_text = ""
     # Goes through the lines after the lines containing kernel_spec
-    for line in reversed(lines[:kernel_spec_index]):
-        # If the last line is as it should be then return the contents.
-        if line == "  }":
-            break
-        else:
-            # If the end of the last cell contains a comma then it must be
-            # removed.
-            if line == "  },":
-                # Removes comma from the end of the last cell.
-                contents = contents.replace("  },\n" + kernel_spec_text,
-                                            "  }\n" + kernel_spec_text)
-                # Once comma is removed then break out of the for loop and
-                # return the contents.
+    if kernel_spec_index is not None:
+        for line in reversed(lines[:kernel_spec_index]):
+            # If the last line is as it should be then return the contents.
+            if line == "  }":
                 break
             else:
-                # If not at the end then more lines are appended.
-                kernel_spec_text = line + "\n" + kernel_spec_text
+                # If the end of the last cell contains a comma then it must be
+                # removed.
+                if line == "  },":
+                    # Removes comma from the end of the last cell.
+                    contents = contents.replace("  },\n" + kernel_spec_text,
+                                                "  }\n" + kernel_spec_text)
+                    # Once comma is removed then break out of the for loop and
+                    # return the contents.
+                    break
+                else:
+                    # If not at the end then more lines are appended.
+                    kernel_spec_text = line + "\n" + kernel_spec_text
     # Returns the new contents.
     return contents
 
