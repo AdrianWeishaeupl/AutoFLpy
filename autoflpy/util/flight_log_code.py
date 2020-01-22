@@ -551,7 +551,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                 text = text[:-2] + " "
                 # This does the last item in the list of checklists
                 text = text + "and " + checklist_and_number[-1:][0][0] + \
-                    checklist_item[1] + " checklists were actioned"
+                       checklist_item[1] + " checklists were actioned"
                 # This checks the last item in the list checklist_and_number to
                 # see if it should appear in the list with items that appear
                 # more than once.
@@ -574,8 +574,8 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                             # This removes the Oxford comma.
                         text = text[:-2] + " "
                         text = text + "and " + \
-                            number_greater_than_1[-1:][0][0] + " was actioned " + \
-                            str(number_greater_than_1[-1:][0][1]) + " times."
+                               number_greater_than_1[-1:][0][0] + " was actioned " + \
+                               str(number_greater_than_1[-1:][0][1]) + " times."
                     else:
                         text = text + "."
         # This else is for it it only has one item
@@ -881,7 +881,8 @@ def flight_log_graph_contents_replacer(contents):
 
 
 def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
-                  y_limits=("y_min", "y_max"), scale=0.01, map_info=(["altitude", "gps"]), arm_data=False):
+                  y_limits=("y_min", "y_max"), scale=0.01, map_info=(["altitude", "gps"]), arm_data=False,
+                  title_text=None):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source].
 
@@ -1129,7 +1130,11 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
               + 'feature. Information on installing these packages can be '
               + 'found on: \n'
               + 'https://autoflpy.readthedocs.io/en/latest/installation.html')
-        title = "Latitude (degrees) v Longitude (degrees)"
+        # Allows for custom title to be used:
+        if title_text is not None:
+            title = str(title_text)
+        else:
+            title = "Latitude v Longitude"
     elif plot_info == 1:
         plt.plot(x[2], y[2])
         # plots x name with unit in brackets.
@@ -1137,7 +1142,10 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         # plots y name with unit in brackets.
         plt.ylabel(y[0] + " (" + y[1] + ")")
         # plots title for graph.
-        title = y[0] + " v " + x[0]
+        if title_text is not None:
+            title = str(title_text)
+        else:
+            title = y[0] + " v " + x[0]
     # If y units have the same unit then this will format the graphs as
     # required.
     if plot_info == 2:
@@ -1161,7 +1169,10 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         # Plots X label.
         plt.xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
-        title = text + " v " + xy_pairs[0][0][0]
+        if title_text is not None:
+            title = str(title_text)
+        else:
+            title = text + " v " + xy_pairs[0][0][0]
     # If y units do not have the same unit then this will format the graphs
     # as required.
     if plot_info == 3:
@@ -1179,7 +1190,10 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         # Plots X label.
         plt.xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         # Plots the title.
-        title = text + " v " + xy_pairs[0][0][0]
+        if title_text is not None:
+            title = str(title_text)
+        else:
+            title = text + " v " + xy_pairs[0][0][0]
     # if plot info is equal to 0 then nothing is returned
     if plot_info == 0:
         print('No data present or variables entered incorrectly.')
@@ -1215,7 +1229,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                 disarm_times.append(arm_plot_data[1][2][event])
                 # arm_plot_data[1][2] = times associated with the events.
 
-        axes_limits = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1])/2
+        axes_limits = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1]) / 2
         for times in arm_times:
             # Plot the arm events:
             plt.axvline(times, color="g")
@@ -1374,7 +1388,8 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                             values_list, x_limits=("x_min", "x_max"),
                             y_limits_left=("y_min", "y_max"),
                             y_limits_right=("y_min", "y_max"),
-                            legend_location=1, arm_data=False):
+                            legend_location=1, arm_data=False,
+                            title_text=None):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source], plots data on
     left and right axis as specified as inputs, legend location will specify
@@ -1751,6 +1766,11 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # Hides left axis if data is missing.
         axis_1.set_yticks([])
         print('Left axis data missing or entered incorrectly.')
+
+    # Plots a custom title if specified:
+    if title_text is not None:
+        full_title = str(title_text)
+
     # Splits title if its width exceeds 60
     wrapped_title = textwrap.wrap(full_title, width=60)
     # Creates an empty string for the final title
@@ -1802,7 +1822,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                 disarm_times.append(arm_plot_data[1][2][event])
                 # arm_plot_data[1][2] = times associated with the events.
 
-        axes_limits = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1])/2
+        axes_limits = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1]) / 2
         for times in arm_times:
             # Plot the arm events:
             plt.axvline(times, color="g")
@@ -2556,16 +2576,16 @@ def take_off_graph(values_list, take_off_time, arm_data=False):
     legend_location = 1
     # Plots data mentioned above.
     multiaxis_graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]],
-                             [["y", "groundspeed", "gps"], ["x", "time", "gps"]], values_list, x_limits, y_limits_left,
-                             y_limits_right, legend_location, arm_data=arm_data)
+                            [["y", "groundspeed", "gps"], ["x", "time", "gps"]], values_list, x_limits, y_limits_left,
+                            y_limits_right, legend_location, arm_data=arm_data)
 
     multiaxis_graph_plotter([["y", "airspeed", "arsp"], ["x", "time", "arsp"]],
-                             [["y", "aoa", "aoa"], ["x", "time", "aoa"]], values_list, x_limits, y_limits_left,
-                             y_limits_right, legend_location, arm_data=arm_data)
+                            [["y", "aoa", "aoa"], ["x", "time", "aoa"]], values_list, x_limits, y_limits_left,
+                            y_limits_right, legend_location, arm_data=arm_data)
 
     multiaxis_graph_plotter([["y", "pitch", "ctun"], ["x", "time", "ctun"]],
-                             [["y", "desired pitch", "att"], ["x", "time", "att"]], values_list, x_limits,
-                             y_limits_left, y_limits_right, legend_location, arm_data=arm_data)
+                            [["y", "desired pitch", "att"], ["x", "time", "att"]], values_list, x_limits,
+                            y_limits_left, y_limits_right, legend_location, arm_data=arm_data)
 
     multiaxis_graph_plotter([["y", "throttle ch3", "rcin"], ["y", "flap ch5", "rcin"], ["y", "elevator ch2", "rcin"],
                              ["x", "time", "rcin"]], [["y", "current", "bat"], ["x", "time", "bat"]],
