@@ -1119,8 +1119,8 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         lat = y[2]
         long = x[2]
         # Plots map with data
-        backplt_map(lat, long, z_var=plot_data_map)
-        backplt_map(lat, long, z_var=plot_data_map, scale_factor=(1 / scale))
+        backplt_map(lat, long, z_var=plot_data_map, text_title=title_text)
+        backplt_map(lat, long, z_var=plot_data_map, scale_factor=(1 / scale), text_title=title_text)
         return
 
     elif plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude' and map_modules_imported is False:
@@ -2365,7 +2365,7 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     print('Pickling finished')
 
 
-def backplt_map(lat, long, z_var, scale_factor=1):
+def backplt_map(lat, long, z_var, scale_factor=1, text_title=None):
     # Sets titles for the data frame
     column_titles = np.array(['index', 'lat, long'])
     index = range(len(lat))
@@ -2515,7 +2515,12 @@ def backplt_map(lat, long, z_var, scale_factor=1):
     # plots y name with unit in brackets.
     plt.ylabel('Latitude' + " (degrees)")
     # plots title for graph.
-    title = "Latitude (degrees) v Longitude (degrees)"
+    title = "Latitude v Longitude"
+
+    if text_title is not None:
+        title = text_title
+    elif scale_factor <= 5:
+        title += " v " + str(z_var[0][0])
 
     # Splits title if its width exceeds 60
     wraped_title = textwrap.wrap(title, width=60)
