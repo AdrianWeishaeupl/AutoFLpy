@@ -1,6 +1,15 @@
 =======
 History
 =======
+1.0.14 (2020-01-22)
+-------------------
+
+* Documentation updated
+* Addition of a function to mark the arm and disarm points in the flight
+* Addition of a function to add custom graph titles to the generated figures
+* Preliminary take-off plotting function added. This can onlt be accessed manually
+* Added the possibility to export the generated flight log from Jupyter to html without any code showing
+* Repaired the checklist function
 
 1.0.13 (2020-01-14)
 -------------------
