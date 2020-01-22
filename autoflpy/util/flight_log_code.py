@@ -326,17 +326,16 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
     damage = filtered_nominal["Damage"].tolist()
     battery = filtered_nominal["Battery Voltages"].tolist()
     notes = filtered_nominal["Notes"].tolist()
-    b = 0
+
+    version_completed = None
     for column in filtered_nominal.columns:
         # If a column contains the word Checklist and the word checklist
         # has not previously appeared then b is set to 1 to stop the loops
         # and record the frame.
         if "Checklist (VER " in column:
-            b = 1
+            version_completed = filtered_nominal[column].tolist()
             break
-        if b != 0:
-            break
-    version_completed = filtered_nominal[column].tolist()
+
     if len(version_completed) != 0:
         version_completed = \
             str(version_completed[0]).replace("Completed (", "")
@@ -353,14 +352,16 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
     emergency_start_date_time = \
         filtered_emergency[filtered_emergency.columns[1]].tolist()
     emergency_notes = filtered_emergency["Notes"].tolist()
+
+    version_completed_emergency = None
     for column in filtered_emergency.columns:
         # If a column contains the word Checklist (VER  and the word
         # checklist has not previously appeared then b is set to 1 to stop the
         # loops and record the frame.
         if "Checklist (VER " in column:
-            b = 1
+            version_completed_emergency = filtered_emergency[column].tolist()
             break
-    version_completed_emergency = filtered_emergency[column].tolist()
+
     if len(version_completed_emergency) != 0:
         version_completed_emergency = \
             str(version_completed_emergency[0]).replace("Completed (", "")
@@ -524,8 +525,6 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                         break
                 if a == 0:
                     checklist_and_number.append([checklist, 1])
-                else:
-                    a = 0
             else:
                 checklist_and_number.append([checklist, 1])
                 b = 1
@@ -551,7 +550,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                 text = text[:-2] + " "
                 # This does the last item in the list of checklists
                 text = text + "and " + checklist_and_number[-1:][0][0] + \
-                       checklist_item[1] + " checklists were actioned"
+                    checklist_item[1] + " checklists were actioned"
                 # This checks the last item in the list checklist_and_number to
                 # see if it should appear in the list with items that appear
                 # more than once.
@@ -573,9 +572,8 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                                    str(repeat[1]) + " times, "
                             # This removes the Oxford comma.
                         text = text[:-2] + " "
-                        text = text + "and " + \
-                               number_greater_than_1[-1:][0][0] + " was actioned " + \
-                               str(number_greater_than_1[-1:][0][1]) + " times."
+                        text = text + "and " + number_greater_than_1[-1:][0][0] + " was actioned " + \
+                            str(number_greater_than_1[-1:][0][1]) + " times."
                     else:
                         text = text + "."
         # This else is for it it only has one item
@@ -667,6 +665,7 @@ def flight_data_and_axis(new_frames):
     """Returns list of lists with the following structure [[data source,
     [name, unit, data],[name, unit, data]], [data source, [name, unit, data],
     [name, unit, data]]]."""
+    # TODO: try rewriting this code in a more legible way.
     # Creates an empty list for all the data.
     values_list = []
     # Checks through all the data frames
@@ -688,17 +687,17 @@ def flight_data_and_axis(new_frames):
             if len(column.split("_")) == 5:
                 # a is used to check if the underscore has been reached.
                 a = 0
-                # c is used to indicate that there is a unit. If c is equal to
-                #  1 then there is no unit for that particular measure.
-                c = 0
+                # unit_present is used to indicate that there is a unit.
+                unit_present = True
             else:
                 if len(column.split("_")) == 4:
                     # This indicates that there are no units for that
                     # particular value.
-                    c = 1
+                    unit_present = False
                     a = 0
                 else:
                     a = 5 - len(column.split("_"))
+
             # This for loop creates the name and unit data.
             for letter in column:
                 if b == 0:
@@ -721,9 +720,10 @@ def flight_data_and_axis(new_frames):
                             if a <= 0:
                                 name += " "
                     else:
-                        if letter != "_" and c == 0:
+                        # TODO: unit_present is only set when a is 0 but only accessed when a is > 0. This is a problem.
+                        if letter != "_" and unit_present is True:
                             unit = unit + letter
-                        elif c == 1:
+                        elif unit_present is False:
                             unit = "no unit"
                             break
                         else:
@@ -881,7 +881,7 @@ def flight_log_graph_contents_replacer(contents):
 
 
 def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
-                  y_limits=("y_min", "y_max"), scale=0.01, map_info=(["altitude", "gps"]), arm_data=False,
+                  y_limits=("y_min", "y_max"), scale=0.01, map_info=("altitude", "gps"), arm_data=False,
                   title_text=None):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source].
@@ -892,6 +892,16 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     map_info represents additional information requested by the user to be plotted as a colour bar on the map line.
     The default is gps altitude data.
     """
+    # TODO: KEEP AN EYE ON THESE:
+    title = None
+    x = None
+    y = None
+    reference_y_unit = None
+    reference_x_unit = None
+    reference_x_heading = None
+    arm_plot_data = None
+    plot_data_map = None
+
     # List of data to plot returns plot data which has structure:
     # [axis, [data_source, column]]
     plot_data = []
@@ -1251,6 +1261,9 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
 
 def flight_log_multiaxis_graph_contents_replacer(contents):
     """Values list is from the function flight_data_and_axis."""
+    # TODO: KEEP AN EYE ON THIS:
+    comma = None
+
     lines = contents.split("\n")
     line_list = []
     # Finds the line numbers that contain the graph key word
@@ -1265,7 +1278,7 @@ def flight_log_multiaxis_graph_contents_replacer(contents):
         b = 1
         # Creates a list for storing the index of the lines.
         local_graph_data = [index]
-        # Creates an infinite loop used to find the end of that particualr cell
+        # Creates an infinite loop used to find the end of that particular cell
         # in the notebook.
         while a == 0:
             # Checks through to see if lines no longer contain useful
@@ -1313,9 +1326,7 @@ def flight_log_multiaxis_graph_contents_replacer(contents):
             # underscore with a space.
             line = line.replace("_", " ")
             # Appends data to list if it is not set to ignore that row.
-            if ignore is True:
-                ignore = False
-            else:
+            if ignore is False:
                 graph_list[graph_data_index][axis].append("[\\\"" + line
                                                           + "\\\"]")
         graph_data_index += 1
@@ -1394,6 +1405,17 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     values. plot information structure, [x, name, data_source], plots data on
     left and right axis as specified as inputs, legend location will specify
     where the legend should go"""
+
+    # TODO: KEEP AN EYE ON THIS:
+    text = None
+    title = None
+    x = None
+    y = None
+    reference_y_unit = None
+    reference_x_unit = None
+    reference_x_heading = None
+    arm_plot_data = None
+
     # List of data to plot returns plot data which has structure:
     # [axis, [data_source, column]]
     plot_information = [plot_information_left, plot_information_right]
@@ -1567,6 +1589,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     x_list = []
     # Counts number of y.
     y_list = []
+
     for xy_data in plot_data:
         # Checks to see what plot info equals.
         if plot_info == 1:
@@ -1883,6 +1906,8 @@ def cell_remover(contents, key):
         contents = contents.replace(old_cell_text, "")
     lines = contents.split("\n")
     # Finds the line numbers that contain the kernel spec key word
+    # TODO: KEEP AN EYE ON THIS:
+    kernel_spec_index = None
     for index in range(len(lines)):
         if "\"kernelspec\": {" in lines[index]:
             kernel_spec_index = index
@@ -1957,7 +1982,7 @@ def flight_data_time_sorter(frame_list):
     # Empty list for new frames to fill.
     new_frames = []
     # Edits one frame at a time.
-    for frame in frame_list:
+    for frame_data in frame_list:
         # Empty list to be populated by columns that contain time more than
         # once.
         frame_columns_list = []
@@ -1966,65 +1991,67 @@ def flight_data_time_sorter(frame_list):
         # Increments a
         a = a + 1
         # Loops through each column to see if it contains the word time.
-        for column in columns:
+        for column_data in columns:
             # Checks to see if the word time appears in the column.
-            if "time" in column.lower():
+            if "time" in column_data.lower():
                 # If time appears then it is appended to the list time_columns.
-                time_columns.append(column)
+                time_columns.append(column_data)
                 # Divides column by 1*10^6 to return it to seconds.
-                frame[column] = frame[column].div(10 ** 6)
+                frame_data[column_data] = frame_data[column_data].div(10 ** 6)
                 # Adds columns in this data frame that contain the word time to
                 # a list.
-                frame_columns_list.append(column)
+                frame_columns_list.append(column_data)
                 # appends replacement column to dictionary.
-                renamed_time_columns[column] = (column.replace("_US_", "_s_"))
+                renamed_time_columns[column_data] = (column_data.replace("_US_", "_s_"))
         # Creates a copy of the columns to delete parts from.
-        frame_copy = frame.copy()
+        frame_copy = frame_data.copy()
         # The variable b will be used to divide the list.
         b = 0
         # This variable is used to trigger the appending of the data frames to
         # the list data frames.
-        c = 0
+        d = 0
         # Checks through each of the columns.
-        for column in columns:
+        # TODO: KEEP AN EYE ON THIS:
+        frame_duplicate = None
+        for column_data in columns:
             if b == 0:
                 frame_duplicate = frame_copy.copy()
                 b = 1
                 # Checks to see if column is a time column.
                 for time_column in time_columns:
-                    if column == time_column:
-                        c = 1
+                    if column_data == time_column:
+                        d = 1
                 # Removes frames
-                frame_copy = frame_copy.drop(labels=column, axis=1)
-                if c == 1:
+                frame_copy = frame_copy.drop(labels=column_data, axis=1)
+                if d == 1:
                     # Removes columns from the frame_duplicate list
                     for column_drop in frame_copy.columns:
                         frame_duplicate = frame_duplicate.drop(labels=column_drop, axis=1)
                     # Checks if time appears in column being checked.
                     new_frames.append(frame_duplicate)
-                    b = c = 0
+                    b = d = 0
             else:
                 # Checks to see if column is a time column.
                 for time_column in time_columns:
-                    if column == time_column:
-                        c = 1
+                    if column_data == time_column:
+                        d = 1
                 # Removes frames
-                frame_copy = frame_copy.drop(labels=column, axis=1)
-                if c == 1:
+                frame_copy = frame_copy.drop(labels=column_data, axis=1)
+                if d == 1:
                     # Removes columns from the frame_duplicate list
                     for column_drop in frame_copy.columns:
                         frame_duplicate = frame_duplicate.drop(labels=column_drop, axis=1)
                     # Checks if time appears in column being checked.
                     new_frames.append(frame_duplicate)
-                    b = c = 0
+                    b = d = 0
     # Creates a blank list for the frames with the seconds unit fixed.
     arranged_frames = []
     # Renames columns and changes the units of time from US (microseconds) to s
-    for frame in new_frames:
+    for frame_data in new_frames:
         # Replaces the unit
-        frame.rename(columns=renamed_time_columns, inplace=True)
+        frame_data.rename(columns=renamed_time_columns, inplace=True)
         # Appends the frame.
-        arranged_frames.append(frame)
+        arranged_frames.append(frame_data)
     return arranged_frames
 
 
@@ -2041,7 +2068,7 @@ def file_type_finder(file_path, extension):
     required_files = []
     # Looks through each file individually.
     for file in files:
-        # Emptys rev_file_extension.
+        # Empties rev_file_extension.
         rev_file_extension = ""
         # a is used to indicate that the . before the file extension has been
         # reached, it is set to 0 to reset it.
@@ -2066,11 +2093,11 @@ def date_and_flight_number(frames):
     """This function finds the date and flight number from the headings in
     the list of frames provided by the function flight data"""
     # Starts at the data frame (first sheet).
-    for frame in frames:
+    for frame_date in frames:
         # Scans through the columns.
-        for column in frame.columns:
+        for column_date in frame_date.columns:
             # Splits column name by the underscore.
-            lines = column.split("_")
+            lines = column_date.split("_")
             # Finds length of columns.
             a = len(lines)
             # If columns are too short to have name, unit, date and Flight
@@ -2154,20 +2181,20 @@ def metar_finder(location, year, month, day, month_end, day_end,
         # Appends data to a list.
         metar_data.append(data)
     # Creates an empty string to be appended to.
-    text = ""
+    full_text = ""
     # Goes through metars.
     for metar in metar_data:
         # Appends metar and new line.
-        text += metar + "\n"
+        full_text += metar + "\n"
     # If there is no METAR data then the empty list is returned.
     if len(metar_data) == 0:
         return metar_data
     # Adds url to end
-    text += url
+    full_text += url
     # Creates a new text file to locally store and append the data to.
     metar_file = open(metar_file_path + os.sep + file_name + ".txt", "w+")
     # Extracts contents.
-    metar_file.write(text)
+    metar_file.write(full_text)
     # Closes the file.
     metar_file.close()
     # Returns the list.
@@ -2303,7 +2330,7 @@ def metar_replacer(file_path, file_name, location, year, month, day,
         if "# METAR REPLACER" in line:
             break
         if line == "  {":
-            # Records postion of last bracket.
+            # Records position of last bracket.
             bracket_index = index
         index += 1
     lines = cell_remover(contents, "# METAR REPLACER").split("\n")
@@ -2336,19 +2363,19 @@ def metar_replacer(file_path, file_name, location, year, month, day,
 
 def arduino_micro_frame(flight_data_file_path, arduino_flight_data_name):
     """Takes file path of arduino micro flight data and returns a pandas
-    data frame."""
+    data frame_micro."""
     # Creates file path from graph file path and file name
     file_path = flight_data_file_path + os.sep + arduino_flight_data_name
     if arduino_flight_data_name == "" or flight_data_file_path == "":
         return pd.DataFrame()
     # Reads CSV
-    frame = pd.read_csv(file_path)
-    return frame
+    frame_micro = pd.read_csv(file_path)
+    return frame_micro
 
 
 def compile_and_compress(flight_data_file_path, flight_data_file_name,
                          arduino_data_file_path, arduino_data_file_name,
-                         compressed_data_file_path):
+                         comp_data_file_path):
     # Excel Sheets
     frame_list = flight_data(flight_data_file_path, flight_data_file_name)
     # Retrieves arduino flight data
@@ -2361,7 +2388,7 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     # Creates a list of all the values.
     values_list = flight_data_and_axis(sorted_frames)
     # Compresses (pickles) the data and saves it in the excel files folder.
-    pk.dump(values_list, open(compressed_data_file_path, "wb"))
+    pk.dump(values_list, open(comp_data_file_path, "wb"))
     print('Pickling finished')
 
 
@@ -2515,15 +2542,15 @@ def backplt_map(lat, long, z_var, scale_factor=1, text_title=None):
     # plots y name with unit in brackets.
     plt.ylabel('Latitude' + " (degrees)")
     # plots title for graph.
-    title = "Latitude v Longitude"
+    map_title = "Latitude v Longitude"
 
     if text_title is not None:
-        title = text_title
+        map_title = text_title
     elif scale_factor <= 5:
-        title += " v " + str(z_var[0][0])
+        map_title += " v " + str(z_var[0][0])
 
     # Splits title if its width exceeds 60
-    wraped_title = textwrap.wrap(title, width=60)
+    wraped_title = textwrap.wrap(map_title, width=60)
     # Creates an empty string for the final title
     final_title = ""
     # Goes through each line in the title and joins them together with a
@@ -2570,8 +2597,8 @@ def take_off_graph(values_list, take_off_time, arm_data=False):
     ["vibez", "vibe"]
     """
     # TODO: Finish this function:
-    # Needs to:
-    # Determine the take off point
+    #  Needs to:
+    #  Determine the take off point
 
     # Sets the range for all of the graphs.
     x_limits = [int(float(take_off_time) - 10), int(float(take_off_time) + 15)]
@@ -2603,6 +2630,6 @@ def take_off_graph(values_list, take_off_time, arm_data=False):
 def take_off_point_finder():
     """Finds the take-off point from the flight data"""
     # TODO: write this function.
-    # Needs to work for tricycle, tail sitter, engine, motor, propeller, jet..
-    # Look into increase in GPS altitude.
+    #  Needs to work for tricycle, tail sitter, engine, motor, propeller, jet..
+    #  Look into increase in GPS altitude.
     pass
