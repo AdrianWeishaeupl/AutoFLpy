@@ -824,7 +824,7 @@ def flight_log_graph_contents_replacer(contents):
         for axis in data:
             line += axis + ", "
         line = line[:-2]
-        line += "], values_list, x_limits, y_limits)\"\n   ]\n  }"
+        line += "], values_list, x_limits, y_limits, marker_list)\"\n   ]\n  }"
         notebook_lines.append(line)
     # Goes through each element in the line list
     index = 0
@@ -868,7 +868,8 @@ def flight_log_graph_contents_replacer(contents):
 
 
 def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
-                  y_limits=("y_min", "y_max"), scale=0.01, map_info=("altitude", "gps"), arm_data=False,
+                  y_limits=("y_min", "y_max"), marker_list=[], scale=0.01,
+                  map_info=("altitude", "gps"), arm_data=False,
                   title_text=None):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source].
@@ -877,7 +878,12 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     if this is present.
 
     map_info represents additional information requested by the user to be plotted as a colour bar on the map line.
-    The default is gps altitude data.
+    The default is gps altitude data. Structure = [name, data_source].
+
+    arm_data is an additional function to display when the UAV was armed/disarmed. This works if the EV (Event) data
+    is has been recorded and is present in the Data_sources.txt document.
+
+    title_text allows the user to give figures custom titles in the form of a string.
     """
     # TODO: KEEP AN EYE ON THESE:
     title = None
@@ -1136,6 +1142,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         plt.plot(x[2], y[2])
         # plots x name with unit in brackets.
         plt.xlabel(x[0] + " (" + x[1] + ")")
+        xlabel = x[0]  # used for checking if the xlabel is time
         # plots y name with unit in brackets.
         plt.ylabel(y[0] + " (" + y[1] + ")")
         # plots title for graph.
@@ -1165,6 +1172,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         plt.ylabel(text + " (" + xy_pairs[0][1][1] + ")")
         # Plots X label.
         plt.xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
+        xlabel = xy_pairs[0][0][0]  # used for checking if the xlabel is time
         # Plots the title.
         if title_text is not None:
             title = str(title_text)
@@ -1186,6 +1194,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         plt.legend()
         # Plots X label.
         plt.xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
+        xlabel = xy_pairs[0][0][0]  # used for checking if the xlabel is time
         # Plots the title.
         if title_text is not None:
             title = str(title_text)
@@ -1212,6 +1221,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     if isinstance(y_limits[0], int) and isinstance(y_limits[1], int):
         plt.ylim(y_limits)
 
+    axes_limits = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1]) / 2
     if arm_data is True:
         arm_times = []
         disarm_times = []
@@ -1226,7 +1236,6 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                 disarm_times.append(arm_plot_data[1][2][event])
                 # arm_plot_data[1][2] = times associated with the events.
 
-        axes_limits = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1]) / 2
         for times in arm_times:
             # Plot the arm events:
             plt.axvline(times, color="g")
@@ -1241,6 +1250,14 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                 print("Time armed: ", disarm_times[section] - arm_times[section], "s")
             except IndexError:
                 continue
+
+    # For adding global markers across all figures.
+    if xlabel is not None and xlabel == "Time":
+        for marker in marker_list:
+            if type(marker) is float or type(marker) is int:
+                # Plots the markers
+                plt.axvline(marker, color="k")
+                plt.annotate(marker, [marker, axes_limits])
 
     plt.grid(which='both', axis='both', linewidth=0.2, color="0.1")
     plt.show()
@@ -1339,7 +1356,7 @@ def flight_log_multiaxis_graph_contents_replacer(contents):
         # Removes last comma and space.
         line = line[:-2]
         line += "], values_list, x_limits, y_limits_left, y_limits_right," + \
-                " legend_location)\"\n   ]\n  }"
+                " marker_list, legend_location)\"\n   ]\n  }"
         notebook_lines.append(line)
     # Goes through each element in the line list
     index = 0
@@ -1385,13 +1402,19 @@ def flight_log_multiaxis_graph_contents_replacer(contents):
 def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                             values_list, x_limits=("x_min", "x_max"),
                             y_limits_left=("y_min", "y_max"),
-                            y_limits_right=("y_min", "y_max"),
+                            y_limits_right=("y_min", "y_max"), marker_list=[],
                             legend_location=1, arm_data=False,
                             title_text=None):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source], plots data on
     left and right axis as specified as inputs, legend location will specify
-    where the legend should go"""
+    where the legend should go.
+
+    arm_data is an additional function to display when the UAV was armed/disarmed. This works if the EV (Event) data
+    is has been recorded and is present in the Data_sources.txt document.
+
+    title_text allows the user to give figures custom titles in the form of a string.
+    """
 
     # TODO: KEEP AN EYE ON THESE:
     text = None
@@ -1402,6 +1425,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     reference_x_unit = None
     reference_x_heading = None
     arm_plot_data = None
+    xlabel = None
 
     # List of data to plot returns plot data which has structure:
     # [axis, [data_source, column]]
@@ -1607,6 +1631,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                            color="C" + str(line_count))
         # plots x name with unit in brackets.
         axis_1.set_xlabel(x[0] + " (" + x[1] + ")")
+        xlabel = x[0]  # For determining if the x axis is time.
         # plots y name with unit in brackets.
         axis_1.set_ylabel(y[0] + " (" + y[1] + ")")
         # plots title for graph.
@@ -1637,6 +1662,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         axis_1.set_ylabel(text + " (" + xy_pairs[0][1][1] + ")")
         # Plots X label.
         axis_1.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
+        xlabel = xy_pairs[0][0][0]  # For determining if the x axis is time.
         # Plots the title.
         title = text
 
@@ -1660,6 +1686,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             text += ", " + xy_pairs[len(xy_pairs) - 1][1][0]
         # Plots X label.
         axis_1.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
+        xlabel = xy_pairs[0][0][0]  # For determining if the x axis is time.
         # Plots the title.
         title = text
 
@@ -1712,6 +1739,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         axis_2.set_ylabel(y[0] + " (" + y[1] + ")")
         # plots title for graph.
         text = y[0] + " v " + x[0]
+        xlabel = x[0]  # For determining if the x axis is time.
     # If y units have the same unit then this will format the graphs as
     # required.
     if plot_info == 2:
@@ -1734,6 +1762,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         axis_2.set_ylabel(text + " (" + xy_pairs[0][1][1] + ")")
         # Plots X label.
         axis_2.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
+        xlabel = xy_pairs[0][0][0]  # For determining if the x axis is time.
         # Adds the x variable for use in the title
         text += " v " + xy_pairs[0][0][0]
     # If y units do not have the same unit then this will format the graphs
@@ -1755,6 +1784,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             text += ", " + xy_pairs[len(xy_pairs) - 1][1][0] + " v " + xy_pairs[len(xy_pairs) - 1][0][0]
         # Plots X label.
         axis_2.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
+        xlabel = xy_pairs[0][0][0]  # For determining if the x axis is time.
     # If there is no valid data then return nothing.
     if plot_info == 0 and plot_info_left == 0:
         plt.close()
@@ -1818,6 +1848,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     if isinstance(y_limits_right[0], int) and isinstance(y_limits_right[1], int):
         axis_2.set_ylim(y_limits_right)
 
+    axes_limits = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1]) / 2
     if arm_data is True:
         arm_times = []
         disarm_times = []
@@ -1832,7 +1863,6 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                 disarm_times.append(arm_plot_data[1][2][event])
                 # arm_plot_data[1][2] = times associated with the events.
 
-        axes_limits = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1]) / 2
         for times in arm_times:
             # Plot the arm events:
             plt.axvline(times, color="g")
@@ -1847,6 +1877,14 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                 print("Time armed: ", disarm_times[section] - arm_times[section], "s")
             except IndexError:
                 continue
+
+    # For adding global markers across all figures.
+    if xlabel is not None and xlabel == "Time":
+        for marker in marker_list:
+            if type(marker) is float or type(marker) is int:
+                # Plots the markers
+                plt.axvline(marker, color="k")
+                plt.annotate(marker, [marker, axes_limits])
 
     plt.grid(which='both', axis='both', linewidth=0.2, color="0.1")
     plt.show()
