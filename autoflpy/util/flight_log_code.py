@@ -336,7 +336,6 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
         version_completed.append("")  # Adds a default version value for no entered version values.
         version_completed = [val for val in version_completed if type(val) is str][0]
 
-
     # Emergency Checklist
     filtered_emergency = filtered_frame_emergency
     emergency_checklists_actioned = \
