@@ -113,6 +113,9 @@ def autoflpy(input_file='Input_File.json'):
     # Generates an appropriate file name
     excel_file_name = name_generator.generated_file_name
 
+    # Imports custom weather data entered into the input file
+    weather_data = data["weather_data"]
+
     # Runs the xlsx converter
 
     log_to_xlsx.log_reader(log_file_path,
@@ -121,7 +124,8 @@ def autoflpy(input_file='Input_File.json'):
                            excel_file_path,
                            excel_file_name,
                            flight_date,
-                           flight_number)
+                           flight_number,
+                           weather_data)
 
     # Assigns variables - checks if any information is entered into the input
     # file for the directories before creating new directories in the current
@@ -257,7 +261,8 @@ def autoflpy(input_file='Input_File.json'):
                                      icao_airfield,
                                      start_time_hours,
                                      end_time_hours,
-                                     metar_file_path)
+                                     metar_file_path,
+                                     weather_data)
 
 
 if __name__ == "__main__":

@@ -54,7 +54,8 @@ def flight_log_maker(template_file_path, template_file_name,
                      arduino_flight_data_name, flight_date, flight_number,
                      flight_log_file_name_header, checklist_file_path,
                      log_code_version, icao_airfield,
-                     start_time_hours, end_time_hours, metar_file_path):
+                     start_time_hours, end_time_hours, metar_file_path,
+                     weather_data):
     """This code will edit a specified template and return the result that has
     been produced after the substitution of data into the template."""
     print('Starting Flight Log Maker')
@@ -231,6 +232,22 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = cell_remover(contents, "METAR_INFORMATION")
         contents = line_remover(contents, "METAR_LINE")
         contents = cell_remover(contents, "METAR_TEXT")
+
+    # TODO: CUSTOM WEATHER_INFORMATION HERE:
+    #  IMPORT INTO TEMPLATE AS A VARIABLE/ADD TO DATA FRAME?
+
+    weather_information = weather_reader(weather_data)
+
+    if weather_information != "":  # If information is present, add it to the content.
+        contents = contents.replace("\"WEATHER_INFORMATION\"", weather_information)
+        contents = contents.replace("WEATHER_LINE", "")
+        contents = contents.replace("WEATHER_TEXT", "")
+    else:
+        # Removes Weather related cells and lines.
+        contents = cell_remover(contents, "\"WEATHER_INFORMATION\"")
+        contents = line_remover(contents, "WEATHER_LINE")
+        contents = cell_remover(contents, "WEATHER_TEXT")
+
     # Creates a new flight log from the contents_checklist_rm
     flight_log_creator(contents, flight_log_file_path, flight_date,
                        flight_number, flight_log_file_name_header)
@@ -2660,3 +2677,46 @@ def take_off_point_finder():
     #  Needs to work for tricycle, tail sitter, engine, motor, propeller, jet..
     #  Look into increase in GPS altitude.
     pass
+
+
+def weather_reader(weather_data):
+    """Takes a dictionary of weather data and outputs a formatted string"""
+    # Splits the dictionary into lists of values and keys
+    weather_keys = list(weather_data.keys())
+    weather_values = list(weather_data.values())
+    try:
+        text = ""
+
+        units = []
+        names = []
+        # Removes the _ from the names and separates the units from the variable names
+        for key in weather_keys:
+            units.append(str(key).split("_")[-1])
+            names.append(str(key).split("_")[:-1])
+
+        # Joins up variable names in case they are two words
+        joined_names = []
+        for name_array in names:
+            name = ""
+            for part in name_array:
+                name += part + " "
+            joined_names.append(name)
+
+        joined_names, units, weather_values = zip(*sorted(zip(
+            joined_names, units, weather_values)))  # Sort alphabetically
+
+        # Adds any non empty values to the text string
+        for data_item in range(len(weather_keys)):
+            if weather_values[data_item] != "":
+                text += "\"" + str(joined_names[data_item]) +\
+                        ": " + str(weather_values[data_item]) + " " + str(units[data_item])\
+                        + "\\n\",  \"\\n\", \n   "
+
+        text += "\"\\n\""
+
+    except ValueError:
+        print("Weather data not entered or in an incorrect format in the Input_File.json. "
+              "Format should be \"variable_unit\": \"value\"")
+        text = ""
+
+    return text

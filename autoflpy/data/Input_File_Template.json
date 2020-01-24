@@ -17,5 +17,12 @@
         "flight_log_destination": "Destination for the generated flight logs. If blank, creates folder in the current directory",
 		"start_time_hours": "HH - 24 hr clock",
 		"end_time_hours": "HH - 24 hr clock"
+	},
+	
+	"weather_data": {
+		"Temperature_C": "Temperature recorded on the ground in celsius",
+		"Pressure_Pa": "Pressure recorded in Pascal",
+		"Wind_speed_mps": "Wind speed recorded in meters per second (mps)",
+		"Wind_direction_degrees": "Wind direction recorded in degrees from North"
 	}
 }

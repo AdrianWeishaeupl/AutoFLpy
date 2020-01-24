@@ -16,7 +16,7 @@ Based on work done by Samuel Pearson (sp1g18@soton.ac.uk) (06-08/2019)
 
 
 def log_reader(log_file_path, name_converter_file_path, data_sources_path,
-               excel_file_path, excel_file_name, flight_date, flight_number):
+               excel_file_path, excel_file_name, flight_date, flight_number, weather_data):
     """Creates a formatted excel 95 file from a log file. """
     print('Starting log reader')
     print('Creating new work book')
@@ -135,6 +135,14 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
         else:
             # Ends for loop and so saves code
             break
+
+    # Adds custom weather data to the xlsx document
+    worksheet = workbook.create_sheet("WEATHER_DATA")
+    weather_keys = list(weather_data.keys())
+    weather_values = list(weather_data.values())
+    worksheet.append(weather_keys)
+    worksheet.append(weather_values)
+
     # Saves file
     print('Saving workbook')
     workbook.save(filename=(excel_file_path + os.sep

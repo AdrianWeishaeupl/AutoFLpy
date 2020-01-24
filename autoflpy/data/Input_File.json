@@ -17,5 +17,12 @@
 		"flight_log_destination": "",
 		"start_time_hours": "15",
 		"end_time_hours": "16"
+	},
+	
+	"weather_data": {
+		"Temperature_C": "10.2",
+		"Pressure_Pa": "103000",
+		"Wind_speed_mps": "2",
+		"Wind_direction_degrees": "20"
 	}
 }
