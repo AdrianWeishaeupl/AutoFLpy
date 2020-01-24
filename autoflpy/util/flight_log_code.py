@@ -2037,16 +2037,19 @@ def flight_data_time_sorter(frame_list):
         # Loops through each column to see if it contains the word time.
         for column_data in columns:
             # Checks to see if the word time appears in the column.
-            if "time" in column_data.lower():
-                # If time appears then it is appended to the list time_columns.
-                time_columns.append(column_data)
-                # Divides column by 1*10^6 to return it to seconds.
-                frame_data[column_data] = frame_data[column_data].div(10 ** 6)
-                # Adds columns in this data frame that contain the word time to
-                # a list.
-                frame_columns_list.append(column_data)
-                # appends replacement column to dictionary.
-                renamed_time_columns[column_data] = (column_data.replace("_US_", "_s_"))
+            try:
+                if "time" in column_data.lower():
+                    # If time appears then it is appended to the list time_columns.
+                    time_columns.append(column_data)
+                    # Divides column by 1*10^6 to return it to seconds.
+                    frame_data[column_data] = frame_data[column_data].div(10 ** 6)
+                    # Adds columns in this data frame that contain the word time to
+                    # a list.
+                    frame_columns_list.append(column_data)
+                    # appends replacement column to dictionary.
+                    renamed_time_columns[column_data] = (column_data.replace("_US_", "_s_"))
+            except TypeError:  # This exception is for the user collected environmental data time
+                pass
         # Creates a copy of the columns to delete parts from.
         frame_copy = frame_data.copy()
         # The variable b will be used to divide the list.

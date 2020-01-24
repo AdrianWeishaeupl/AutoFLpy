@@ -20,6 +20,7 @@
 	},
 	
 	"weather_data": {
+		"Action_time_hh:mm": "Time the weather data was recorded as hh:mm",
 		"Temperature_C": "Temperature recorded on the ground in celsius",
 		"Pressure_Pa": "Pressure recorded in Pascal",
 		"Wind_speed_mps": "Wind speed recorded in meters per second (mps)",

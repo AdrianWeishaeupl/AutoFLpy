@@ -20,6 +20,7 @@
 	},
 	
 	"weather_data": {
+		"Action_time_hh:mm": "15:15",
 		"Temperature_C": "10.2",
 		"Pressure_Pa": "103000",
 		"Wind_speed_mps": "2",
