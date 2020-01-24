@@ -133,6 +133,7 @@ class TestFlightLogCode(unittest.TestCase):
                 "end_time_hours"]
         self.metar_file_path = self.base_path + self.data[
                 "flight_log_generator_input"]["metar_file_path"]
+        self.weather_data = self.data["weather_data"]
 
     def tearDown(self):
         # Removes generated flight log.
@@ -162,7 +163,8 @@ class TestFlightLogCode(unittest.TestCase):
                                          self.ICAO_airfield,
                                          self.start_time_hours,
                                          self.end_time_hours,
-                                         self.metar_file_path)
+                                         self.metar_file_path,
+                                         self.weather_data)
         # This code tests the flight_log_maker function.
         # First, check that a file has been created.
         test_flight_log_file_path = self.base_path + \
