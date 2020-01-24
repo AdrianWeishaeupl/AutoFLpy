@@ -758,6 +758,7 @@ def flight_data_and_axis(new_frames):
 
 def flight_log_graph_contents_replacer(contents):
     """Values list is from the function flight_data_and_axis."""
+    comma = None
     lines = contents.split("\n")
     line_list = []
     # Finds the line numbers that contain the graph key word
@@ -856,7 +857,7 @@ def flight_log_graph_contents_replacer(contents):
             if a == 1:
                 break
         # Adds comma to end if required
-        if comma is True:
+        if comma is not None and comma is True:
             end = ",\n"
         else:
             end = "\n"
@@ -868,7 +869,7 @@ def flight_log_graph_contents_replacer(contents):
 
 
 def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
-                  y_limits=("y_min", "y_max"), marker_list=[], scale=0.01,
+                  y_limits=("y_min", "y_max"), marker_list=(), scale=0.01,
                   map_info=("altitude", "gps"), arm_data=False,
                   title_text=None):
     """ Goes through graph data, finds source and gets required data from
@@ -1402,7 +1403,7 @@ def flight_log_multiaxis_graph_contents_replacer(contents):
 def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                             values_list, x_limits=("x_min", "x_max"),
                             y_limits_left=("y_min", "y_max"),
-                            y_limits_right=("y_min", "y_max"), marker_list=[],
+                            y_limits_right=("y_min", "y_max"), marker_list=(),
                             legend_location=1, arm_data=False,
                             title_text=None):
     """ Goes through graph data, finds source and gets required data from
@@ -1671,7 +1672,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     if plot_info == 3:
         for pair in xy_pairs:
             # plots x against y values.
-            line = axis_1.plot(pair[0][2], pair[1][2], label=pair[1][0],
+            line = axis_1.plot(pair[0][2], pair[1][2], label=(pair[1][0] + " (" + pair[1][1] + ")"),
                                color="C" + str(line_count))
             # Increments line count
             line_count += 1
@@ -1770,7 +1771,8 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     if plot_info == 3:
         for pair in xy_pairs:
             # plots x against y values.
-            line = axis_2.plot(pair[0][2], pair[1][2], label=pair[1][0], color="C" + str(line_count))
+            line = axis_2.plot(pair[0][2], pair[1][2], label=(pair[1][0]  + " (" + pair[1][1] + ")"),
+                               color="C" + str(line_count))
             # Increments line count
             line_count += 1
             # Appends current line to list of lines.
@@ -2599,7 +2601,7 @@ def backplt_map(lat, long, z_var, scale_factor=1, text_title=None):
     return
 
 
-def take_off_graph(values_list, take_off_time, arm_data=False):
+def take_off_graph(values_list, take_off_time, marker_list=(), arm_data=False):
     """Plots the main variables over the take-off range of the flight on a multi-axis plot.
 
     Variables plotted:
@@ -2634,22 +2636,22 @@ def take_off_graph(values_list, take_off_time, arm_data=False):
     # Plots data mentioned above.
     multiaxis_graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]],
                             [["y", "groundspeed", "gps"], ["x", "time", "gps"]], values_list, x_limits, y_limits_left,
-                            y_limits_right, legend_location, arm_data=arm_data)
+                              y_limits_right, marker_list, legend_location, arm_data=arm_data)
 
     multiaxis_graph_plotter([["y", "airspeed", "arsp"], ["x", "time", "arsp"]],
                             [["y", "aoa", "aoa"], ["x", "time", "aoa"]], values_list, x_limits, y_limits_left,
-                            y_limits_right, legend_location, arm_data=arm_data)
+                            y_limits_right, marker_list, legend_location, arm_data=arm_data)
 
-    multiaxis_graph_plotter([["y", "pitch", "ctun"], ["x", "time", "ctun"]],
-                            [["y", "desired pitch", "att"], ["x", "time", "att"]], values_list, x_limits,
-                            y_limits_left, y_limits_right, legend_location, arm_data=arm_data)
+    graph_plotter([["y", "pitch", "att"], ["y", "desired pitch", "att"], ["x", "time", "att"]], values_list, x_limits,
+                  y_limits, marker_list, arm_data=arm_data)
 
     multiaxis_graph_plotter([["y", "throttle ch3", "rcin"], ["y", "flap ch5", "rcin"], ["y", "elevator ch2", "rcin"],
                              ["x", "time", "rcin"]], [["y", "current", "bat"], ["x", "time", "bat"]],
-                            values_list, x_limits, y_limits_left, y_limits_right, legend_location, arm_data=arm_data)
+                            values_list, x_limits, y_limits_left, y_limits_right, marker_list,
+                            legend_location, arm_data=arm_data)
 
     graph_plotter([["x", "time", "vibe"], ["y", "vibex", "vibe"], ["y", "vibey", "vibe"], ["y", "vibez", "vibe"]],
-                  values_list, x_limits, y_limits, arm_data=arm_data)
+                  values_list, x_limits, y_limits, marker_list, arm_data=arm_data)
 
 
 def take_off_point_finder():
