@@ -188,15 +188,15 @@ class TestFlightLogCode(unittest.TestCase):
                 self.flight_data_file_name)
         # Checks that the expected frame dimensions are the correct size.
         frame_dimensions = [17780, 95220, 22860, 25400, 57141, 44436, 57132,
-                            19044]
-        if len(frame_list) == 8:
+                            19044, 5]
+        if len(frame_list) == 9:
             for frame in range(len(frame_list)):
                 self.assertEqual(frame_list[frame].size,
                                  frame_dimensions[frame])
         else:
             # Raises a fault if the length of the frame_list is not as
             # expected.
-            raise ValueError('Frame list length is not as expected: {0} != 8'
+            raise ValueError('Frame list length is not as expected: {0} != 9'
                              .format(len(frame_list)))
 
     def test_checklist_finder(self):
@@ -488,7 +488,7 @@ class TestFlightLogCode(unittest.TestCase):
         data_frames = notebook_results[3]
         # Checks that the frames were split into the correct number of
         # subframes
-        self.assertEqual(len(data_frames), 9)
+        self.assertEqual(len(data_frames), 10)
         # Assigns expected titles
         data_frame_section_titles = [
                 'Status_unavailable_GPS_20190123_Flight2',
@@ -499,6 +499,7 @@ class TestFlightLogCode(unittest.TestCase):
                 'VibeX_mperspers_VIBE_20190123_Flight2',
                 'NavRoll_unavailable_CTUN_20190123_Flight2',
                 'AOA_degrees_AOA_20190123_Flight2',
+                'Action_time_hh:mm',
                 'Temp0_degC_ArduinoMicro_20190123_Flight2']
         correct_titles = 0
         # Runs through titles. Checks that each title can be called and adds 1
@@ -511,8 +512,7 @@ class TestFlightLogCode(unittest.TestCase):
             except KeyError:
                 self.assertEqual(1, 2)
         # Checks that all titles are correct
-        self.assertEqual(correct_titles, 9)
-        pass  # Not yet written.
+        self.assertEqual(correct_titles, 10)
 
     def test_flight_data_and_axis(self):
         # Gets run in the Jupyter Notebook.
@@ -520,7 +520,7 @@ class TestFlightLogCode(unittest.TestCase):
         flight_data_and_axis = notebook_results[4]
         # Assigns expected titles
         expected_titles = ['GPS', 'RCIN', 'BARO', 'ARSP', 'ATT', 'VIBE',
-                           'CTUN', 'AOA', 'ArduinoMicro']
+                           'CTUN', 'AOA', 'Action', 'ArduinoMicro']
         # Checks that the titles are present and in the correct palace
         for item in range(len(expected_titles)):
             self.assertEqual(flight_data_and_axis[item][0],
