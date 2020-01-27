@@ -554,7 +554,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                 text = text[:-2] + " "
                 # This does the last item in the list of checklists
                 text = text + "and " + checklist_and_number[-1:][0][0] + \
-                    checklist_item[1] + " checklists were actioned"
+                       checklist_item[1] + " checklists were actioned"
                 # This checks the last item in the list checklist_and_number to
                 # see if it should appear in the list with items that appear
                 # more than once.
@@ -577,7 +577,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                             # This removes the Oxford comma.
                         text = text[:-2] + " "
                         text = text + "and " + number_greater_than_1[-1:][0][0] + " was actioned " + \
-                            str(number_greater_than_1[-1:][0][1]) + " times."
+                               str(number_greater_than_1[-1:][0][1]) + " times."
                     else:
                         text = text + "."
         # This else is for it it only has one item
@@ -887,7 +887,7 @@ def flight_log_graph_contents_replacer(contents):
 
 def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                   y_limits=("y_min", "y_max"), marker_list=(), scale=0.01,
-                  map_info=("altitude", "gps"), arm_data=False,
+                  map_info=("altitude", "gps"), map_info_limits=(None, None), arm_data=False,
                   title_text=None):
     """ Goes through graph data, finds source and gets required data from
     values. plot information structure, [x, name, data_source].
@@ -897,6 +897,10 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
 
     map_info represents additional information requested by the user to be plotted as a colour bar on the map line.
     The default is gps altitude data. Structure = [name, data_source].
+
+    map_info_limits are limits to be applied in to the map_info data in the form [lower_limit, upper_limit]. If only
+    one limit is required, enter the other limit as None. This colours any points below the lower_limit in blue and any
+    above the upper_limit in red.
 
     arm_data is an additional function to display when the UAV was armed/disarmed. This works if the EV (Event) data
     is has been recorded and is present in the Data_sources.txt document.
@@ -912,6 +916,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     reference_x_heading = None
     arm_plot_data = None
     plot_data_map = None
+    xlabel = None
 
     # List of data to plot returns plot data which has structure:
     # [axis, [data_source, column]]
@@ -1140,8 +1145,9 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         lat = y[2]
         long = x[2]
         # Plots map with data
-        backplt_map(lat, long, z_var=plot_data_map, text_title=title_text)
-        backplt_map(lat, long, z_var=plot_data_map, scale_factor=(1 / scale), text_title=title_text)
+        backplt_map(lat, long, z_var=plot_data_map, text_title=title_text, z_var_limits=map_info_limits)
+        backplt_map(lat, long, z_var=plot_data_map, scale_factor=(1 / scale), text_title=title_text,
+                    z_var_limits=map_info_limits)
         return
 
     elif plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude' and map_modules_imported is False:
@@ -1788,7 +1794,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     if plot_info == 3:
         for pair in xy_pairs:
             # plots x against y values.
-            line = axis_2.plot(pair[0][2], pair[1][2], label=(pair[1][0]  + " (" + pair[1][1] + ")"),
+            line = axis_2.plot(pair[0][2], pair[1][2], label=(pair[1][0] + " (" + pair[1][1] + ")"),
                                color="C" + str(line_count))
             # Increments line count
             line_count += 1
@@ -2439,7 +2445,7 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     print('Pickling finished')
 
 
-def backplt_map(lat, long, z_var, scale_factor=1, text_title=None):
+def backplt_map(lat, long, z_var, scale_factor=1, text_title=None, z_var_limits=(None, None)):
     # Sets titles for the data frame
     column_titles = np.array(['index', 'lat, long'])
     index = range(len(lat))
@@ -2494,25 +2500,74 @@ def backplt_map(lat, long, z_var, scale_factor=1, text_title=None):
 
     # Creates the data series of same length as the latitude/longitude data:
     # z_var[2][2] = gps time data
-    colour_data = []
+    colour_data_uncut = []
     for point in [p for p in z_var[2][2] if min(z_var[1][2]) <= p <= max(z_var[1][2])]:
-        colour_data.append(z_var_interp(point))
+        colour_data_uncut.append(z_var_interp(point))
+
+    # TODO: THIS NEEDS FIXING IN A WAY THAT WORKS BETTER. NEED TO MATCH THE TIME STAMPS OF THE LOCATION DATA WITH
+    #  THE COLOUR DATA.
+    # Makes sure that the colour data has the same length as the latitude and longitude data
+    colour_data = []
+    if len(geometry_data[0]) != len(colour_data_uncut):
+        for point in colour_data_uncut[:(len(geometry_data) - 1)]:
+            colour_data.append(point)
+    else:
+        colour_data = colour_data_uncut
+
+    # Creates lists of points of latitude and longitude of colour values above and below the limits specified limits
+    # and notes the points
+    low_colour_lat_values = []
+    low_colour_long_values = []
+
+    high_colour_lat_values = []
+    high_colour_long_values = []
+
+    try:
+        lower_limit = z_var_limits[0]
+        upper_limit = z_var_limits[1]
+    except IndexError:
+        print("Limits not entered in the correct format. Format should be [lower_limit, upper_limit] where lower_limit "
+              "and upper_limit are floats or integers.")
+        lower_limit = None
+        upper_limit = None
+
+    # Checks that the formats are correct for the lower_ and upper_limit(s)
+    if type(lower_limit) is str or type(lower_limit) is float:
+        print("Lower limit type not correct. Format should be [lower_limit, upper_limit] where lower_limit "
+              "and upper_limit are floats or integers.")
+        lower_limit = None
+    if type(upper_limit) is str or type(upper_limit) is float:
+        print("Upper limit type not correct. Format should be [lower_limit, upper_limit] where lower_limit "
+              "and upper_limit are floats or integers.")
+        upper_limit = None
+
+    # Adds geometry data
+    for index in range(len(colour_data)):
+        if lower_limit is not None:
+            if colour_data[index] <= lower_limit:
+                low_colour_lat_values.append(geometry_data[0][index])
+                low_colour_long_values.append(geometry_data[1][index])
+        if upper_limit is not None:
+            if colour_data[index] >= upper_limit:
+                high_colour_lat_values.append(geometry_data[0][index])
+                high_colour_long_values.append(geometry_data[1][index])
 
     if scale_factor <= 200:
-        # plots the geometry data using matplotlib
+        # Plots the geometry data using matplotlib
         plt.plot(geometry_data[0], geometry_data[1], 'r', zorder=1,
                  linewidth=0.5)
-
-        # TODO: THIS NEEDS FIXING IN A WAY THAT WORKS. NEED TO MATCH THE TIME STAMPS OF THE LOCATION DATA WITH THE
-        #  COLOUR DATA.
-        # Makes sure that the
-        if len(geometry_data[0]) != len(colour_data):
-            for point in colour_data[:(len(geometry_data) - 1)]:
-                colour_data.append(point)
-
+        # Plots the colour data over the base data
         mapplot = plt.scatter(geometry_data[0], geometry_data[1],
                               c=colour_data, marker='.',
                               cmap='gnuplot', zorder=2)
+        # Plots lower and upper limit data if limits are present.
+        if lower_limit is not None:
+            mapplot_lower = plt.scatter(low_colour_lat_values, low_colour_long_values,
+                                        s=80, facecolors='none', edgecolors='b', marker='o', zorder=3)
+        if upper_limit is not None:
+            mapplot_upper = plt.scatter(high_colour_lat_values, high_colour_long_values,
+                                        s=80, facecolors='none', edgecolors='r', marker='o', zorder=4)
+
     else:
         # Plots a point symbolising the mean of the data.
         mapplot = plt.scatter(np.mean(geometry_data[0]),
@@ -2617,6 +2672,7 @@ def backplt_map(lat, long, z_var, scale_factor=1, text_title=None):
         # z_var[0][0] = colour variable name
         # z_var[0][1] = colour variable units
         cbar.ax.set_ylabel(str(z_var[0][0]) + " (" + str(z_var[0][1]) + ")", rotation=90)
+
     plt.show()
     return
 
@@ -2656,7 +2712,7 @@ def take_off_graph(values_list, take_off_time, marker_list=(), arm_data=False):
     # Plots data mentioned above.
     multiaxis_graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]],
                             [["y", "groundspeed", "gps"], ["x", "time", "gps"]], values_list, x_limits, y_limits_left,
-                              y_limits_right, marker_list, legend_location, arm_data=arm_data)
+                            y_limits_right, marker_list, legend_location, arm_data=arm_data)
 
     multiaxis_graph_plotter([["y", "airspeed", "arsp"], ["x", "time", "arsp"]],
                             [["y", "aoa", "aoa"], ["x", "time", "aoa"]], values_list, x_limits, y_limits_left,
@@ -2677,7 +2733,7 @@ def take_off_graph(values_list, take_off_time, marker_list=(), arm_data=False):
 def take_off_point_finder():
     """Finds the take-off point from the flight data"""
     # TODO: write this function.
-    #  Needs to work for tricycle, tail sitter, engine, motor, propeller, jet..
+    #  Needs to work for tricycle, tail dragger, engine, motor, propeller, jet..
     #  Look into increase in GPS altitude.
     pass
 
@@ -2711,8 +2767,8 @@ def weather_reader(weather_data):
         # Adds any non empty values to the text string
         for data_item in range(len(weather_keys)):
             if weather_values[data_item] != "":
-                text += "\"" + str(joined_names[data_item]) +\
-                        ": " + str(weather_values[data_item]) + " " + str(units[data_item])\
+                text += "\"" + str(joined_names[data_item]) + \
+                        ": " + str(weather_values[data_item]) + " " + str(units[data_item]) \
                         + "\\n\",  \"\\n\", \n   "
 
         text += "\"\\n\""
