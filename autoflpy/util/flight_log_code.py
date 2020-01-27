@@ -1271,7 +1271,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         # Prints time armed:
         for section in range(len(arm_times)):
             try:
-                print("Time armed: ", disarm_times[section] - arm_times[section], "s")
+                print("Time armed: ", round(disarm_times[section] - arm_times[section], 2), "s")
             except IndexError:
                 continue
 
@@ -1899,7 +1899,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # Prints time armed:
         for section in range(len(arm_times)):
             try:
-                print("Time armed: ", disarm_times[section] - arm_times[section], "s")
+                print("Time armed: ", round(disarm_times[section] - arm_times[section], 2), "s")
             except IndexError:
                 continue
 
