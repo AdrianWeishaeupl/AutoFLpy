@@ -2681,7 +2681,7 @@ def take_off_graph(values_list, take_off_time, marker_list=(), arm_data=False):
     """Plots the main variables over the take-off range of the flight on a multi-axis plot.
 
     Variables plotted:
-    ["altitude", "gps"]
+    ["altitude", "baro"]
     ["groundspeed", "gps"]
 
     ["airspeed", "arsp"]
@@ -2710,7 +2710,7 @@ def take_off_graph(values_list, take_off_time, marker_list=(), arm_data=False):
     y_limits = ["y_min", "y_max"]
     legend_location = 1
     # Plots data mentioned above.
-    multiaxis_graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]],
+    multiaxis_graph_plotter([["y", "altitude", "baro"], ["x", "time", "gps"]],
                             [["y", "groundspeed", "gps"], ["x", "time", "gps"]], values_list, x_limits, y_limits_left,
                             y_limits_right, marker_list, legend_location, arm_data=arm_data)
 
