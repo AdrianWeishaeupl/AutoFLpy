@@ -2,6 +2,13 @@
 History
 =======
 
+1.0.16 (2020-01-28)
+-------------------
+* Custom weather data functionality added
+* Conditional colouring functionality added to the map plot
+* Functionality to add time markers across all plots simultaneously
+
+
 1.0.15 (2020-01-23)
 -------------------
 * Checklist name bug fixed
