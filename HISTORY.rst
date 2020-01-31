@@ -2,6 +2,10 @@
 History
 =======
 
+1.0.18 (2020-01-31)
+-------------------
+* Bug fixes
+
 1.0.17 (2020-01-31)
 -------------------
 * Automatic take-off detection based on GPS altitude data added
