@@ -2,6 +2,12 @@
 History
 =======
 
+1.0.17 (2020-01-31)
+-------------------
+* Automatic take-off detection based on GPS altitude data added
+* Requirements updated
+
+
 1.0.16 (2020-01-28)
 -------------------
 * Custom weather data functionality added

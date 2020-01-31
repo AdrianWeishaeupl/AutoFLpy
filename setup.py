@@ -42,6 +42,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/AdrianWeishaeupl/AutoFLpy.git',
-    version='1.0.16',
+    version='1.0.17',
     zip_safe=False,
 )
