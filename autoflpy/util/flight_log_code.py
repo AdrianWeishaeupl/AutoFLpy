@@ -2754,7 +2754,7 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
     ["vibey", "vibe"]
     ["vibez", "vibe"]
     """
-    if take_off_time is not None:
+    if take_off_time is None:
         take_off_time = take_off_point_finder(values_list, alt_sensitivity=alt_sensitivity,
                                               groundspeed_sensitivity=groundspeed_sensitivity)
 
@@ -2765,7 +2765,7 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
     y_limits = ["y_min", "y_max"]
     legend_location = 1
     # Plots data mentioned above.
-    multiaxis_graph_plotter([["y", "altitude", "baro"], ["x", "time", "gps"]],
+    multiaxis_graph_plotter([["y", "altitude", "baro"], ["x", "time", "baro"]],
                             [["y", "groundspeed", "gps"], ["x", "time", "gps"]], values_list, x_limits, y_limits_left,
                             y_limits_right, marker_list, legend_location, arm_data=arm_data)
 
