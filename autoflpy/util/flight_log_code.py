@@ -1243,7 +1243,8 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     if isinstance(y_limits[0], int) and isinstance(y_limits[1], int):
         plt.ylim(y_limits)
 
-    axes_limits = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1]) / 2
+    axes_limits_center_y = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1]) / 2
+    axes_limits_x = [plt.gca().get_xlim()[0], plt.gca().get_xlim()[1]]
     if arm_data is True:
         arm_times = []
         disarm_times = []
@@ -1261,11 +1262,11 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         for times in arm_times:
             # Plot the arm events:
             plt.axvline(times, color="g")
-            plt.annotate("ARM", [times, axes_limits])
+            plt.annotate("ARM", [times, axes_limits_center_y])
         for times in disarm_times:
             # Plot the disarm events:
             plt.axvline(times, color="r")
-            plt.annotate("DISARM", [times, axes_limits])
+            plt.annotate("DISARM", [times, axes_limits_center_y])
         # Prints time armed:
         for section in range(len(arm_times)):
             try:
@@ -1276,10 +1277,12 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     # For adding global markers across all figures.
     if xlabel is not None and xlabel == "Time":
         for marker in marker_list:
-            if type(marker) is float or type(marker) is int:
-                # Plots the markers
-                plt.axvline(marker, color="k")
-                plt.annotate(marker, [marker, axes_limits])
+            # Only plots marker if it is in the correct range
+            if axes_limits_x[0] < marker < axes_limits_x[1]:
+                if type(marker) is float or type(marker) is int:
+                    # Plots the markers
+                    plt.axvline(marker, color="k")
+                    plt.annotate(marker, [marker, axes_limits_center_y])
 
     plt.grid(which='both', axis='both', linewidth=0.2, color="0.1")
     plt.show()
@@ -1871,7 +1874,8 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     if isinstance(y_limits_right[0], int) and isinstance(y_limits_right[1], int):
         axis_2.set_ylim(y_limits_right)
 
-    axes_limits = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1]) / 2
+    axes_limits_center_y = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1]) / 2
+    axes_limits_x = [plt.gca().get_xlim()[0], plt.gca().get_xlim()[1]]
     if arm_data is True:
         arm_times = []
         disarm_times = []
@@ -1889,11 +1893,11 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         for times in arm_times:
             # Plot the arm events:
             plt.axvline(times, color="g")
-            plt.annotate("ARM", [times, axes_limits])
+            plt.annotate("ARM", [times, axes_limits_center_y])
         for times in disarm_times:
             # Plot the disarm events:
             plt.axvline(times, color="r")
-            plt.annotate("DISARM", [times, axes_limits])
+            plt.annotate("DISARM", [times, axes_limits_center_y])
         # Prints time armed:
         for section in range(len(arm_times)):
             try:
@@ -1904,10 +1908,12 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     # For adding global markers across all figures.
     if xlabel is not None and xlabel == "Time":
         for marker in marker_list:
-            if type(marker) is float or type(marker) is int:
-                # Plots the markers
-                plt.axvline(marker, color="k")
-                plt.annotate(marker, [marker, axes_limits])
+            # Plots only the markers in the correct range.
+            if axes_limits_x[0] < marker < axes_limits_x[1]:
+                if type(marker) is float or type(marker) is int:
+                    # Plots the markers
+                    plt.axvline(marker, color="k")
+                    plt.annotate(marker, [marker, axes_limits_center_y])
 
     plt.grid(which='both', axis='both', linewidth=0.2, color="0.1")
     plt.show()
@@ -2758,8 +2764,20 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
         take_off_time = take_off_time_alt
         take_off_time_calculated = True
 
+    # Prints calculated times
+    if take_off_time_calculated is True:
+        print("Detected take-off time: ", take_off_time)
+        if take_off_groundspeed is not None:
+            print("Groundspeed at detected take-off: ", take_off_groundspeed)
+        if take_off_time_spd is not None:
+            print("Detected ground run start time: ", take_off_time_spd)
+
+    # Sets bounds to display on the time axis
+    lower_bound = int(float(take_off_time) - 10)
+    upper_bound = int(float(take_off_time) + 15)
+
     # Sets the range for all of the graphs.
-    x_limits = [int(float(take_off_time) - 10), int(float(take_off_time) + 15)]
+    x_limits = [lower_bound, upper_bound]
     y_limits_left = ["y_min", "y_max"]
     y_limits_right = ["y_min", "y_max"]
     y_limits = ["y_min", "y_max"]
@@ -2784,13 +2802,6 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
 
     graph_plotter([["x", "time", "vibe"], ["y", "vibex", "vibe"], ["y", "vibey", "vibe"], ["y", "vibez", "vibe"]],
                   values_list, x_limits, y_limits, marker_list, arm_data=arm_data)
-
-    if take_off_time_calculated is True:
-        print("Detected take-off time: ", take_off_time)
-        if take_off_groundspeed is not None:
-            print("Groundspeed at detected take-off: ", take_off_groundspeed)
-        if take_off_time_spd is not None:
-            print("Detected ground run start time: ", take_off_time_spd)
 
 
 def significant_data_change_via_rms_error(data_set, sensitivity=0.3):
