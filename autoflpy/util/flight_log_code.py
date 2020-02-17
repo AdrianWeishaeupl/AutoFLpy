@@ -233,9 +233,7 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = line_remover(contents, "METAR_LINE")
         contents = cell_remover(contents, "METAR_TEXT")
 
-    # TODO: CUSTOM WEATHER_INFORMATION HERE:
-    #  IMPORT INTO TEMPLATE AS A VARIABLE/ADD TO DATA FRAME?
-
+    # Formats weather_data appropriately to be put into the jupyter notebook as text
     weather_information = weather_reader(weather_data)
 
     if weather_information != "":  # If information is present, add it to the content.
@@ -2712,23 +2710,16 @@ def take_off_point_finder(values_list, alt_sensitivity=0.3, groundspeed_sensitiv
         significant_data_change_via_rms_error(alt_data, alt_sensitivity)
 
     take_off_time_alt = gps_data[2][2][take_off_data_point_alt]
-    print("ALT_TAKE_OFF_TIME", take_off_time_alt)
-    print("LAST ALT POINT", ground_alt_data[-1])
-    print("ALT_ERROR", alt_error)
+    take_off_groundspeed = gps_data[1][2][take_off_data_point_alt]
 
-    # TODO: IS THE GROUNDSPEED NEEDED? WHAT ABOUT FAST TAXYING?
     # Repeats the process for groundspeed
     spd_data = gps_data[1][2]
     ground_spd_data, mean_ground_spd, take_off_data_point_spd, spd_error = \
         significant_data_change_via_rms_error(spd_data, groundspeed_sensitivity)
 
     take_off_time_spd = gps_data[2][2][take_off_data_point_spd]
-    print("SPD_TAKE_OFF_TIME", take_off_time_spd)
-    print("TAKE_OFF GROUNDSPEED", ground_spd_data[-1])
-    print("SPD_ERROR", spd_error)
 
-    # TODO: Figure out a reliable way of finding the take-off point/take-off run.
-    return take_off_time_alt
+    return take_off_time_alt, take_off_groundspeed, take_off_time_spd
 
 
 def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=False, alt_sensitivity=0.3,
@@ -2754,9 +2745,18 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
     ["vibey", "vibe"]
     ["vibez", "vibe"]
     """
+    take_off_time_calculated = False
+
+    # TODO: Create a function to automatically tune the sensitivity - start high and reduce it until it doesn't make
+    #  sense anymore.
+
+    take_off_time_alt, take_off_groundspeed, take_off_time_spd = \
+        take_off_point_finder(values_list, alt_sensitivity=alt_sensitivity,
+                              groundspeed_sensitivity=groundspeed_sensitivity)
+
     if take_off_time is None:
-        take_off_time = take_off_point_finder(values_list, alt_sensitivity=alt_sensitivity,
-                                              groundspeed_sensitivity=groundspeed_sensitivity)
+        take_off_time = take_off_time_alt
+        take_off_time_calculated = True
 
     # Sets the range for all of the graphs.
     x_limits = [int(float(take_off_time) - 10), int(float(take_off_time) + 15)]
@@ -2764,6 +2764,7 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
     y_limits_right = ["y_min", "y_max"]
     y_limits = ["y_min", "y_max"]
     legend_location = 1
+
     # Plots data mentioned above.
     multiaxis_graph_plotter([["y", "altitude", "baro"], ["x", "time", "baro"]],
                             [["y", "groundspeed", "gps"], ["x", "time", "gps"]], values_list, x_limits, y_limits_left,
@@ -2783,6 +2784,13 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
 
     graph_plotter([["x", "time", "vibe"], ["y", "vibex", "vibe"], ["y", "vibey", "vibe"], ["y", "vibez", "vibe"]],
                   values_list, x_limits, y_limits, marker_list, arm_data=arm_data)
+
+    if take_off_time_calculated is True:
+        print("Detected take-off time: ", take_off_time)
+        if take_off_groundspeed is not None:
+            print("Groundspeed at detected take-off: ", take_off_groundspeed)
+        if take_off_time_spd is not None:
+            print("Detected ground run start time: ", take_off_time_spd)
 
 
 def significant_data_change_via_rms_error(data_set, sensitivity=0.3):
