@@ -10,9 +10,41 @@ AutoFLpy is a code designed to allow drone pilots and operators to easily analys
 **Upon first time running of the script, sample data will be used to create a sample flight log for the user to look at for inspiration.** 
 A folder structure containing the "Input_File.json" and base file paths will also be created. The user can then complete the "Input_File.json" with appropriate information and analyse their own flight data.
 
-.. image:: images/Input_file_template.png
-	:width: 900
-	:alt: Input_file.json template and advice on what information is required.
+```json
+{
+	"log_to_xlsx_input": {
+		"log_file_name": "Your log file to be run",
+		"log_file_path": "Set to your storage location. If blank, uses the file path of the sample data. NOTE: file paths need // as separators.",
+        "excel_data_file_path": "Destination for the generated excel data. If blank, creates folder in the current directory",
+		"date": "YYYYMMDD",
+		"flight_number": "Flight number on the date specified"
+	},
+```
+
+```json
+	"flight_log_generator_input": {		
+		"template_file_path": "If blank, finds the default template location",
+		"template_file_name": "If blank, uses the default template",
+		"arduino_flight_data_name": "Name of correctly formatted Arduino data. If blank, uses the name of the sample data",
+        "arduino_flight_data_file_path": "Path to arduino data. If blank, finds the path to the sample data",
+        "checklist_data_file_path": "If blank, uses the sample checklist file path",
+        "metar_file_path": "METAR data collected will be stored here. If blank, creates folder in the current directory",
+        "flight_log_destination": "Destination for the generated flight logs. If blank, creates folder in the current directory",
+		"start_time_hours": "HH - 24 hr clock",
+		"end_time_hours": "HH - 24 hr clock"
+	},
+```
+
+```json
+	"weather_data": {
+		"Action_time_hh:mm": "Time the weather data was recorded as hh:mm",
+		"Temperature_C": "Temperature recorded on the ground in celsius",
+		"Pressure_Pa": "Pressure recorded in Pascal",
+		"Wind_speed_mps": "Wind speed recorded in meters per second (mps)",
+		"Wind_direction_degrees": "Wind direction recorded in degrees from North"
+	}
+}
+```
 
 -----------------
 

@@ -76,4 +76,19 @@ The colour of the additional variable on the map plot can be defined by any thir
 	:width: 900
 	:alt: Image of zoomed in map generated using Software In The Loop showing airspeed on the colour axes.
 
+To set limits in the map plot, the map_info_limits argument can be used. map_info_limits are limits to be applied in to the map_info data in the form [lower_limit, upper_limit]. If only one limit is required, enter the other limit as None. This colours any points below the lower_limit in blue and any above the upper_limit in red. Below is an example with altitudes below 25 m and above 85 m marked.
 
+.. image:: images/SITL_flight_map_4.png
+	:width: 900
+	:alt: Image of zoomed in map generated using Software In The Loop showing outliers marked.
+
+Take-off Graphs
+---------------
+
+Take-off graphs can be generated using the take_off_graph function. This allows the user to quickly plot the variables that influence the take off of the UAV. In it's most basic form, this function detects the take off and plots 5 figures focused around the take-off. The take off point is gound using the GPS data provided. If the function does not automatically detect the take off it can be entered manually using the take_off_time argument. Sensitivity of the take-off detection can be adjusted in the alt_sensitivity and groundspeed_sensitivity arguments. Markers and arm data work as normally described.
+
+The following figure shows the use of this feature.
+
+.. image:: images/Ex_take_off.png
+	:width: 900
+	:alt: Image of the take off data plotted through the take_off_graph function.
