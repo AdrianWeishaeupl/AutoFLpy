@@ -56,14 +56,14 @@ class TestNearestICAOFinder(unittest.TestCase):
         airport_lat_long = nearest_ICAO_finder.airport_lat_long()
         # Creates lists of items and expected results
         item_check = [10, 100, 1000, 10000, 20000, 30000, 40488]
-        expected_ICAOs = ['00FL', '01OI', '0PA1', '9MI6', 'KDGL', 'RJNO',
+        expected_icaos = ['00FL', '01OI', '0PA1', '9MI6', 'KDGL', 'RJNO',
                           'ZZZZ']
         for item_index in range(len(item_check)):
             # Finds ICAO
             icao = airport_lat_long[item_check[item_index]][0]
             # Compares ICAO to the expected index
-            expected_ICAO = expected_ICAOs[item_index]
-            self.assertEqual(icao, expected_ICAO)
+            expected_icao = expected_icaos[item_index]
+            self.assertEqual(icao, expected_icao)
 
     def test_uav_lat_long(self):
         # Runs the uav_lat_long_clst function from the nearest_ICAO_finder.py

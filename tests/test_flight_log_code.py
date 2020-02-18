@@ -22,17 +22,17 @@ def check_str_in_content(string, content):
     provided. This is case sensitive. This is used in the test functions."""
     if string in content:
         # Checks that the string is present in the content
-        occurence = 0
-        # Counts the number of occurences
+        occurrence = 0
+        # Counts the number of occurrences
         for section in range((len(content) - len(string) + 1)):
             if content[section:section + len(string)] == string:
-                occurence = occurence + 1
+                occurrence = occurrence + 1
             else:
                 continue
     else:
-        occurence = 0
+        occurrence = 0
     # Returns results
-    return (occurence)
+    return occurrence
 
 
 def notebook_sample_code(flight_data_file_path, flight_data_file_name,
@@ -54,22 +54,22 @@ def notebook_sample_code(flight_data_file_path, flight_data_file_name,
     # arduino_flight_data_name = "test_arduino.CSV"
     # Arduino Data file path
     # arduino_data_file_path = base_path
-    # Excell Sheets
+    # Excel Sheets
     frame_list = flight_log_code.flight_data(flight_data_file_path,
                                              flight_data_file_name)
     # A list containing the date first and then the flight number
-    Date_and_flight_Number = flight_log_code.date_and_flight_number(frame_list)
+    date_and_flight_number = flight_log_code.date_and_flight_number(frame_list)
     # Retrieves arduino flight data
     arduino_micro_flight_data_frame =\
         flight_log_code.arduino_micro_frame(arduino_data_file_path,
                                             arduino_flight_data_name)
-    # Appends audino frame to flight data from pixhawk
+    # Appends arduino frame to flight data from pixhawk
     frame_list.append(arduino_micro_flight_data_frame)
     # Sorts frames by time
     sorted_frames = flight_log_code.flight_data_time_sorter(frame_list)
     # Creates a list of all the values.
     values_list = flight_log_code.flight_data_and_axis(sorted_frames)
-    return(frame_list, Date_and_flight_Number, arduino_micro_flight_data_frame,
+    return(frame_list, date_and_flight_number, arduino_micro_flight_data_frame,
            sorted_frames, values_list)
 
 
