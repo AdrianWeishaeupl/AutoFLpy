@@ -12,13 +12,6 @@ except ImportError:
     raise Exception('Please install the metar module before continuing.'
                     ' BASH command: $ pip install metar')
 
-try:
-    import geopandas as gpd
-    import contextily as ctx
-    from pyproj import Proj as proj, transform
-    map_modules_imported = True
-except ImportError:
-    map_modules_imported = False
 
 """
 Flight Log Generation Code.
