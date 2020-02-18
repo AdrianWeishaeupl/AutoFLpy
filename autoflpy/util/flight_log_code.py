@@ -2419,8 +2419,7 @@ def metar_replacer(file_path, file_name, location, year, month, day,
 
 
 def arduino_micro_frame(flight_data_file_path, arduino_flight_data_name):
-    """Takes file path of arduino micro flight data and returns a pandas
-    data frame_micro."""
+    """Takes file path of arduino micro flight data and returns a pandas data frame_micro."""
     # Creates file path from graph file path and file name
     file_path = flight_data_file_path + os.sep + arduino_flight_data_name
     if arduino_flight_data_name == "" or flight_data_file_path == "":
@@ -2433,6 +2432,9 @@ def arduino_micro_frame(flight_data_file_path, arduino_flight_data_name):
 def compile_and_compress(flight_data_file_path, flight_data_file_name,
                          arduino_data_file_path, arduino_data_file_name,
                          comp_data_file_path):
+    """
+    This is used to compile all the entered data. This is then pickled and saved for faster loading.
+    """
     # Excel Sheets
     frame_list = flight_data(flight_data_file_path, flight_data_file_name)
     # Retrieves arduino flight data
@@ -2450,6 +2452,11 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
 
 
 def backplt_map(lat, long, z_var, scale_factor=1, text_title=None, z_var_limits=(None, None)):
+    """
+    This plots a map behind some latitude-longitude data and colours the line according to a third variable (z_var).
+
+    """
+
     # Sets titles for the data frame
     column_titles = np.array(['index', 'lat, long'])
     index = range(len(lat))
@@ -2682,7 +2689,16 @@ def backplt_map(lat, long, z_var, scale_factor=1, text_title=None, z_var_limits=
 
 
 def take_off_point_finder(values_list, alt_sensitivity=0.3, groundspeed_sensitivity=0.3):
-    """Finds the take-off point from the gps flight data"""
+    """Finds the take-off point from the gps flight data from an RMS approach.
+
+    The sensitivity is used to define the point where the data deviates from a linear trend (on the runway).
+    Sensitivities need to be adjusted for the data for more accurate times.
+
+    The same method is also used on the gps groundspeed data to give an idea of the take-off run.
+
+    Returns:    take_off_time_alt (take-off time from the altitude data),
+                take_off_groundspeed (at the altitude take-off time),
+                take_off_time_spd (take-off time from the groundspeed data i.e. start of the take-off run)"""
 
     # Imports GPS data
     gps_index = [["altitude", "gps"], ["groundspeed", "gps"], ["time", "gps"]]
