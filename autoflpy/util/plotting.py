@@ -5,7 +5,7 @@ import numpy as np
 import scipy.interpolate as interp
 from requests import  HTTPError
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-import autoflpy.util.analysis as analysis
+import autoflpy.util.analysis.take_off_detection as take_off_detection
 
 try:
     import geopandas as gpd
@@ -1182,8 +1182,8 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
     #  sense anymore.
 
     take_off_time_alt, take_off_groundspeed, take_off_time_spd = \
-        analysis.take_off_point_finder(values_list, alt_sensitivity=alt_sensitivity,
-                                       groundspeed_sensitivity=groundspeed_sensitivity)
+        take_off_detection.take_off_point_finder(values_list, alt_sensitivity=alt_sensitivity,
+                                                 groundspeed_sensitivity=groundspeed_sensitivity)
 
     if take_off_time is None:
         take_off_time = take_off_time_alt
