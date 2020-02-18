@@ -86,6 +86,7 @@ class TestTakeOffDetection(unittest.TestCase):
         pass
 
     def test_take_off_point_finder(self):
+        """Tests the take_off_point_finder"""
         # Generates the data
         values_list = notebook_results[-1]
 
