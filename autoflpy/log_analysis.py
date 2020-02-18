@@ -212,7 +212,6 @@ def autoflpy(input_file='Input_File.json'):
                           ) is False:
             copyfile(base_path + 'Checklists_nominal.xlsx', checklist_file_path
                      + 'Checklists_nominal.xlsx')
-    log_code_version = "autoflpy.util.flight_log_code"
     start_time_hours = data["flight_log_generator_input"]["start_time_hours"]
     end_time_hours = data["flight_log_generator_input"]["end_time_hours"]
     if data["flight_log_generator_input"][
@@ -257,7 +256,6 @@ def autoflpy(input_file='Input_File.json'):
                                      flight_number,
                                      flight_log_file_name_header,
                                      checklist_file_path,
-                                     log_code_version,
                                      icao_airfield,
                                      start_time_hours,
                                      end_time_hours,
