@@ -38,6 +38,12 @@ The arm and disarm times can be added to both multi-variable and standard graphs
 	:width: 900
 	:alt: Image of a graph generated with AutoFLpy showing the altitude v time plot as well as the times when it was armed and disarmed.
 
+For marking specific flight points across all graphs simultaneously, define your markers in the marker_list as a list of numbers. Below is an example marking the two highest points in the flight on the altitude figure and displaying these in the airspeed and groundspeed figure.
+
+.. image:: images/Ex_markers.png
+	:width: 900
+	:alt: Image of a graph generated with AutoFLpy showing the use of custom markers on various plots.
+
 
 Plotting Maps
 -------------
