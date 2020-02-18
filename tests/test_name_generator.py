@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """
+Unit tests for the name_generator function
 Created on Thu Nov 21 14:53:20 2019
 
 @author: aw6g15
