@@ -95,7 +95,7 @@ class TestFlightLogCode(unittest.TestCase):
                                         ]["arduino_flight_data_name"]
         # Creates a global variable to be used in the testing
         global notebook_results
-        # Populates the clobal variable
+        # Populates the global variable
         notebook_results =\
             notebook_sample_code(flight_data_file_path,
                                  flight_data_file_name,
@@ -126,7 +126,6 @@ class TestFlightLogCode(unittest.TestCase):
                                                   ]["arduino_flight_data_name"]
         self.flight_log_file_name_header = "test_generated_flight_log"
         self.checklist_file_path = self.base_path
-        self.log_code_version = "autoflpy.flight_log_code"
         self.start_time_hours = self.data["flight_log_generator_input"][
                 "start_time_hours"]
         self.end_time_hours = self.data["flight_log_generator_input"][
@@ -134,6 +133,7 @@ class TestFlightLogCode(unittest.TestCase):
         self.metar_file_path = self.base_path + self.data[
                 "flight_log_generator_input"]["metar_file_path"]
         self.weather_data = self.data["weather_data"]
+        self.comp_data_file_path = self.flight_data_file_path + self.flight_data_file_name[:-5] + ".pkl"
 
     def tearDown(self):
         # Removes generated flight log.
@@ -143,6 +143,12 @@ class TestFlightLogCode(unittest.TestCase):
             "test_generated_flight_log20190123_2.ipynb"
         if os.path.exists(generated_file_name):
             os.remove(generated_file_name)
+
+        # Removes pickled data.
+        pickle_file_name = base_path + \
+            "test_xlsx.pkl"
+        if os.path.exists(pickle_file_name):
+            os.remove(pickle_file_name)
 
     def test_flight_log_maker(self):
         self.ICAO_airfield = nearest_ICAO_finder.icao_finder(
@@ -159,7 +165,6 @@ class TestFlightLogCode(unittest.TestCase):
                                          self.flight_number,
                                          self.flight_log_file_name_header,
                                          self.checklist_file_path,
-                                         self.log_code_version,
                                          self.ICAO_airfield,
                                          self.start_time_hours,
                                          self.end_time_hours,
@@ -171,6 +176,8 @@ class TestFlightLogCode(unittest.TestCase):
             'test_generated_flight_log20190123_2.ipynb'
         if os.path.exists(test_flight_log_file_path) is True:
             file_exists = True
+        else:
+            file_exists = False
         self.assertTrue(file_exists)
         # Checks that the file was recently created.
         filetime = os.stat(test_flight_log_file_path)
@@ -402,11 +409,11 @@ class TestFlightLogCode(unittest.TestCase):
                                                          content)
         self.assertEqual(1, metar_information_present)
         # Run the METAR_replacer
-        content = flight_log_code.metar_replacer(self.template_file_path,
-                                                 template_temp_name,
-                                                 'EGHE', '2019', '01', '23',
-                                                 '01', '23', '9', '10',
-                                                 self.base_path)
+        flight_log_code.metar_replacer(self.template_file_path,
+                                       template_temp_name,
+                                       'EGHE', '2019', '01', '23',
+                                       '01', '23', '9', '10',
+                                       self.base_path)
         # Check information was replaced correctly
         # Re-reads content
         content = flight_log_code.contents_opener(self.template_file_path,
@@ -527,7 +534,25 @@ class TestFlightLogCode(unittest.TestCase):
                              expected_titles[item])
 
     def test_file_type_finder(self):
-        pass  # Not yet written.
+        # Detects xlsx files from the test_files folder
+        detected_files = flight_log_code.file_type_finder(self.base_path, ".xlsx")
+        expected_file_names = ['Checklists_emergency.xlsx', 'Checklists_nominal.xlsx', 'test_xlsx.xlsx']
+        # Checks that all the expected files are present
+        for file_name in expected_file_names:
+            if file_name in detected_files:
+                file_detected = True
+            else:
+                file_detected = False
+            self.assertTrue(file_detected)
+
+    def test_compile_and_compress(self):
+        # Runs the compiler and compressor.
+        flight_log_code.compile_and_compress(self.flight_data_file_path, self.flight_data_file_name,
+                                             self.arduino_flight_data_file_path, self.arduino_flight_data_name,
+                                             self.comp_data_file_path)
+        pickle_file_name = self.base_path + "test_xlsx.pkl"  # Defines the file name
+        # Checks that the file exists
+        self.assertTrue(os.path.exists(pickle_file_name))
 
 
 if __name__ == '__main__':
