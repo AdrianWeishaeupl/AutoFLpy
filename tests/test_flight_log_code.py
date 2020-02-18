@@ -134,6 +134,7 @@ class TestFlightLogCode(unittest.TestCase):
                 "flight_log_generator_input"]["metar_file_path"]
         self.weather_data = self.data["weather_data"]
         self.comp_data_file_path = self.flight_data_file_path + self.flight_data_file_name[:-5] + ".pkl"
+        self.weather_data = self.data["weather_data"]
 
     def tearDown(self):
         # Removes generated flight log.
@@ -553,6 +554,15 @@ class TestFlightLogCode(unittest.TestCase):
         pickle_file_name = self.base_path + "test_xlsx.pkl"  # Defines the file name
         # Checks that the file exists
         self.assertTrue(os.path.exists(pickle_file_name))
+
+    def test_weather_reader(self):
+        # Returns a string of formatted weather data
+        read_data = flight_log_code.weather_reader(self.weather_data)
+        expected_results = ["Action time : 12:34 hh:mm", "Pressure : 1234567 Pa", "Temperature : -12.3 C",
+                            "Wind direction : 123 degrees", "Wind speed : 12.3 mps"]
+        # Checks that the correct data is present in the read_data string
+        for string in expected_results:
+            self.assertTrue(string in read_data)
 
 
 if __name__ == '__main__':
