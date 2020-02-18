@@ -1,13 +1,4 @@
-import pandas as pd
-import os
-import textwrap
-import matplotlib.pyplot as plt
 import numpy as np
-import pickle as pk
-import scipy.interpolate as interp
-from requests import get, HTTPError
-from openpyxl import load_workbook
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 def take_off_point_finder(values_list, alt_sensitivity=0.3, groundspeed_sensitivity=0.3):
@@ -66,7 +57,6 @@ def take_off_point_finder(values_list, alt_sensitivity=0.3, groundspeed_sensitiv
     return take_off_time_alt, take_off_groundspeed, take_off_time_spd
 
 
-
 def significant_data_change_via_rms_error(data_set, sensitivity=0.3):
     """Finds the first point that significantly deviates from a constant value trend. This uses a developing root mean
         squared error and compares it to a prescribes sensitivity.
@@ -99,4 +89,3 @@ def significant_data_change_via_rms_error(data_set, sensitivity=0.3):
     data_point -= 1  # Last data point on the ground
 
     return constant_value_points, np.mean(constant_value_points), data_point, rms_error
-

@@ -1,20 +1,16 @@
 import pandas as pd
-import os
 import textwrap
 import matplotlib.pyplot as plt
 import numpy as np
-import pickle as pk
 import scipy.interpolate as interp
-from requests import get, HTTPError
-from openpyxl import load_workbook
+from requests import  HTTPError
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-import autoflpy.util.plotting
+import autoflpy.util.analysis as analysis
 
 try:
     import geopandas as gpd
     import contextily as ctx
     from pyproj import Proj as proj, transform
-
     map_modules_imported = True
 except ImportError:
     map_modules_imported = False
@@ -1186,8 +1182,8 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
     #  sense anymore.
 
     take_off_time_alt, take_off_groundspeed, take_off_time_spd = \
-        take_off_point_finder(values_list, alt_sensitivity=alt_sensitivity,
-                              groundspeed_sensitivity=groundspeed_sensitivity)
+        analysis.take_off_point_finder(values_list, alt_sensitivity=alt_sensitivity,
+                                       groundspeed_sensitivity=groundspeed_sensitivity)
 
     if take_off_time is None:
         take_off_time = take_off_time_alt

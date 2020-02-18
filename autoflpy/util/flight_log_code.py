@@ -1,13 +1,9 @@
 import pandas as pd
 import os
-import textwrap
-import matplotlib.pyplot as plt
-import numpy as np
 import pickle as pk
-import scipy.interpolate as interp
-from requests import get, HTTPError
+from requests import get
 from openpyxl import load_workbook
-from mpl_toolkits.axes_grid1 import make_axes_locatable
+
 
 try:
     from metar import Metar as mtr
@@ -20,7 +16,6 @@ try:
     import geopandas as gpd
     import contextily as ctx
     from pyproj import Proj as proj, transform
-
     map_modules_imported = True
 except ImportError:
     map_modules_imported = False
@@ -53,17 +48,13 @@ def flight_log_maker(template_file_path, template_file_name,
                      flight_data_file_name, arduino_flight_data_file_path,
                      arduino_flight_data_name, flight_date, flight_number,
                      flight_log_file_name_header, checklist_file_path,
-                     log_code_version, icao_airfield,
-                     start_time_hours, end_time_hours, metar_file_path,
+                     icao_airfield, start_time_hours, end_time_hours, metar_file_path,
                      weather_data):
     """This code will edit a specified template and return the result that has
     been produced after the substitution of data into the template."""
     print('Starting Flight Log Maker')
     # loads contents_checklist_rm.
     contents = contents_opener(template_file_path, template_file_name)
-    # Replaces the key for the flight log code version with the text
-    contents = contents.replace("FLIGHT_LOG_CODE_VERSION",
-                                log_code_version)
     # Inserts the date into the contents_checklist_rm.
     contents = contents.replace("FLIGHT_DATE", (str(flight_date)[6:] + "/" +
                                                 str(flight_date)[4:6] + "/" +
