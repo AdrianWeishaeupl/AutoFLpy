@@ -9,86 +9,27 @@ Created on Tue Feb 18 14:53:20 2020
 from autoflpy.util.analysis import take_off_detection
 import unittest
 import os
-import sys
-import json
-from autoflpy.util import flight_log_code
+import pickle as pk
 
 
-def notebook_sample_code(flight_data_file_path, flight_data_file_name,
-                         arduino_data_file_path, arduino_flight_data_name):
-    """Sample flight log code for testing purposes"""
-    # GRAPH_DATA_IMPORT
-
-    # Creates a base_path to the test files.
-    base_path = os.path.dirname(__file__) + os.sep
-
-    # Creates a link to where the code is stored.
-    sys.path.append(base_path[:-11])
-
-    # file_path of the flight data.
-    # flight_data_file_path = base_path
-    # Excel File name
-    # flight_data_file_name = "test_xlsx.xlsx"
-    # Arduino File name
-    # arduino_flight_data_name = "test_arduino.CSV"
-    # Arduino Data file path
-    # arduino_data_file_path = base_path
-    # Excel Sheets
-    frame_list = flight_log_code.flight_data(flight_data_file_path,
-                                             flight_data_file_name)
-    # A list containing the date first and then the flight number
-    date_and_flight_number = flight_log_code.date_and_flight_number(frame_list)
-    # Retrieves arduino flight data
-    arduino_micro_flight_data_frame =\
-        flight_log_code.arduino_micro_frame(arduino_data_file_path,
-                                            arduino_flight_data_name)
-    # Appends arduino frame to flight data from pixhawk
-    frame_list.append(arduino_micro_flight_data_frame)
-    # Sorts frames by time
-    sorted_frames = flight_log_code.flight_data_time_sorter(frame_list)
-    # Creates a list of all the values.
-    values_list = flight_log_code.flight_data_and_axis(sorted_frames)
-    return(frame_list, date_and_flight_number, arduino_micro_flight_data_frame,
-           sorted_frames, values_list)
+def load_values_list_from_pickle(data_file_path):
+    # Uncompress the data.
+    values_list = pk.load(open(data_file_path, "rb"))
+    return values_list
 
 
 class TestTakeOffDetection(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        # Runs once before any tests
-        # Defines the base path
-        base_path = os.path.join(os.path.dirname(__file__), "test_files"
-                                 ) + os.sep
-        # Tidies base path
-        base_path = base_path.replace(os.sep, "/")
-        # Opens the input file and reads content
-        with open(base_path + 'test_Input_File.json') as file:
-            data = json.load(file)
-        # Defines variables
-        flight_data_file_path = base_path
-        flight_data_file_name = "test_xlsx.xlsx"
-        arduino_flight_data_file_path = base_path + data[
-                "flight_log_generator_input"]["arduino_flight_data_file_path"]
-        arduino_flight_data_name = data["flight_log_generator_input"
-                                        ]["arduino_flight_data_name"]
-        # Creates a global variable to be used in the testing
-        global notebook_results
-        # Populates the global variable
-        notebook_results =\
-            notebook_sample_code(flight_data_file_path,
-                                 flight_data_file_name,
-                                 arduino_flight_data_file_path,
-                                 arduino_flight_data_name)
-
     def setUp(self):
-        # Defines variables needed
-        pass
+        self.base_path = os.path.join(os.path.dirname(__file__),
+                                      "test_files") + os.sep
+        self.base_path = self.base_path.replace(os.sep, "/")
+        self.values_list = load_values_list_from_pickle(self.base_path + "test_pickled_data.pkl")
 
     def test_take_off_point_finder(self):
         """Tests the take_off_point_finder"""
         # Generates the data
-        values_list = notebook_results[-1]
+        values_list = self.values_list
 
         take_off_time_alt_list = []
         take_off_groundspeed_list = []
@@ -114,8 +55,43 @@ class TestTakeOffDetection(unittest.TestCase):
             self.assertEqual(take_off_time_spd_list[item], expected_take_off_time_spd_list[item])
 
     def test_significant_data_change_via_rms_error(self):
-        # To be written
-        pass
+        """Unit test for the significant_data_change_via_rms_error"""
+        values_list = self.values_list  # Imports values to be used
+        # values_list[0] is the GPS data set
+        # values_list[0][x] is a single set of data as [descriptor, units, [data]]
+        # values_list[0][x][2] is a single set of data
+        data_set_altitude = values_list[0][8][2]
+        data_set_groundspeed = values_list[0][9][2]
+        data_sets = [data_set_altitude, data_set_groundspeed]
+
+        constant_value_points_list = []
+        mean_list = []
+        data_point_list = []
+        rms_error_list = []
+
+        sensitivities = [0.05, 0.1, 0.2, 0.5, 0.7]
+        for sensitivity in sensitivities:
+            for data_set in data_sets:
+                constant_value_points, mean, data_point, rms_error = \
+                    take_off_detection.significant_data_change_via_rms_error(data_set, sensitivity)
+                constant_value_points_list.append(constant_value_points)
+                mean_list.append(mean)
+                data_point_list.append(data_point)
+                rms_error_list.append(rms_error)
+
+        lists = [mean_list, data_point_list, rms_error_list]
+        expected_data = [[8.388690476190476, 0.0034166666805555555, 8.396235294117647, 0.0034166666805555555,
+                          8.410813953488372, 0.01558904110958904, 8.551666666666668, 0.08913333334666666,
+                          8.678152173913045, 0.15988157896052632],
+                         [84, 72, 85, 72, 86, 73, 90, 75, 92, 76],
+                         [0.06874143389818238, 0.10257614404379453, 0.1336248679103539, 0.10257614404379453,
+                          0.20551288210907936, 0.22779510268712833, 0.5493127740558753, 0.6086535257834387,
+                          0.7469731708072621, 0.8356314669674233]]
+
+        # Checks that all the items generated are correct. The constant_value_points_list is omitted for brevity
+        for list_item in range(len(lists)):
+            for item in range(len(lists[list_item])):
+                self.assertEqual(lists[list_item][item], expected_data[list_item][item])
 
 
 if __name__ == '__main__':
