@@ -25,5 +25,11 @@
 		"Pressure_Pa": "103000",
 		"Wind_speed_mps": "2",
 		"Wind_direction_degrees": "20"
+	},
+	
+	"runway_data": {
+		"take_off_direction": "",
+		"runway_surface": "",
+		"surface_condition": ""
 	}
 }

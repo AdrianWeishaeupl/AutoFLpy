@@ -25,5 +25,11 @@
 		"Pressure_Pa": "Pressure recorded in Pascal",
 		"Wind_speed_mps": "Wind speed recorded in meters per second (mps)",
 		"Wind_direction_degrees": "Wind direction recorded in degrees from North"
+	},
+	
+	"runway_data": {
+		"take_off_direction": "This should be entered in degrees with North being 0.",
+		"runway_surface": "What material is the runway? E.g. tarmac/concrete/grass/dirt/ect.",
+		"surface_condition": "What condition is the runway in? E.g. dry/wet/icy/dusty/damaged/ect."
 	}
 }
