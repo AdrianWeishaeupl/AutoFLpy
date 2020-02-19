@@ -4,6 +4,7 @@ Author: Adrian Weishaeupl
 Created 19/02/2020
 """
 
+
 def check_str_in_content(string, content):
     """Checks that a certain string is present in the content
     provided. This is case sensitive. This is used in the test functions."""
