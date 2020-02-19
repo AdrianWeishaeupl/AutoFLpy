@@ -211,7 +211,7 @@ def flight_log_maker(template_file_path, template_file_name,
     # Formats dictionary appropriately to be put into the jupyter notebook as text
     weather_information = dictionary_reader(weather_data, debug_name="Weather data", units_present=True)
 
-    if weather_information != "":  # If information is present, add it to the content.
+    if weather_information != "\"\\n\"":  # If information is present, add it to the content.
         contents = contents.replace("\"WEATHER_INFORMATION\"", "\"<h2>Weather Information</h2><a class=\\\"anchor\\\"" +
                                     " id=\\\"Weather-Information\\\"></a>\\n\"" + ",\n   \"\\n\",\n   " +
                                     weather_information)  # Creates a formatted title
@@ -219,14 +219,15 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = contents.replace("WEATHER_TEXT", "")
     else:
         # Removes Weather related cells and lines.
-        contents = cell_remover(contents, "\"WEATHER_INFORMATION\"")
+        contents = cell_remover(contents, "WEATHER_INFORMATION")
         contents = line_remover(contents, "WEATHER_LINE")
         contents = cell_remover(contents, "WEATHER_TEXT")
+        contents = contents.replace("WEATHER_INFORMATION", "")
 
     # Formats runway_data appropriately to be put into the jupyter notebook as text
     runway_information = dictionary_reader(runway_data, debug_name="Runway data", units_present=False)
 
-    if runway_information != "":  # If information is present, add it to the content.
+    if runway_information != "\"\\n\"":  # If information is present, add it to the content.
         contents = contents.replace("\"RUNWAY_INFORMATION\"", "\"<h2>Runway Information</h2><a class=\\\"anchor\\\"" +
                                     " id=\\\"Runway-Information\\\"></a>\\n\"" + ",\n   \"\\n\",\n   " +
                                     runway_information)  # Creates a formatted title
@@ -234,9 +235,10 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = contents.replace("RUNWAY_TEXT", "")
     else:
         # Removes runway related cells and lines.
-        contents = cell_remover(contents, "\"RUNWAY_INFORMATION\"")
+        contents = cell_remover(contents, "RUNWAY_INFORMATION")
         contents = line_remover(contents, "RUNWAY_LINE")
         contents = cell_remover(contents, "RUNWAY_TEXT")
+        contents = contents.replace("RUNWAY_INFORMATION", "")
 
     # Creates a new flight log from the contents_checklist_rm
     flight_log_creator(contents, flight_log_file_path, flight_date,
@@ -989,7 +991,6 @@ def dictionary_reader(dictionary, debug_name="Dictionary data", units_present=Fa
                     text += "\"" + str(joined_names[data_item]) + \
                             ": " + str(dictionary_values[data_item]) \
                             + "\\n\",  \"\\n\", \n   "
-
         text += "\"\\n\""
 
     except ValueError:

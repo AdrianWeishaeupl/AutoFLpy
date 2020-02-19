@@ -266,7 +266,7 @@ def cell_remover(contents, key):
     # splits contents into lines.
     lines = contents.split("\n")
     line_list = []
-    # Finds the line numbers that contain the graph key word
+    # Finds the line numbers that contain the key word
     for index in range(len(lines)):
         if key in lines[index]:
             line_list.append(index)
