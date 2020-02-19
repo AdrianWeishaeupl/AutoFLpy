@@ -16,7 +16,7 @@ Based on work done by Samuel Pearson (sp1g18@soton.ac.uk) (06-08/2019)
 
 
 def log_reader(log_file_path, name_converter_file_path, data_sources_path,
-               excel_file_path, excel_file_name, flight_date, flight_number, weather_data):
+               excel_file_path, excel_file_name, flight_date, flight_number, weather_data, runway_data):
     """Creates a formatted excel 95 file from a log file. """
     print('Starting log reader')
     print('Creating new work book')
@@ -142,6 +142,13 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
     weather_values = list(weather_data.values())
     worksheet.append(weather_keys)
     worksheet.append(weather_values)
+
+    # Adds custom runway data to the xlsx document
+    worksheet = workbook.create_sheet("RUNWAY_DATA")
+    runway_keys = list(runway_data.keys())
+    runway_values = list(runway_data.values())
+    worksheet.append(runway_keys)
+    worksheet.append(runway_values)
 
     # Saves file
     print('Saving workbook')

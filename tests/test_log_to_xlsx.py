@@ -37,6 +37,7 @@ class TestLogToXlsx(unittest.TestCase):
         self.flight_date = self.data["log_to_xlsx_input"]["date"]
         self.flight_number = self.data["log_to_xlsx_input"]["flight_number"]
         self.weather_data = self.data["weather_data"]
+        self.runway_data = self.data["runway_data"]
 
     def test_log_reader(self):
         # Make sure the test workbook is closed.
@@ -47,7 +48,8 @@ class TestLogToXlsx(unittest.TestCase):
                                self.excel_file_name,
                                self.flight_date,
                                self.flight_number,
-                               self.weather_data)
+                               self.weather_data,
+                               self.runway_data)
 
         def worksheet_tester(sheet, cell, expected_answer):
             """

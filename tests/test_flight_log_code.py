@@ -180,15 +180,15 @@ class TestFlightLogCode(unittest.TestCase):
             self.flight_data_file_name)
         # Checks that the expected frame dimensions are the correct size.
         frame_dimensions = [17780, 95220, 22860, 25400, 57141, 44436, 57132,
-                            19044, 5]
-        if len(frame_list) == 9:
+                            19044, 5, 3]
+        if len(frame_list) == 10:
             for frame in range(len(frame_list)):
                 self.assertEqual(frame_list[frame].size,
                                  frame_dimensions[frame])
         else:
             # Raises a fault if the length of the frame_list is not as
             # expected.
-            raise ValueError('Frame list length is not as expected: {0} != 9'
+            raise ValueError('Frame list length is not as expected: {0} != 10'
                              .format(len(frame_list)))
 
     def test_checklist_finder(self):

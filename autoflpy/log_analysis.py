@@ -124,7 +124,8 @@ def autoflpy(input_file='Input_File.json'):
                            excel_file_name,
                            flight_date,
                            flight_number,
-                           weather_data)
+                           weather_data,
+                           runway_data)
 
     # Assigns variables - checks if any information is entered into the input
     # file for the directories before creating new directories in the current
