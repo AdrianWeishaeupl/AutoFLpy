@@ -2,33 +2,39 @@
 History
 =======
 
+1.1.1 (2020-02-19)
+------------------
+
+* Custom runway data functionality added
+
 1.1.0 (2020-02-19)
 ------------------
+
 * Code modularised
 * Unit tests updated
 
-
 1.0.18 (2020-01-31)
 -------------------
+
 * Bug fixes
 
 1.0.17 (2020-01-31)
 -------------------
+
 * Automatic take-off detection based on GPS altitude data added
 * Requirements updated
 
-
 1.0.16 (2020-01-28)
 -------------------
+
 * Custom weather data functionality added
 * Conditional colouring functionality added to the map plot
 * Functionality to add time markers across all plots simultaneously
 
-
 1.0.15 (2020-01-23)
 -------------------
-* Checklist name bug fixed
 
+* Checklist name bug fixed
 
 1.0.14 (2020-01-22)
 -------------------
@@ -51,7 +57,6 @@ History
 
 * Map formatting improved
 * Documentation updated with images and examples
-
 
 1.0.11 (2020-01-09)
 -------------------
