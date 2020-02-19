@@ -13,26 +13,9 @@ import json
 import sys
 from autoflpy.util import flight_log_code
 from datetime import datetime
-from autoflpy.util import nearest_ICAO_finder
 from shutil import copyfile
-
-
-def check_str_in_content(string, content):
-    """Checks that a certain string is present in the content
-    provided. This is case sensitive. This is used in the test functions."""
-    if string in content:
-        # Checks that the string is present in the content
-        occurrence = 0
-        # Counts the number of occurrences
-        for section in range((len(content) - len(string) + 1)):
-            if content[section:section + len(string)] == string:
-                occurrence = occurrence + 1
-            else:
-                continue
-    else:
-        occurrence = 0
-    # Returns results
-    return occurrence
+from autoflpy.util import nearest_ICAO_finder
+from autoflpy.util.testing.check_str_in_content import *
 
 
 def notebook_sample_code(flight_data_file_path, flight_data_file_name,
@@ -226,85 +209,6 @@ class TestFlightLogCode(unittest.TestCase):
         # Passes if the checklist is open.
         except PermissionError:
             self.assertEqual(1, 1)
-
-    def test_contents_opener(self):
-        contents = flight_log_code.contents_opener(self.template_file_path,
-                                                   self.template_file_name)
-        test_string = (contents[370:430])
-        test_string_true = 'o view images, place the images in a folder' +\
-            ' called images (a'
-        self.assertEqual(test_string_true, test_string)
-
-    def test_flight_log_graph_contents_replacer(self):
-        # Function being tested is expected to replace all fields with
-        # single axis graphs.
-        # Generates content.
-        contents = flight_log_code.contents_opener(self.template_file_path,
-                                                   self.template_file_name)
-        # Runs the flight_log_content_replacer
-        contents = flight_log_code.flight_log_graph_contents_replacer(contents)
-        # Checks for values replaced by the function
-        check_x_lim = check_str_in_content('x_limits', contents)
-        check_y_lim = check_str_in_content('y_limits', contents)
-        check_graph_plotter = check_str_in_content('graph_plotter', contents)
-        self.assertEqual(26, check_x_lim)
-        self.assertEqual(26, check_y_lim)
-        self.assertEqual(13, check_graph_plotter)
-
-    def test_flight_log_multiaxis_graph_contents_replacer(self):
-        # Function being tested is expected to replace all fields with
-        # multi-axis graphs.
-        # Generates content.
-        contents = flight_log_code.contents_opener(self.template_file_path,
-                                                   self.template_file_name)
-        # Runs the flight_log_content_replacer
-        contents = flight_log_code.\
-            flight_log_multiaxis_graph_contents_replacer(contents)
-        # Checks for values replaced by the function
-        check_x_lim = check_str_in_content('x_limits', contents)
-        check_y_lim = check_str_in_content('y_limits', contents)
-        check_graph_plotter = check_str_in_content('graph_plotter', contents)
-        self.assertEqual(6, check_x_lim)
-        self.assertEqual(12, check_y_lim)  # Note: multiple y axis inputs.
-        self.assertEqual(3, check_graph_plotter)
-
-    def test_cell_remover(self):
-        # Defines keys to be tested in the cell remover
-        keys = ['METAR_INFORMATION', 'CHECKLIST_INFORMATION', 'GRAPH',
-                'MULTIAXIS_GRAPH']
-        for key in keys:
-            # Generates content
-            content = flight_log_code.contents_opener(self.template_file_path,
-                                                      self.template_file_name)
-            # Counts the keys in the content
-            content_count = check_str_in_content(key, content)
-            # Checks that the keys are present
-            self.assertNotEqual(0, content_count)
-            # Runs cell remover
-            content = flight_log_code.cell_remover(content, key)
-            # Counts Key occurences
-            content_count = check_str_in_content(key, content)
-            # Checks that the cell has been removed
-            self.assertEqual(0, content_count)
-
-    def test_line_remover(self):
-        # Defines keys to be tested in the line remover
-        keys = ['METAR_INFORMATION', 'CHECKLIST_INFORMATION', 'GRAPH',
-                'MULTIAXIS_GRAPH', 'CHECKLIST_LINE', 'GRAPH_LINE']
-        for key in keys:
-            # Generates content
-            content = flight_log_code.contents_opener(self.template_file_path,
-                                                      self.template_file_name)
-            # Counts how many times the key is present
-            content_count = check_str_in_content(key, content)
-            # Checks that the key is present
-            self.assertNotEqual(0, content_count)
-            # Runs line remover
-            content = flight_log_code.line_remover(content, key)
-            # Counts Key occurences
-            content_count = check_str_in_content(key, content)
-            # Checks that the line has been removed
-            self.assertEqual(0, content_count)
 
     def test_flight_log_creator(self):
         # Generates content
