@@ -212,7 +212,9 @@ def flight_log_maker(template_file_path, template_file_name,
     weather_information = dictionary_reader(weather_data, debug_name="Weather data", units_present=True)
 
     if weather_information != "":  # If information is present, add it to the content.
-        contents = contents.replace("\"WEATHER_INFORMATION\"", weather_information)
+        contents = contents.replace("\"WEATHER_INFORMATION\"", "\"<h2>Weather Information</h2><a class=\\\"anchor\\\"" +
+                                    " id=\\\"Weather-Information\\\"></a>\\n\"" + ",\n   \"\\n\",\n   " +
+                                    weather_information)  # Creates a formatted title
         contents = contents.replace("WEATHER_LINE", "")
         contents = contents.replace("WEATHER_TEXT", "")
     else:
@@ -223,14 +225,18 @@ def flight_log_maker(template_file_path, template_file_name,
 
     # Formats runway_data appropriately to be put into the jupyter notebook as text
     runway_information = dictionary_reader(runway_data, debug_name="Runway data", units_present=False)
-    print(runway_information)
 
-
-
-
-
-
-
+    if runway_information != "":  # If information is present, add it to the content.
+        contents = contents.replace("\"RUNWAY_INFORMATION\"", "\"<h2>Runway Information</h2><a class=\\\"anchor\\\"" +
+                                    " id=\\\"Runway-Information\\\"></a>\\n\"" + ",\n   \"\\n\",\n   " +
+                                    runway_information)  # Creates a formatted title
+        contents = contents.replace("RUNWAY_LINE", "")
+        contents = contents.replace("RUNWAY_TEXT", "")
+    else:
+        # Removes runway related cells and lines.
+        contents = cell_remover(contents, "\"RUNWAY_INFORMATION\"")
+        contents = line_remover(contents, "RUNWAY_LINE")
+        contents = cell_remover(contents, "RUNWAY_TEXT")
 
     # Creates a new flight log from the contents_checklist_rm
     flight_log_creator(contents, flight_log_file_path, flight_date,
@@ -620,7 +626,7 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
                             "  \"cell_type\": \"markdown\",\n" + \
                             "   \"metadata\": {},\n" + \
                             "   \"source\": [\n" + \
-                            "    \"<h1>Checklist Information</h1><a class=\\\"anchor\\\" " + \
+                            "    \"<h2>Checklist Information</h2><a class=\\\"anchor\\\" " + \
                             "id=\\\"Checklist-Information\\\"></a>\\n\",\n    \"\\n\",\n" + \
                             "    \"" + text_list[0] + " " + text_list[1] + "\\n\",\n    " + \
                             "\"\\n\"," + flight_duration_text + checklist_actioned_text + \
