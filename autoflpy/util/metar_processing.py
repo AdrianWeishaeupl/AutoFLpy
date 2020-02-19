@@ -138,7 +138,7 @@ def metar_returner(metar_data, contents, month, year,
                         "  \"cell_type\": \"markdown\",\n" + \
                         "   \"metadata\": {},\n" + \
                         "   \"source\": [\n" + \
-                        "    \"<h1>METAR Information</h1><a class=\\\"anchor\\\" " + \
+                        "    \"<h2>METAR Information</h2><a class=\\\"anchor\\\" " + \
                         "id=\\\"METAR-Information\\\"></a>\\n\",\n    \"\\n\",\n" + \
                         metar_text + \
                         "\n   ]\n" + \
