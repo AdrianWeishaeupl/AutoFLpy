@@ -28,8 +28,8 @@
 	},
 	
 	"runway_data": {
-		"take_off_direction": "This should be entered in degrees with North being 0.",
-		"runway_surface": "What material is the runway? E.g. tarmac/concrete/grass/dirt/ect.",
-		"surface_condition": "What condition is the runway in? E.g. dry/wet/icy/dusty/damaged/ect."
+		"Take_off_direction": "This should be entered in degrees with North being 0.",
+		"Runway_surface": "What material is the runway? E.g. tarmac/concrete/grass/dirt/ect.",
+		"Surface_condition": "What condition is the runway in? E.g. dry/wet/icy/dusty/damaged/ect."
 	}
 }

@@ -28,8 +28,8 @@
 	},
 	
 	"runway_data": {
-		"take_off_direction": "000",
-		"runway_surface": "Grass",
-		"surface_condition": "Dry"
+		"Take_off_direction": "000",
+		"Runway_surface": "Grass",
+		"Surface_condition": "Dry"
 	}
 }
