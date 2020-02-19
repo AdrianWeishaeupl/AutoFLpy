@@ -42,7 +42,7 @@ def notebook_sample_code(flight_data_file_path, flight_data_file_name,
     # A list containing the date first and then the flight number
     date_and_flight_number = flight_log_code.date_and_flight_number(frame_list)
     # Retrieves arduino flight data
-    arduino_micro_flight_data_frame =\
+    arduino_micro_flight_data_frame = \
         flight_log_code.arduino_micro_frame(arduino_data_file_path,
                                             arduino_flight_data_name)
     # Appends arduino frame to flight data from pixhawk
@@ -51,8 +51,8 @@ def notebook_sample_code(flight_data_file_path, flight_data_file_name,
     sorted_frames = flight_log_code.flight_data_time_sorter(frame_list)
     # Creates a list of all the values.
     values_list = flight_log_code.flight_data_and_axis(sorted_frames)
-    return(frame_list, date_and_flight_number, arduino_micro_flight_data_frame,
-           sorted_frames, values_list)
+    return (frame_list, date_and_flight_number, arduino_micro_flight_data_frame,
+            sorted_frames, values_list)
 
 
 class TestFlightLogCode(unittest.TestCase):
@@ -72,13 +72,13 @@ class TestFlightLogCode(unittest.TestCase):
         flight_data_file_path = base_path
         flight_data_file_name = "test_xlsx.xlsx"
         arduino_flight_data_file_path = base_path + data[
-                "flight_log_generator_input"]["arduino_flight_data_file_path"]
+            "flight_log_generator_input"]["arduino_flight_data_file_path"]
         arduino_flight_data_name = data["flight_log_generator_input"
-                                        ]["arduino_flight_data_name"]
+        ]["arduino_flight_data_name"]
         # Creates a global variable to be used in the testing
         global notebook_results
         # Populates the global variable
-        notebook_results =\
+        notebook_results = \
             notebook_sample_code(flight_data_file_path,
                                  flight_data_file_name,
                                  arduino_flight_data_file_path,
@@ -97,46 +97,47 @@ class TestFlightLogCode(unittest.TestCase):
         self.flight_date = self.data["log_to_xlsx_input"]["date"]
         self.template_file_path = self.base_path
         self.template_file_name = self.data["flight_log_generator_input"][
-                "template_file_name"]
+            "template_file_name"]
         self.flight_log_file_path = self.base_path + self.data[
-                "flight_log_generator_input"]["flight_log_destination"]
+            "flight_log_generator_input"]["flight_log_destination"]
         self.flight_data_file_path = self.base_path  # Path to xlsx file
         self.flight_data_file_name = "test_xlsx.xlsx"
         self.arduino_flight_data_file_path = self.base_path + self.data[
-                "flight_log_generator_input"]["arduino_flight_data_file_path"]
+            "flight_log_generator_input"]["arduino_flight_data_file_path"]
         self.arduino_flight_data_name = self.data["flight_log_generator_input"
-                                                  ]["arduino_flight_data_name"]
+        ]["arduino_flight_data_name"]
         self.flight_log_file_name_header = "test_generated_flight_log"
         self.checklist_file_path = self.base_path
         self.start_time_hours = self.data["flight_log_generator_input"][
-                "start_time_hours"]
+            "start_time_hours"]
         self.end_time_hours = self.data["flight_log_generator_input"][
-                "end_time_hours"]
+            "end_time_hours"]
         self.metar_file_path = self.base_path + self.data[
-                "flight_log_generator_input"]["metar_file_path"]
+            "flight_log_generator_input"]["metar_file_path"]
         self.weather_data = self.data["weather_data"]
         self.comp_data_file_path = self.flight_data_file_path + self.flight_data_file_name[:-5] + ".pkl"
         self.weather_data = self.data["weather_data"]
+        self.runway_data = self.data["runway_data"]
 
     def tearDown(self):
         # Removes generated flight log.
         base_path = os.path.join(os.path.dirname(__file__),
                                  "test_files") + os.sep
         generated_file_name = base_path + \
-            "test_generated_flight_log20190123_2.ipynb"
+                              "test_generated_flight_log20190123_2.ipynb"
         if os.path.exists(generated_file_name):
             os.remove(generated_file_name)
 
         # Removes pickled data.
         pickle_file_name = base_path + \
-            "test_xlsx.pkl"
+                           "test_xlsx.pkl"
         if os.path.exists(pickle_file_name):
             os.remove(pickle_file_name)
 
     def test_flight_log_maker(self):
         self.ICAO_airfield = nearest_ICAO_finder.icao_finder(
-                self.flight_data_file_path,
-                self.flight_data_file_name)
+            self.flight_data_file_path,
+            self.flight_data_file_name)
         flight_log_code.flight_log_maker(self.template_file_path,
                                          self.template_file_name,
                                          self.flight_log_file_path,
@@ -152,11 +153,12 @@ class TestFlightLogCode(unittest.TestCase):
                                          self.start_time_hours,
                                          self.end_time_hours,
                                          self.metar_file_path,
-                                         self.weather_data)
+                                         self.weather_data,
+                                         self.runway_data)
         # This code tests the flight_log_maker function.
         # First, check that a file has been created.
         test_flight_log_file_path = self.base_path + \
-            'test_generated_flight_log20190123_2.ipynb'
+                                    'test_generated_flight_log20190123_2.ipynb'
         if os.path.exists(test_flight_log_file_path) is True:
             file_exists = True
         else:
@@ -174,8 +176,8 @@ class TestFlightLogCode(unittest.TestCase):
     def test_flight_data(self):
         # Tests the flight data code.
         frame_list = flight_log_code.flight_data(
-                self.flight_data_file_path,
-                self.flight_data_file_name)
+            self.flight_data_file_path,
+            self.flight_data_file_name)
         # Checks that the expected frame dimensions are the correct size.
         frame_dimensions = [17780, 95220, 22860, 25400, 57141, 44436, 57132,
                             19044, 5]
@@ -221,7 +223,7 @@ class TestFlightLogCode(unittest.TestCase):
         # Checks the file was created correctly
         file_exists = os.path.exists(self.base_path
                                      + 'test_generated_flight_log20190123'
-                                     '_2.ipynb')
+                                       '_2.ipynb')
         self.assertTrue(file_exists)
 
     def test_flight_log_checklist(self):
@@ -230,14 +232,14 @@ class TestFlightLogCode(unittest.TestCase):
                                                   self.template_file_name)
         # Creates checklist frames
         frame_list_nominal = flight_log_code.flight_data(
-                self.checklist_file_path, "Checklists_nominal.xlsx")
+            self.checklist_file_path, "Checklists_nominal.xlsx")
         frame_list_emergency = flight_log_code.flight_data(
-                self.checklist_file_path, "Checklists_emergency.xlsx")
+            self.checklist_file_path, "Checklists_emergency.xlsx")
         # Filters checklist for the current flight
         filtered_frame_nominal = flight_log_code.checklist_finder(
-                frame_list_nominal, self.flight_number, self.flight_date)
+            frame_list_nominal, self.flight_number, self.flight_date)
         filtered_frame_emergency = flight_log_code.checklist_finder(
-                frame_list_emergency, self.flight_number, self.flight_date)
+            frame_list_emergency, self.flight_number, self.flight_date)
         # Runs the flight_log_checklist code
         content = \
             flight_log_code.flight_log_checklist(filtered_frame_nominal,
@@ -245,9 +247,9 @@ class TestFlightLogCode(unittest.TestCase):
                                                  "CHECKLIST_INFORMATION",
                                                  content)[0]
         # Checks that the content has been changed
-        expected_content = 'The Initial Pre-Flight was actioned by Adria' +\
-                           'n Weishaeupl starting at 2019-01-23 15:31:44 an' +\
-                           'd ending at 2019-01-23 15:32:58. The notes reco' +\
+        expected_content = 'The Initial Pre-Flight was actioned by Adria' + \
+                           'n Weishaeupl starting at 2019-01-23 15:31:44 an' + \
+                           'd ending at 2019-01-23 15:32:58. The notes reco' + \
                            'rded on this checklist were: <i>THIS IS A TEST.'
         content_present = check_str_in_content(expected_content, content)
         self.assertEqual(1, content_present)
@@ -275,7 +277,7 @@ class TestFlightLogCode(unittest.TestCase):
             self.assertTrue(True)
         # Loads values
         values = arduino_micro_frame['Temp0_degC_ArduinoMicro_20190123_Flight2'
-                                     ]
+        ]
         # Compares expected values with values from the data frame
         expected_values = [24.38, 24.38, 24.38, 24.44, 25.31, 26.69, 27.69,
                            28.44, 29.00, 29.38, 29.69, 30.00, 30.06, 29.69,
@@ -292,16 +294,16 @@ class TestFlightLogCode(unittest.TestCase):
         self.assertEqual(len(data_frames), 10)
         # Assigns expected titles
         data_frame_section_titles = [
-                'Status_unavailable_GPS_20190123_Flight2',
-                'aileron_CH1_us_RCIN_20190123_Flight2',
-                'Altitude_m_BARO_20190123_Flight2',
-                'Airspeed_mpers_ARSP_20190123_Flight2',
-                'Desired_Roll_degrees_ATT_20190123_Flight2',
-                'VibeX_mperspers_VIBE_20190123_Flight2',
-                'NavRoll_unavailable_CTUN_20190123_Flight2',
-                'AOA_degrees_AOA_20190123_Flight2',
-                'Action_time_hh:mm',
-                'Temp0_degC_ArduinoMicro_20190123_Flight2']
+            'Status_unavailable_GPS_20190123_Flight2',
+            'aileron_CH1_us_RCIN_20190123_Flight2',
+            'Altitude_m_BARO_20190123_Flight2',
+            'Airspeed_mpers_ARSP_20190123_Flight2',
+            'Desired_Roll_degrees_ATT_20190123_Flight2',
+            'VibeX_mperspers_VIBE_20190123_Flight2',
+            'NavRoll_unavailable_CTUN_20190123_Flight2',
+            'AOA_degrees_AOA_20190123_Flight2',
+            'Action_time_hh:mm',
+            'Temp0_degC_ArduinoMicro_20190123_Flight2']
         correct_titles = 0
         # Runs through titles. Checks that each title can be called and adds 1
         # to the counter (correct_titles). If a title is not correct/cannot be
@@ -348,11 +350,14 @@ class TestFlightLogCode(unittest.TestCase):
         # Checks that the file exists
         self.assertTrue(os.path.exists(pickle_file_name))
 
-    def test_weather_reader(self):
+    def test_dictionary_reader(self):
         # Returns a string of formatted weather data
-        read_data = flight_log_code.weather_reader(self.weather_data)
+        read_data = flight_log_code.dictionary_reader(self.weather_data, units_present=True)
+        # Adds a string of formatted runway data
+        read_data += flight_log_code.dictionary_reader(self.runway_data, units_present=False)
         expected_results = ["Action time : 12:34 hh:mm", "Pressure : 1234567 Pa", "Temperature : -12.3 C",
-                            "Wind direction : 123 degrees", "Wind speed : 12.3 mps"]
+                            "Wind direction : 123 degrees", "Wind speed : 12.3 mps", "take off direction : 321",
+                            "runway surface : XYZ", "surface condition : ZYX"]
         # Checks that the correct data is present in the read_data string
         for string in expected_results:
             self.assertTrue(string in read_data)
