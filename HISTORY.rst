@@ -2,6 +2,12 @@
 History
 =======
 
+1.1.0 (2020-02-19)
+------------------
+* Code modularised
+* Unit tests updated
+
+
 1.0.18 (2020-01-31)
 -------------------
 * Bug fixes
