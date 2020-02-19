@@ -23,6 +23,7 @@ TODO:
     Add flight duration from vibration data.
     Add a 3D map image to summarise flight.
     Option to display time in UTC or time after flight start.
+    Fix cell removal if no weather/runway information was entered.
 DONE:
 """
 
