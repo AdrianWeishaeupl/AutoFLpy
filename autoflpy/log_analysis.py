@@ -112,8 +112,10 @@ def autoflpy(input_file='Input_File.json'):
     # Imports custom weather data entered into the input file
     weather_data = data["weather_data"]
 
-    # Runs the xlsx converter
+    # Imports custom runway data entered into the input file
+    runway_data = data["runway_data"]
 
+    # Runs the xlsx converter
     log_to_xlsx.log_reader(log_file_path,
                            name_converter_file_path,
                            data_sources_path,
@@ -256,7 +258,7 @@ def autoflpy(input_file='Input_File.json'):
                                      start_time_hours,
                                      end_time_hours,
                                      metar_file_path,
-                                     weather_data)
+                                     weather_data, runway_data)
 
 
 if __name__ == "__main__":
