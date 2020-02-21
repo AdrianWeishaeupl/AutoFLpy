@@ -10,6 +10,44 @@ AutoFLpy is a code designed to allow drone pilots and operators to easily analys
 **Upon first time running of the script, sample data will be used to create a sample flight log for the user to look at for inspiration.** 
 A folder structure containing the "Input_File.json" and base file paths will also be created. The user can then complete the "Input_File.json" with appropriate information and analyse their own flight data.
 
+The template is structured as follows::
+
+	{
+		"log_to_xlsx_input": {
+			"log_file_name": "Your log file to be run",
+			"log_file_path": "Set to your storage location. If blank, uses the file path of the sample data. NOTE: file paths need // as separators.",
+			"excel_data_file_path": "Destination for the generated excel data. If blank, creates folder in the current directory",
+			"date": "YYYYMMDD",
+			"flight_number": "Flight number on the date specified"
+		},
+		
+		"flight_log_generator_input": {		
+			"template_file_path": "If blank, finds the default template location",
+			"template_file_name": "If blank, uses the default template",
+			"arduino_flight_data_name": "Name of correctly formatted Arduino data. If blank, uses the name of the sample data",
+			"arduino_flight_data_file_path": "Path to arduino data. If blank, finds the path to the sample data",
+			"checklist_data_file_path": "If blank, uses the sample checklist file path",
+			"metar_file_path": "METAR data collected will be stored here. If blank, creates folder in the current directory",
+			"flight_log_destination": "Destination for the generated flight logs. If blank, creates folder in the current directory",
+			"start_time_hours": "HH - 24 hr clock",
+			"end_time_hours": "HH - 24 hr clock"
+		},
+		
+		"weather_data": {
+			"Action_time_hh:mm": "Time the weather data was recorded as hh:mm",
+			"Temperature_C": "Temperature recorded on the ground in celsius",
+			"Pressure_Pa": "Pressure recorded in Pascal",
+			"Wind_speed_mps": "Wind speed recorded in meters per second (mps)",
+			"Wind_direction_degrees": "Wind direction recorded in degrees from North"
+		},
+		
+		"runway_data": {
+			"Take_off_direction": "This should be entered in degrees with North being 0.",
+			"Runway_surface": "What material is the runway? E.g. tarmac/concrete/grass/dirt/ect.",
+			"Surface_condition": "What condition is the runway in? E.g. dry/wet/icy/dusty/damaged/ect."
+		}
+	}
+
 .. image:: images/Us_input_template.png
 	:width: 900
 	:alt: Input_Template.json file content.
@@ -122,7 +160,7 @@ These are x and y graphs with multiple y values with different units. The legend
 Mapplot
 This is a special case of the standard graph and is active when Latitdue and Longitude are plotted against each other. A map is plotted behind the data aid with flight visualisation.
 
-Multiaxis Graphs
+Multiaxis graphs
 ----------------
 Multiaxis graphs will have left and right axis. These are like the normal graphs but the text to create the graph is MULTIAXIS_GRAPH. To state the data for the left axis the label is LEFT_AXIS and to state the data for the right axis, the label is RIGHT_AXIS.
 
@@ -160,7 +198,7 @@ Checklist related information
 -----------------------------
 If a cell contains the label CHECKLIST_TEXT, it will be removed if checklists do not appear on that flight date. Likewise, CHECKLIST_LINE will remove a specific line when checklists do not appear.
 
-METAR Information
+METAR information
 -----------------
 The text METAR_INFORMATION will import a paragraph of text stating the METAR information for the input times and dates. METAR_INFORMATION must be on a cell on its own to work.
 
@@ -169,11 +207,20 @@ METAR_INFORMATION
 An example showing how the cell must be laid out for METAR information.
 The METAR information paragraph created will have an anchor with the id "METAR-Information".
 
-METAR related Information
+METAR related information
 -------------------------
 If a cell contains the label METAR_TEXT, autoflpy will search for METAR information at the closest airfield. This also works retrospectively.
 
-Autoflpy template labels and text:
+Weather and runway information
+------------------------------
+Weather information and runway information entered into the input file are generated through the following keys respectively:
+
+WEATHER_INFORMATION
+
+RUNWAY_INFORMATION
+
+
+Autoflpy template labels and text
 ----------------------------------
 Label					Function
 
