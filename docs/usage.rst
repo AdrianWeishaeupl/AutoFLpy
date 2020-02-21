@@ -10,7 +10,7 @@ AutoFLpy is a code designed to allow drone pilots and operators to easily analys
 **Upon first time running of the script, sample data will be used to create a sample flight log for the user to look at for inspiration.** 
 A folder structure containing the "Input_File.json" and base file paths will also be created. The user can then complete the "Input_File.json" with appropriate information and analyse their own flight data.
 
-The template is structured as follows::
+The Input_file.json is structured as follows::
 
 	{
 		"log_to_xlsx_input": {
