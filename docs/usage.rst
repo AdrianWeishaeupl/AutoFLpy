@@ -48,9 +48,6 @@ The template is structured as follows::
 		}
 	}
 
-.. image:: images/Us_input_template.png
-	:width: 900
-	:alt: Input_Template.json file content.
 
 -----------------
 
@@ -224,19 +221,19 @@ Autoflpy template labels and text
 ----------------------------------
 Label					Function
 
-GRAPH					Identifies cell as a graph cell
+GRAPH					Identifies cell as a graph cell.
 
 X NAME DATA_SOURCE		X data from column with name NAME from data source DATA_SOURCE. This must be paired with at least one y column from the same data source.
 
 Y NAME DATA_SOURCE		Y data from column with name NAME form data source DATA SOURCE. This must be paired with an x column from the same data source.
 
-MULTIAXIS_GRAPH			Identifies cell as a multiaxis graph
+MULTIAXIS_GRAPH			Identifies cell as a multiaxis graph.
 
-LEFT_AXIS				Labels data for left axis on multiaxis graph
+LEFT_AXIS				Labels data for left axis on multiaxis graph.
 
-RIGHT_AXIS				Labels data for Right axis of multiaxis graph
+RIGHT_AXIS				Labels data for Right axis of multiaxis graph.
 
-GRAPH_TEXT				Removes cell containing this label when there is no data to create graphs with
+GRAPH_TEXT				Removes cell containing this label when there is no data to create graphs with.
 
 GRAPH_LINE				Removes line containing this label when there is no data to create graphs with.
 
@@ -244,13 +241,25 @@ CHECKLIST_INFORMATION	When CHECKLIST_INFORMATION is placed in a cell, this will 
 
 CHECKLIST_TEXT			Removes cell containing this label when there is no checklist data for that date.
 
-CHECKLIST_LINE			Removes cell containing this label when there is no checklist data for that date.
+CHECKLIST_LINE			Removes line containing this label when there is no checklist data for that date.
 
-METAR_INFORMATION		When METAR_INFORMATION is placed in a cell, this will place a cell containing the METAR data when available
+METAR_INFORMATION		When METAR_INFORMATION is placed in a cell, this will place a cell containing the METAR data when available.
 
 METAR_TEXT				Removes cell containing this label when there is no METAR data for that date.
 
-METAR_LINE				Removes cell containing this label when there is no METAR data for that date.
+METAR_LINE				Removes line containing this label when there is no METAR data for that date.
+
+WEATHER_INFORMATION		When WEATHER_INFORMATION is placed in a cell, this will place a cell containing the weather data from the input_file.json when available.
+
+WEATHER_TEXT			Removes cell containing this label when there is no weather data entered.
+
+WEATHER_LINE			Removes line containing this label when there is no weather data entered.
+
+RUNWAY_INFORMATION		When RUNWAY_INFORMATION is placed in a cell, this will place a cell containing the runway data from the input_file.json when available.
+
+RUNWAY_TEXT				Removes cell containing this label when there is no runway data entered.
+
+RUNWAY_LINE				Removes line containing this label when there is no runway data entered.
 
 
 
