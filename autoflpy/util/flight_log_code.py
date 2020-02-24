@@ -647,12 +647,15 @@ def flight_log_checklist(filtered_frame_nominal, filtered_frame_emergency,
 
 
 def flight_data_and_axis(new_frames):
-    """Returns list of lists with the following structure [[data source,
-    [name, unit, data],[name, unit, data]], [data source, [name, unit, data],
-    [name, unit, data]]]."""
+    """Returns list of lists with the following structure:
+    [[flight, [data source, [name, unit, data],[name, unit, data]]], [flight, [data source, [name, unit, data],
+    [name, unit, data]]]]."""
     # TODO: try rewriting this code in a more legible way.
+    # TODO: This needs to be rewritten for multiple flights/logs.
     # Creates an empty list for all the data.
     values_list = []
+    # Finds the flight date and number from the data
+    flight_identifier = new_frames[0].columns[0][-16:]
     # Checks through all the data frames
     for frame in new_frames:
         # Goes through all the columns
@@ -751,7 +754,7 @@ def flight_data_and_axis(new_frames):
                            str(denominator[1]) + "}$"
             data_lists.append([name, unit, y])
         values_list.append(data_lists)
-    return values_list
+    return [flight_identifier, values_list]
 
 
 def flight_log_creator(contents, file_path, date, flight_number,
@@ -928,18 +931,22 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
                          comp_data_file_path):
     """
     This is used to compile all the entered data. This is then pickled and saved for faster loading.
+
+    flight_data_file_path, flight_data_file_name, arduino_data_file_path and arduino_data_file_name are of type list.
     """
-    # Excel Sheets
-    frame_list = flight_data(flight_data_file_path, flight_data_file_name)
-    # Retrieves arduino flight data
-    arduino_flight_data_frame = arduino_micro_frame(arduino_data_file_path,
-                                                    arduino_data_file_name)
-    # Appends arduino frame to flight data from pixhawk
-    frame_list.append(arduino_flight_data_frame)
-    # Sorts frames by time
-    sorted_frames = flight_data_time_sorter(frame_list)
-    # Creates a list of all the values.
-    values_list = flight_data_and_axis(sorted_frames)
+    values_list = []
+    for data_set in range(len(flight_data_file_name)):
+        # Excel Sheets
+        frame_list = flight_data(flight_data_file_path[data_set], flight_data_file_name[data_set])
+        # Retrieves arduino flight data
+        arduino_flight_data_frame = arduino_micro_frame(arduino_data_file_path[data_set],
+                                                        arduino_data_file_name[data_set])
+        # Appends arduino frame to flight data from pixhawk
+        frame_list.append(arduino_flight_data_frame)
+        # Sorts frames by time
+        sorted_frames = flight_data_time_sorter(frame_list)
+        # Creates a list of all the values.
+        values_list.append(flight_data_and_axis_2(sorted_frames))
     # Compresses (pickles) the data and saves it in the excel files folder.
     pk.dump(values_list, open(comp_data_file_path, "wb"))
     print('Pickling finished')
