@@ -946,7 +946,7 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
         # Sorts frames by time
         sorted_frames = flight_data_time_sorter(frame_list)
         # Creates a list of all the values.
-        values_list.append(flight_data_and_axis_2(sorted_frames))
+        values_list.append(flight_data_and_axis(sorted_frames))
     # Compresses (pickles) the data and saves it in the excel files folder.
     pk.dump(values_list, open(comp_data_file_path, "wb"))
     print('Pickling finished')
