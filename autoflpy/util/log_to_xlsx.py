@@ -17,7 +17,7 @@ Based on work done by Samuel Pearson (sp1g18@soton.ac.uk) (06-08/2019)
 
 def log_reader(log_file_path, name_converter_file_path, data_sources_path,
                excel_file_path, excel_file_name, flight_date, flight_number, weather_data, runway_data):
-    """Creates a formatted excel 95 file from a log file. """
+    """Creates a formatted excel file from a log file. """
     print('Starting log reader')
     print('Creating new work book')
     # Creates a new write only workbook for faster writing
