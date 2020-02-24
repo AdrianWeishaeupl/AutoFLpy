@@ -54,7 +54,7 @@ def take_off_point_finder(values_list, alt_sensitivity=0.3, groundspeed_sensitiv
 
     take_off_time_spd = gps_data[2][2][take_off_data_point_spd]
 
-    return take_off_time_alt, take_off_groundspeed, take_off_time_spd
+    return round(take_off_time_alt, 2), round(take_off_groundspeed, 2), round(take_off_time_spd, 2)
 
 
 def significant_data_change_via_rms_error(data_set, sensitivity=0.3):
