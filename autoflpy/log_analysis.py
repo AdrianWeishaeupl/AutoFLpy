@@ -249,8 +249,8 @@ def autoflpy(input_file='Input_File.json'):
         copyfile(base_path + 'Your_logo_file_name_here.png',
                  images_path + 'Your_logo_file_name_here.png')
     # Finds the nearest airfield for METAR information
-    icao_airfield = nearest_ICAO_finder.icao_finder(flight_data_file_path,
-                                                    flight_data_file_names)
+    icao_airfield = nearest_ICAO_finder.multi_icao_finder(flight_data_file_path,
+                                                          flight_data_file_names, excel_file_names)
 
     # Runs the flight log generator
     flight_log_code.flight_log_maker(template_file_path,

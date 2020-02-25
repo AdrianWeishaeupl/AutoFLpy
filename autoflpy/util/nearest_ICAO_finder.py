@@ -15,6 +15,18 @@ import pandas as pd
 from openpyxl import load_workbook
 
 
+def multi_icao_finder(file_path, file_names, flight_names):
+    """Runs the icao_finder for multiple file_names in the form of lists from the same file_path
+
+    returns a list of ICAO codes found for the respective flights
+    """
+    icaos = []
+    for flight in range(len(flight_names)):
+        print("Finding ICAO for {}".format(flight_names[flight]))
+        icaos.append(icao_finder(file_path, file_names[flight]))
+    return icaos
+
+
 def icao_finder(file_path, file_name):
     """Puts together sub-functions to find the UAV's nearest ICAO"""
     # Finds airport latitudes and longitudes
