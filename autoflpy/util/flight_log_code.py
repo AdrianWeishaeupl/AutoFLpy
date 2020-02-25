@@ -40,7 +40,7 @@ def flight_log_maker(template_file_path, template_file_name,
     # Sets the number of flights for iterating through the data lists
     number_of_flights = len(flight_dates)
 
-    # loads contents_checklist_rm.
+    # loads contents.
     contents = contents_opener(template_file_path, template_file_name)
 
     # Formats flight_dates into a string for insertion into template
@@ -50,7 +50,7 @@ def flight_log_maker(template_file_path, template_file_name,
         flight_dates_str += flight_date[6:] + "/" + flight_date[4:6] + "/" + flight_date[:4] + " and "
     flight_dates_str = flight_dates_str[:-5]
 
-    # Inserts the dates into the contents_checklist_rm.
+    # Inserts the dates into the contents.
     contents = contents.replace("FLIGHT_DATE", flight_dates_str)
 
     # Formats flight_numbers into a string for insertion into template
@@ -59,7 +59,7 @@ def flight_log_maker(template_file_path, template_file_name,
         flight_numbers_str += str(flight_numbers[flight]) + ", "
     flight_numbers_str = flight_numbers_str[:-2]
 
-    # Inserts the flight number into the contents_checklist_rm.
+    # Inserts the flight number into the contents.
     contents = contents.replace("FLIGHT_NUMBER", flight_numbers_str)
     compressed_data_file_name = ""
     # Checks to see whether there is graph data or arduino data that can be
@@ -219,7 +219,7 @@ def flight_log_maker(template_file_path, template_file_name,
                 contents = contents.replace("METAR_LINE", "")
                 contents = contents.replace("METAR_TEXT", "")
             else:
-                # Includes METAR data into the contents_checklist_rm.
+                # Includes METAR data into the contents.
                 contents = metar_returner(metar_data, contents,
                                           int(str(flight_dates)[4:6]),
                                           int(str(flight_dates)[:4]),
@@ -280,7 +280,7 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = cell_remover(contents, "RUNWAY_TEXT")
         contents = contents.replace("RUNWAY_INFORMATION", "")
 
-    # Creates a new flight log from the contents_checklist_rm
+    # Creates a new flight log from the contents
     flight_log_creator(contents, flight_log_file_path, flight_dates,
                        flight_numbers, flight_log_file_name_header)
     print('Pickling data')
