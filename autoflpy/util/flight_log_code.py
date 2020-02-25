@@ -246,7 +246,13 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = cell_remover(contents, "METAR_TEXT")
 
     # Formats dictionary appropriately to be put into the jupyter notebook as text
-    weather_information = dictionary_reader(weather_data_lists, debug_name="Weather data", units_present=True)
+    weather_information = ""
+    runway_information = ""
+    for flight in range(number_of_flights):
+        weather_information += dictionary_reader(weather_data_lists[flight], debug_name="Weather data",
+                                                 units_present=True)
+        runway_information += dictionary_reader(runway_data_lists[flight], debug_name="Runway data",
+                                                units_present=False)
 
     if weather_information != "\"\\n\"":  # If information is present, add it to the content.
         contents = contents.replace("\"WEATHER_INFORMATION\"", "\"<h2>Weather Information</h2><a class=\\\"anchor\\\"" +
@@ -260,9 +266,6 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = line_remover(contents, "WEATHER_LINE")
         contents = cell_remover(contents, "WEATHER_TEXT")
         contents = contents.replace("WEATHER_INFORMATION", "")
-
-    # Formats runway_data_lists appropriately to be put into the jupyter notebook as text
-    runway_information = dictionary_reader(runway_data_lists, debug_name="Runway data", units_present=False)
 
     if runway_information != "\"\\n\"":  # If information is present, add it to the content.
         contents = contents.replace("\"RUNWAY_INFORMATION\"", "\"<h2>Runway Information</h2><a class=\\\"anchor\\\"" +
