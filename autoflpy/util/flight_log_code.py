@@ -129,13 +129,20 @@ def flight_log_maker(template_file_path, template_file_name,
             frame_list_emergency = flight_data(checklist_file_path,
                                                "Checklists_emergency.xlsx")
             print('Looking for checklists')
-            filtered_frame_nominal = checklist_finder(frame_list_nominal,
-                                                      flight_numbers,
-                                                      flight_dates)
-            # Filters the data to get just the required data.
-            filtered_frame_emergency = checklist_finder(frame_list_emergency,
-                                                        flight_numbers,
-                                                        flight_dates)
+            filtered_frame_nominal_concat = []  # For combining checklist data frames into one
+            filtered_frame_emergency_concat = []  # For combining checklist data frames into one
+            for flight in range(number_of_flights):
+                filtered_frame_nominal_concat.append(checklist_finder(frame_list_nominal,
+                                                                      flight_numbers[flight],
+                                                                      flight_dates[flight]))
+
+                # Filters the data to get just the required data.
+                filtered_frame_emergency_concat.append(checklist_finder(frame_list_emergency,
+                                                                        flight_numbers[flight],
+                                                                        flight_dates[flight]))
+            # Combining checklist data frames into one:
+            filtered_frame_nominal = pd.concat(filtered_frame_nominal_concat)
+            filtered_frame_emergency = pd.concat(filtered_frame_emergency_concat)
             contents = flight_log_checklist(filtered_frame_nominal,
                                             filtered_frame_emergency,
                                             "CHECKLIST_INFORMATION",
@@ -166,18 +173,21 @@ def flight_log_maker(template_file_path, template_file_name,
     else:
         contents = remove_checklist_line_from_template(contents)
     # Checks to see if the start and end time are in the correct format
-    hours_valid = True
-    try:
-        int(start_times_hours)
-    except ValueError:
-        hours_valid = False
-    try:
-        int(end_times_hours)
-    except ValueError:
-        hours_valid = False
+    hours_valid = []
+    for flight in range(number_of_flights):
+        try:
+            int(start_times_hours[flight])
+            hours_valid.append(True)
+        except ValueError:
+            hours_valid.append(False)
+        try:
+            int(end_times_hours[flight])
+            hours_valid.append(True)
+        except ValueError:
+            hours_valid.append(False)
     # Checks to see if ICAO code is valid, if not then the Metar information is
     # removed
-    if (icao_airfields != "data" or icao_airfields != "") and hours_valid is True:
+    if (icao_airfields != "data" or icao_airfields != "") and all(hours_valid) is True:
         # Retrieves METAR data.
         metar_data = metar_finder(icao_airfields, str(flight_dates)[:4],
                                   str(flight_dates)[4:6], str(flight_dates)[6:8],
