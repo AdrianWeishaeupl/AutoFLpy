@@ -66,22 +66,21 @@ def autoflpy(input_file='Input_File.json'):
     # Sets  variables from the input file to be used.
     # If no log file path has been entered, go to the standard log path.
     if data["log_to_xlsx_input"]["log_file_path"] != "" and os.path.exists(
-        data["log_to_xlsx_input"]["log_file_path"]) is True:
-        log_file_path = (data["log_to_xlsx_input"][
-                             "log_file_path"] + os.sep + data["log_to_xlsx_input"][
-                             "log_file_name"])
+      data["log_to_xlsx_input"]["log_file_path"]) is True:
+        for file in data["log_to_xlsx_input"]["log_file_name"].replace(" ", "").split(","):
+            log_file_path = (data["log_to_xlsx_input"][
+                                 "log_file_path"] + os.sep + file)
     else:
         # Creates a new directory to look for files.
         log_file_base_path = (default_storage_path + "log_files" + os.sep
                               )
-        log_file_path = (log_file_base_path + os.sep + data[
-            "log_to_xlsx_input"]["log_file_name"])
+        for file in data["log_to_xlsx_input"]["log_file_name"].replace(" ", "").split(","):
+            log_file_path = (log_file_base_path + os.sep + file)
         try:
             os.makedirs(log_file_base_path)
             # Raises error and gives advice on how to continue.
-            print('No log file directory was entered. A new directory has been'
-                  ' made.')
-            raise FileNotFoundError
+            raise FileNotFoundError('No log file directory was entered. A new directory has been'
+                                    ' made.')
         except OSError:
             print('Log file path found.')
             # Copies the example data file into the log storage
@@ -103,29 +102,31 @@ def autoflpy(input_file='Input_File.json'):
         except OSError:
             print("Excel folder found. Will use this folder to store generated"
                   " xlsx files.")
-
-    flight_date = data["log_to_xlsx_input"]["date"]
-    flight_number = data["log_to_xlsx_input"]["flight_number"]
-    name_generator.excel_file_name_updater(flight_date, flight_number)
+    # TODO: Check that all inputs are the same length - user defined data needs to be complete
+    # Formats the flight dates and flight numbers as lists
+    flight_dates = str(data["log_to_xlsx_input"]["date"]).replace(" ", "").split(",")
+    flight_numbers = str(data["log_to_xlsx_input"]["flight_number"]).replace(" ", "").split(",")
     # Generates an appropriate file name
-    excel_file_name = name_generator.generated_file_name
-
+    excel_file_names = name_generator.excel_file_name_updater(flight_dates, flight_numbers)
     # Imports custom weather data entered into the input file
-    weather_data = data["weather_data"]
+    weather_data_multi = data["weather_data"]
 
     # Imports custom runway data entered into the input file
-    runway_data = data["runway_data"]
+    runway_data_multi = data["runway_data"]
+    # Formats the runway data into several separate dictionaries
+    weather_data, runway_data = flight_log_code.weather_runway_data_formatter(weather_data_multi, runway_data_multi,
+                                                                              flight_dates)
 
     # Runs the xlsx converter
-    log_to_xlsx.log_reader(log_file_path,
-                           name_converter_file_path,
-                           data_sources_path,
-                           excel_file_path,
-                           excel_file_name,
-                           flight_date,
-                           flight_number,
-                           weather_data,
-                           runway_data)
+    log_to_xlsx.log_reader_multi(log_file_path,
+                                 name_converter_file_path,
+                                 data_sources_path,
+                                 excel_file_path,
+                                 excel_file_names,
+                                 flight_dates,
+                                 flight_numbers,
+                                 weather_data,
+                                 runway_data)
 
     # Assigns variables - checks if any information is entered into the input
     # file for the directories before creating new directories in the current
@@ -166,7 +167,7 @@ def autoflpy(input_file='Input_File.json'):
             print("Flight log folder found. Will use this folder to store "
                   "generated flight log files.")
     flight_data_file_path = (excel_file_path + os.sep)
-    flight_data_file_name = excel_file_name + ".xlsx"
+    flight_data_file_name = excel_file_names + ".xlsx"
     if data["flight_log_generator_input"][
         "arduino_flight_data_file_path"] != "" and \
         os.path.exists(data["flight_log_generator_input"]
@@ -252,8 +253,8 @@ def autoflpy(input_file='Input_File.json'):
                                      flight_data_file_name,
                                      arduino_flight_data_file_path,
                                      arduino_flight_data_name,
-                                     flight_date,
-                                     flight_number,
+                                     flight_dates,
+                                     flight_numbers,
                                      flight_log_file_name_header,
                                      checklist_file_path,
                                      icao_airfield,
