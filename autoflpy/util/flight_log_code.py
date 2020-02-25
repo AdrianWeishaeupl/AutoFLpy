@@ -61,28 +61,32 @@ def flight_log_maker(template_file_path, template_file_name,
 
     # Inserts the flight number into the contents_checklist_rm.
     contents = contents.replace("FLIGHT_NUMBER", flight_numbers_str)
+    compressed_data_file_name = ""
     # Checks to see whether there is graph data or arduino data that can be
     # used to plot graphs by checking if the path exists and if the path has a
     # suitable length to that it is not just greater than 1.
-    if (os.path.exists(flight_data_file_path + os.sep + flight_data_file_names)
-        is True and
-        len(flight_data_file_path + os.sep + flight_data_file_names) > 1) \
-        or \
-        (os.path.exists(arduino_flight_data_file_path + os.sep +
-                        arduino_flight_data_names) is True and
-         len(arduino_flight_data_file_path + os.sep +
-             arduino_flight_data_names) > 1):
-        print('Importing xlsx data')
+    directories_present = []
+    for flight in range(number_of_flights):
+        if (os.path.exists(flight_data_file_path + os.sep + flight_data_file_names[flight])
+            is True and
+            len(flight_data_file_path + os.sep + flight_data_file_names[flight]) > 1) \
+            or \
+            (os.path.exists(arduino_flight_data_file_path + os.sep +
+                            arduino_flight_data_names[flight]) is True and
+             len(arduino_flight_data_file_path + os.sep +
+                 arduino_flight_data_names[flight]) > 1):
+            directories_present.append(True)
+        else:
+            directories_present.append(False)
         # Assigns file name based on excel data
-        compressed_data_file_path = flight_data_file_path + flight_data_file_names[:-5] + ".pkl"
+        compressed_data_file_name += str(flight_data_file_names[flight])[:-5] + "-"  # [:-5] removes the ".xslx"
+
+    if all(directories_present):  # If all are true, carry on.
+        print('Importing xlsx data')
         # This replaces the file path with the necessary information
         contents = contents.replace("PYTHON_FILE_PATH", "\\\"" +
                                     os.getcwd().replace("\\", jupyter_sep) +
                                     "\\\"")
-        # This replaces the file path to the compressed data
-        contents = contents.replace("COMPRESSED_DATA_FILE_PATH", "\\\"" +
-                                    (compressed_data_file_path
-                                     ).replace("\\", jupyter_sep) + "\\\"")
         # This replaces the graph text label
         contents = contents.replace("GRAPH_TEXT", "")
         # This replaces the graph data label
@@ -104,6 +108,13 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = cell_remover(contents, "GRAPH_TEXT")
         # removes graph lines from cell
         contents = line_remover(contents, "GRAPH_LINE")
+
+    # Assigns file name based on excel data
+    compressed_data_file_path = flight_data_file_path + compressed_data_file_name[:-1] + ".pkl"  # [:-1] removes the "-"
+    # This replaces the file path to the compressed data
+    contents = contents.replace("COMPRESSED_DATA_FILE_PATH", "\\\"" +
+                                (compressed_data_file_path
+                                 ).replace("\\", jupyter_sep) + "\\\"")
 
     def remove_checklist_line_from_template(contents_checklist_rm):
         contents_checklist_rm = line_remover(contents_checklist_rm, "CHECKLIST_LINE")
