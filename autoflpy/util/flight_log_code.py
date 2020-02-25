@@ -1006,3 +1006,37 @@ def dictionary_reader(dictionary, debug_name="Dictionary data", units_present=Fa
         text = ""
 
     return text
+
+
+def weather_runway_data_formatter(weather_data_dictionaries, runway_data_dictionaries, flight_dates):
+    """Takes in 2 dictionaries of weather and runway data with possibly multiple data sets separated by a "," and
+    formats them into lists of dictionaries which each contain one data set.
+
+    flight_dates is used to determine the number of flights
+
+    eg: runway_data_dictionaries{key} = {value_dataset_1, value__dataset_2}
+    into:
+    [{key}=value_dataset_1, {key}=value_dataset_2]
+
+    returns weather_data, runway_data
+    """
+
+    weather_data = []
+    runway_data = []
+    weather_data_temp = {}
+    runway_data_temp = {}
+    try:
+        # Formats weather and runway data as lists of data dictionaries
+        for flight in range(len(flight_dates)):
+            # Creates a new dictionary for the first set of weather data and runway data
+            for key in weather_data_dictionaries.keys():
+                weather_data_temp[key] = weather_data_dictionaries[key].replace(" ", "").split(",")[flight]
+
+            for key in runway_data_dictionaries.keys():
+                runway_data_temp[key] = runway_data_dictionaries[key].replace(" ", "").split(",")[flight]
+            weather_data.append(weather_data_temp)
+            runway_data.append(runway_data_temp)
+    except IndexError:
+        raise IndexError("weather_data or runway_data do not contain enough data for the number of flights entered.")
+
+    return weather_data, runway_data
