@@ -1008,39 +1008,53 @@ def dictionary_reader(dictionary, debug_name="Dictionary data", units_present=Fa
     return text
 
 
-def weather_runway_data_formatter(weather_data_dictionaries, runway_data_dictionaries, flight_dates):
-    """Takes in 2 dictionaries of weather and runway data with possibly multiple data sets separated by a "," and
+def multi_dictionary_data_formatter(dictionaries, flight_dates, debug_name):
+    """Takes in a dictionaries of data with possibly multiple data sets separated by a "," and
     formats them into lists of dictionaries which each contain one data set.
 
     flight_dates is used to determine the number of flights
 
-    eg: runway_data_dictionaries{key} = {value_dataset_1, value__dataset_2}
+    e.g.: dictionaries{key} = {value_dataset_1, value__dataset_2}
     into:
     [{key}=value_dataset_1, {key}=value_dataset_2]
 
-    returns weather_data, runway_data
+    returns dictionary
     """
 
-    weather_data = []
-    runway_data = []
-    weather_data_temp = {}
-    runway_data_temp = {}
-    # Checks that the weather_data/runway_data lengths are equal to the number of flights
-    for dictionary in [weather_data_dictionaries, runway_data_dictionaries]:
-        for item in dictionary.values():
-            if len(item.replace(" ", "").split(",")) == len(flight_dates):
-                pass
-            else:
-                raise IndexError("weather_data and/or runway_data do not contain enough data for the number"
-                                 " of flights entered.")
+    dictionary = []
+    dictionary_data_temp = {}
 
-    # Formats weather and runway data as lists of data dictionaries
+    # Checks that the dictionary data lengths are equal to the number of flights
+    for item in dictionaries.values():
+        if len(item.replace(" ", "").split(",")) == len(flight_dates):
+            pass
+        else:
+            raise IndexError("{} data content does not match the number"
+                             " of flights entered ({}).".format(debug_name, len(flight_dates)))
+
+    # Formats dictionaries data as lists of data dictionaries
     for flight in range(len(flight_dates)):
-        # Creates a new dictionary for the first set of weather data and runway data
-        for key in weather_data_dictionaries.keys():
-            weather_data_temp[key] = weather_data_dictionaries[key].replace(" ", "").split(",")[flight]
+        # Creates a new dictionary for each set of data
+        for key in dictionaries.keys():
+            dictionary_data_temp[key] = dictionaries[key].replace(" ", "").split(",")[flight]
+        dictionary.append(dictionary_data_temp)
 
-        for key in runway_data_dictionaries.keys():
-            runway_data_temp[key] = runway_data_dictionaries[key].replace(" ", "").split(",")[flight]
-        weather_data.append(weather_data_temp)
-        runway_data.append(runway_data_temp)
+    return dictionary
+
+
+def multi_string_data_formatter(data_string, flight_dates, debug_name):
+    """Takes a string of multiple inputs separated by a "," and separates this into a list of multiple inputs.
+
+    flight_dates a list used to verify that enough data has been entered (is equal to len(flight_data)).
+
+    e.g. data_string = "1234,4567"
+    output = [1234, 4567]
+    """
+
+    data_list = str(data_string).replace(" ", "").split(",")
+
+    if len(data_list) != len(flight_dates):
+        raise IndexError("{} data entered does not have the same length as the number of flights ({})"
+                         .format(debug_name, len(flight_dates)))
+
+    return data_list
