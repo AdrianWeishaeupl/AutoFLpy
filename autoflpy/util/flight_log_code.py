@@ -29,36 +29,36 @@ else:
 
 def flight_log_maker(template_file_path, template_file_name,
                      flight_log_file_path, flight_data_file_path,
-                     flight_data_file_name, arduino_flight_data_file_path,
-                     arduino_flight_data_name, flight_date, flight_number,
+                     flight_data_file_names, arduino_flight_data_file_path,
+                     arduino_flight_data_names, flight_dates, flight_numbers,
                      flight_log_file_name_header, checklist_file_path,
-                     icao_airfield, start_time_hours, end_time_hours, metar_file_path,
-                     weather_data, runway_data):
+                     icao_airfields, start_times_hours, end_times_hours, metar_file_path,
+                     weather_data_lists, runway_data_lists):
     """This code will edit a specified template and return the result that has
     been produced after the substitution of data into the template."""
     print('Starting Flight Log Maker')
     # loads contents_checklist_rm.
     contents = contents_opener(template_file_path, template_file_name)
     # Inserts the date into the contents_checklist_rm.
-    contents = contents.replace("FLIGHT_DATE", (str(flight_date)[6:] + "/" +
-                                                str(flight_date)[4:6] + "/" +
-                                                str(flight_date)[:4]))
+    contents = contents.replace("FLIGHT_DATE", (str(flight_dates)[6:] + "/" +
+                                                str(flight_dates)[4:6] + "/" +
+                                                str(flight_dates)[:4]))
     # Inserts the flight number into the contents_checklist_rm.
-    contents = contents.replace("FLIGHT_NUMBER", str(flight_number))
+    contents = contents.replace("FLIGHT_NUMBER", str(flight_numbers))
     # Checks to see whether there is graph data or arduino data that can be
     # used to plot graphs by checking if the path exists and if the path has a
     # suitable length to that it is not just greater than 1.
-    if (os.path.exists(flight_data_file_path + os.sep + flight_data_file_name)
+    if (os.path.exists(flight_data_file_path + os.sep + flight_data_file_names)
         is True and
-        len(flight_data_file_path + os.sep + flight_data_file_name) > 1) \
+        len(flight_data_file_path + os.sep + flight_data_file_names) > 1) \
         or \
         (os.path.exists(arduino_flight_data_file_path + os.sep +
-                        arduino_flight_data_name) is True and
+                        arduino_flight_data_names) is True and
          len(arduino_flight_data_file_path + os.sep +
-             arduino_flight_data_name) > 1):
+             arduino_flight_data_names) > 1):
         print('Importing xlsx data')
         # Assigns file name based on excel data
-        compressed_data_file_path = flight_data_file_path + flight_data_file_name[:-5] + ".pkl"
+        compressed_data_file_path = flight_data_file_path + flight_data_file_names[:-5] + ".pkl"
         # This replaces the file path with the necessary information
         contents = contents.replace("PYTHON_FILE_PATH", "\\\"" +
                                     os.getcwd().replace("\\", jupyter_sep) +
@@ -103,12 +103,12 @@ def flight_log_maker(template_file_path, template_file_name,
                                                "Checklists_emergency.xlsx")
             print('Looking for checklists')
             filtered_frame_nominal = checklist_finder(frame_list_nominal,
-                                                      flight_number,
-                                                      flight_date)
+                                                      flight_numbers,
+                                                      flight_dates)
             # Filters the data to get just the required data.
             filtered_frame_emergency = checklist_finder(frame_list_emergency,
-                                                        flight_number,
-                                                        flight_date)
+                                                        flight_numbers,
+                                                        flight_dates)
             contents = flight_log_checklist(filtered_frame_nominal,
                                             filtered_frame_emergency,
                                             "CHECKLIST_INFORMATION",
@@ -141,21 +141,21 @@ def flight_log_maker(template_file_path, template_file_name,
     # Checks to see if the start and end time are in the correct format
     hours_valid = True
     try:
-        int(start_time_hours)
+        int(start_times_hours)
     except ValueError:
         hours_valid = False
     try:
-        int(end_time_hours)
+        int(end_times_hours)
     except ValueError:
         hours_valid = False
     # Checks to see if ICAO code is valid, if not then the Metar information is
     # removed
-    if (icao_airfield != "data" or icao_airfield != "") and hours_valid is True:
+    if (icao_airfields != "data" or icao_airfields != "") and hours_valid is True:
         # Retrieves METAR data.
-        metar_data = metar_finder(icao_airfield, str(flight_date)[:4],
-                                  str(flight_date)[4:6], str(flight_date)[6:8],
-                                  str(flight_date)[4:6], str(flight_date)[6:8],
-                                  start_time_hours, end_time_hours,
+        metar_data = metar_finder(icao_airfields, str(flight_dates)[:4],
+                                  str(flight_dates)[4:6], str(flight_dates)[6:8],
+                                  str(flight_dates)[4:6], str(flight_dates)[6:8],
+                                  start_times_hours, end_times_hours,
                                   metar_file_path)
         # Checks to see if METAR data is available.
         if len(metar_data) != 0:
@@ -165,16 +165,16 @@ def flight_log_maker(template_file_path, template_file_name,
                 # to re-try when the quota limit has been reached.
                 contents = metar_quota_returner(contents,
                                                 flight_log_file_name_header +
-                                                str(flight_date) + "_" +
-                                                str(flight_number) +
-                                                ".ipynb", icao_airfield,
-                                                str(flight_date)[:4],
-                                                str(flight_date)[4:6],
-                                                str(flight_date)[6:8],
-                                                str(flight_date)[4:6],
-                                                str(flight_date)[6:8],
-                                                start_time_hours,
-                                                end_time_hours,
+                                                str(flight_dates) + "_" +
+                                                str(flight_numbers) +
+                                                ".ipynb", icao_airfields,
+                                                str(flight_dates)[:4],
+                                                str(flight_dates)[4:6],
+                                                str(flight_dates)[6:8],
+                                                str(flight_dates)[4:6],
+                                                str(flight_dates)[6:8],
+                                                start_times_hours,
+                                                end_times_hours,
                                                 metar_file_path,
                                                 replace_key="METAR_" +
                                                             "INFORMATION")
@@ -184,19 +184,19 @@ def flight_log_maker(template_file_path, template_file_name,
             else:
                 # Includes METAR data into the contents_checklist_rm.
                 contents = metar_returner(metar_data, contents,
-                                          int(str(flight_date)[4:6]),
-                                          int(str(flight_date)[:4]),
+                                          int(str(flight_dates)[4:6]),
+                                          int(str(flight_dates)[:4]),
                                           replace_key="METAR_INFORMATION")
                 # Replaces JFLTS METAR text with nothing if data is available.
                 contents = contents.replace("METAR_LINE", "")
                 contents = contents.replace("METAR_TEXT", "")
         else:
-            contents = no_metar_returner(icao_airfield, str(flight_date)[:4],
-                                         str(flight_date)[4:6],
-                                         str(flight_date)[6:8],
-                                         str(flight_date)[4:6],
-                                         str(flight_date)[6:8],
-                                         start_time_hours, end_time_hours,
+            contents = no_metar_returner(icao_airfields, str(flight_dates)[:4],
+                                         str(flight_dates)[4:6],
+                                         str(flight_dates)[6:8],
+                                         str(flight_dates)[4:6],
+                                         str(flight_dates)[6:8],
+                                         start_times_hours, end_times_hours,
                                          contents,
                                          replace_key="METAR_INFORMATION")
             # Replaces JFLTS METAR text with nothing if data is available
@@ -209,7 +209,7 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = cell_remover(contents, "METAR_TEXT")
 
     # Formats dictionary appropriately to be put into the jupyter notebook as text
-    weather_information = dictionary_reader(weather_data, debug_name="Weather data", units_present=True)
+    weather_information = dictionary_reader(weather_data_lists, debug_name="Weather data", units_present=True)
 
     if weather_information != "\"\\n\"":  # If information is present, add it to the content.
         contents = contents.replace("\"WEATHER_INFORMATION\"", "\"<h2>Weather Information</h2><a class=\\\"anchor\\\"" +
@@ -224,8 +224,8 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = cell_remover(contents, "WEATHER_TEXT")
         contents = contents.replace("WEATHER_INFORMATION", "")
 
-    # Formats runway_data appropriately to be put into the jupyter notebook as text
-    runway_information = dictionary_reader(runway_data, debug_name="Runway data", units_present=False)
+    # Formats runway_data_lists appropriately to be put into the jupyter notebook as text
+    runway_information = dictionary_reader(runway_data_lists, debug_name="Runway data", units_present=False)
 
     if runway_information != "\"\\n\"":  # If information is present, add it to the content.
         contents = contents.replace("\"RUNWAY_INFORMATION\"", "\"<h2>Runway Information</h2><a class=\\\"anchor\\\"" +
@@ -241,13 +241,13 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = contents.replace("RUNWAY_INFORMATION", "")
 
     # Creates a new flight log from the contents_checklist_rm
-    flight_log_creator(contents, flight_log_file_path, flight_date,
-                       flight_number, flight_log_file_name_header)
+    flight_log_creator(contents, flight_log_file_path, flight_dates,
+                       flight_numbers, flight_log_file_name_header)
     print('Pickling data')
     # Compresses the flight data for faster loading
-    compile_and_compress(flight_data_file_path, flight_data_file_name,
+    compile_and_compress(flight_data_file_path, flight_data_file_names,
                          arduino_flight_data_file_path,
-                         arduino_flight_data_name, compressed_data_file_path)
+                         arduino_flight_data_names, compressed_data_file_path)
     print('Flight log maker finished')
 
 
@@ -760,7 +760,7 @@ def flight_data_and_axis(new_frames):
 def flight_log_creator(contents, file_path, date, flight_number,
                        file_name_header="Flight_Log_"):
     """This creates or overwrites a file with the name file_name_header date
-     flight_number.ipynb  and fills the file with the
+     flight_numbers.ipynb  and fills the file with the
     contents provided as an input."""
     # Creates file with name
     print('Creating new flight log')
@@ -932,7 +932,7 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     """
     This is used to compile all the entered data. This is then pickled and saved for faster loading.
 
-    flight_data_file_path, flight_data_file_name, arduino_data_file_path and arduino_data_file_name are of type list.
+    flight_data_file_path, flight_data_file_names, arduino_data_file_path and arduino_data_file_name are of type list.
     """
     values_list = []
     for data_set in range(len(flight_data_file_name)):
