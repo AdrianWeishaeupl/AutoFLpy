@@ -102,7 +102,6 @@ def autoflpy(input_file='Input_File.json'):
         except OSError:
             print("Excel folder found. Will use this folder to store generated"
                   " xlsx files.")
-    # TODO: Check that all inputs are the same length - user defined data needs to be complete
     # Formats the flight dates and flight numbers as lists and checks their length against the length of flight_dates
     flight_dates = str(data["log_to_xlsx_input"]["date"]).replace(" ", "").split(",")
     flight_numbers = flight_log_code.multi_string_data_formatter(data["log_to_xlsx_input"]["flight_number"],
@@ -115,9 +114,11 @@ def autoflpy(input_file='Input_File.json'):
     # Imports custom runway data entered into the input file
     runway_data_multi = data["runway_data"]
     # Formats the weather data into several separate dictionaries
-    weather_data = flight_log_code.multi_dictionary_data_formatter(weather_data_multi, flight_dates, "weather_data")
+    weather_data_lists = flight_log_code.multi_dictionary_data_formatter(
+        weather_data_multi, flight_dates, "weather_data")
     # Formats the runway data into several separate dictionaries
-    runway_data = flight_log_code.multi_dictionary_data_formatter(runway_data_multi, flight_dates, "runway_data")
+    runway_data_lists = flight_log_code.multi_dictionary_data_formatter(
+        runway_data_multi, flight_dates, "runway_data")
 
     # Runs the xlsx converter
     #log_to_xlsx.log_reader_multi(log_file_path,
@@ -127,14 +128,14 @@ def autoflpy(input_file='Input_File.json'):
     #                             excel_file_names,
     #                             flight_dates,
     #                             flight_numbers,
-    #                             weather_data,
-    #                             runway_data)
+    #                             weather_data_lists,
+    #                             runway_data_lists)
 
-    start_time_hours = flight_log_code.multi_string_data_formatter(
+    start_times_hours = flight_log_code.multi_string_data_formatter(
         data["flight_log_generator_input"]["start_time_hours"], flight_dates, "start_time_hours")
-    end_time_hours = flight_log_code.multi_string_data_formatter(
+    end_times_hours = flight_log_code.multi_string_data_formatter(
         data["flight_log_generator_input"]["end_time_hours"], flight_dates, "end_time_hours")
-    arduino_flight_data_name = flight_log_code.multi_string_data_formatter(
+    arduino_flight_data_names = flight_log_code.multi_string_data_formatter(
         data["flight_log_generator_input"]["arduino_flight_data_name"], flight_dates, "arduino_flight_data_name")
     flight_data_file_names = []
     for name in excel_file_names:
@@ -249,8 +250,10 @@ def autoflpy(input_file='Input_File.json'):
         copyfile(base_path + 'Your_logo_file_name_here.png',
                  images_path + 'Your_logo_file_name_here.png')
     # Finds the nearest airfield for METAR information
-    icao_airfield = nearest_ICAO_finder.multi_icao_finder(flight_data_file_path,
+    icao_airfields = nearest_ICAO_finder.multi_icao_finder(flight_data_file_path,
                                                           flight_data_file_names, excel_file_names)
+
+    icao_airfields = ["EGHE", "EGHE"]
 
     # Runs the flight log generator
     flight_log_code.flight_log_maker(template_file_path,
@@ -259,16 +262,16 @@ def autoflpy(input_file='Input_File.json'):
                                      flight_data_file_path,
                                      flight_data_file_names,
                                      arduino_flight_data_file_path,
-                                     arduino_flight_data_name,
+                                     arduino_flight_data_names,
                                      flight_dates,
                                      flight_numbers,
                                      flight_log_file_name_header,
                                      checklist_file_path,
-                                     icao_airfield,
-                                     start_time_hours,
-                                     end_time_hours,
+                                     icao_airfields,
+                                     start_times_hours,
+                                     end_times_hours,
                                      metar_file_path,
-                                     weather_data, runway_data)
+                                     weather_data_lists, runway_data_lists)
 
 
 if __name__ == "__main__":
