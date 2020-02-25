@@ -37,14 +37,30 @@ def flight_log_maker(template_file_path, template_file_name,
     """This code will edit a specified template and return the result that has
     been produced after the substitution of data into the template."""
     print('Starting Flight Log Maker')
+    # Sets the number of flights for iterating through the data lists
+    number_of_flights = len(flight_dates)
+
     # loads contents_checklist_rm.
     contents = contents_opener(template_file_path, template_file_name)
-    # Inserts the date into the contents_checklist_rm.
-    contents = contents.replace("FLIGHT_DATE", (str(flight_dates)[6:] + "/" +
-                                                str(flight_dates)[4:6] + "/" +
-                                                str(flight_dates)[:4]))
+
+    # Formats flight_dates into a string for insertion into template
+    flight_dates_str = ""
+    for flight in range(number_of_flights):
+        flight_date = str(flight_dates[flight])
+        flight_dates_str += flight_date[6:] + "/" + flight_date[4:6] + "/" + flight_date[:4] + " and "
+    flight_dates_str = flight_dates_str[:-5]
+
+    # Inserts the dates into the contents_checklist_rm.
+    contents = contents.replace("FLIGHT_DATE", flight_dates_str)
+
+    # Formats flight_numbers into a string for insertion into template
+    flight_numbers_str = ""
+    for flight in range(number_of_flights):
+        flight_numbers_str += str(flight_numbers[flight]) + ", "
+    flight_numbers_str = flight_numbers_str[:-2]
+
     # Inserts the flight number into the contents_checklist_rm.
-    contents = contents.replace("FLIGHT_NUMBER", str(flight_numbers))
+    contents = contents.replace("FLIGHT_NUMBER", flight_numbers_str)
     # Checks to see whether there is graph data or arduino data that can be
     # used to plot graphs by checking if the path exists and if the path has a
     # suitable length to that it is not just greater than 1.
