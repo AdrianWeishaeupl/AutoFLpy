@@ -118,15 +118,15 @@ def autoflpy(input_file='Input_File.json'):
                                                                               flight_dates)
 
     # Runs the xlsx converter
-    log_to_xlsx.log_reader_multi(log_file_path,
-                                 name_converter_file_path,
-                                 data_sources_path,
-                                 excel_file_path,
-                                 excel_file_names,
-                                 flight_dates,
-                                 flight_numbers,
-                                 weather_data,
-                                 runway_data)
+    #log_to_xlsx.log_reader_multi(log_file_path,
+    #                             name_converter_file_path,
+    #                             data_sources_path,
+    #                             excel_file_path,
+    #                             excel_file_names,
+    #                             flight_dates,
+    #                             flight_numbers,
+    #                             weather_data,
+    #                             runway_data)
 
     # Assigns variables - checks if any information is entered into the input
     # file for the directories before creating new directories in the current

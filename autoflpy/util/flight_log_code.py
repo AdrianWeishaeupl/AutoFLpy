@@ -1025,18 +1025,22 @@ def weather_runway_data_formatter(weather_data_dictionaries, runway_data_diction
     runway_data = []
     weather_data_temp = {}
     runway_data_temp = {}
-    try:
-        # Formats weather and runway data as lists of data dictionaries
-        for flight in range(len(flight_dates)):
-            # Creates a new dictionary for the first set of weather data and runway data
-            for key in weather_data_dictionaries.keys():
-                weather_data_temp[key] = weather_data_dictionaries[key].replace(" ", "").split(",")[flight]
+    # Checks that the weather_data/runway_data lengths are equal to the number of flights
+    for dictionary in [weather_data_dictionaries, runway_data_dictionaries]:
+        for item in dictionary.values():
+            if len(item.replace(" ", "").split(",")) == len(flight_dates):
+                pass
+            else:
+                raise IndexError("weather_data and/or runway_data do not contain enough data for the number"
+                                 " of flights entered.")
 
-            for key in runway_data_dictionaries.keys():
-                runway_data_temp[key] = runway_data_dictionaries[key].replace(" ", "").split(",")[flight]
-            weather_data.append(weather_data_temp)
-            runway_data.append(runway_data_temp)
-    except IndexError:
-        raise IndexError("weather_data or runway_data do not contain enough data for the number of flights entered.")
+    # Formats weather and runway data as lists of data dictionaries
+    for flight in range(len(flight_dates)):
+        # Creates a new dictionary for the first set of weather data and runway data
+        for key in weather_data_dictionaries.keys():
+            weather_data_temp[key] = weather_data_dictionaries[key].replace(" ", "").split(",")[flight]
 
-    return weather_data, runway_data
+        for key in runway_data_dictionaries.keys():
+            runway_data_temp[key] = runway_data_dictionaries[key].replace(" ", "").split(",")[flight]
+        weather_data.append(weather_data_temp)
+        runway_data.append(runway_data_temp)
