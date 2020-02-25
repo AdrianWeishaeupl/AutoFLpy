@@ -4,10 +4,10 @@ Generates the xls file name
 """
 
 
-def excel_file_name_updater(dates, flight_number):
+def excel_file_name_updater(dates, flight_numbers):
     """Takes a list of dates and a list of flight numbers and returns a list of names"""
     flight_names = []
-    if len(dates) == len(flight_number):
+    if len(dates) == len(flight_numbers):
         for flight in range(len(dates)):
             # Checks to see if the year data is in the right format
             date = str(dates[flight])
@@ -50,7 +50,7 @@ def excel_file_name_updater(dates, flight_number):
             # Gets the flight number from the input data.
             try:
                 # Checks to see if the flight number is available
-                flight_number = int(flight_number[flight])
+                flight_number = int(flight_numbers[flight])
                 flight_number_available = True
                 if len(str(flight_number)) < 2:
                     flight_number = "0" + str(flight_number)
@@ -88,5 +88,5 @@ def excel_file_name_updater(dates, flight_number):
     else:
         raise IndexError("Number of dates does not match the number of flights. Check the Input_file.json to make sure"
                          " the lists are of the same length. len(dates) = {}, len(flight_numbers) ="
-                         " {}".format(len(dates), len(flight_number)))
+                         " {}".format(len(dates), len(flight_numbers)))
     return generated_file_name
