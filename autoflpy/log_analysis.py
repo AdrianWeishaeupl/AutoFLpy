@@ -103,9 +103,10 @@ def autoflpy(input_file='Input_File.json'):
             print("Excel folder found. Will use this folder to store generated"
                   " xlsx files.")
     # TODO: Check that all inputs are the same length - user defined data needs to be complete
-    # Formats the flight dates and flight numbers as lists
+    # Formats the flight dates and flight numbers as lists and checks their length against the length of flight_dates
     flight_dates = str(data["log_to_xlsx_input"]["date"]).replace(" ", "").split(",")
-    flight_numbers = str(data["log_to_xlsx_input"]["flight_number"]).replace(" ", "").split(",")
+    flight_numbers = flight_log_code.multi_string_data_formatter(data["log_to_xlsx_input"]["flight_number"],
+                                                                 flight_dates, "flight_numbers")
     # Generates an appropriate file name
     excel_file_names = name_generator.excel_file_name_updater(flight_dates, flight_numbers)
     # Imports custom weather data entered into the input file
@@ -113,9 +114,10 @@ def autoflpy(input_file='Input_File.json'):
 
     # Imports custom runway data entered into the input file
     runway_data_multi = data["runway_data"]
+    # Formats the weather data into several separate dictionaries
+    weather_data = flight_log_code.multi_dictionary_data_formatter(weather_data_multi, flight_dates, "weather_data")
     # Formats the runway data into several separate dictionaries
-    weather_data, runway_data = flight_log_code.weather_runway_data_formatter(weather_data_multi, runway_data_multi,
-                                                                              flight_dates)
+    runway_data = flight_log_code.multi_dictionary_data_formatter(runway_data_multi, flight_dates, "runway_data")
 
     # Runs the xlsx converter
     #log_to_xlsx.log_reader_multi(log_file_path,
@@ -127,6 +129,16 @@ def autoflpy(input_file='Input_File.json'):
     #                             flight_numbers,
     #                             weather_data,
     #                             runway_data)
+
+    start_time_hours = flight_log_code.multi_string_data_formatter(
+        data["flight_log_generator_input"]["start_time_hours"], flight_dates, "start_time_hours")
+    end_time_hours = flight_log_code.multi_string_data_formatter(
+        data["flight_log_generator_input"]["end_time_hours"], flight_dates, "end_time_hours")
+    arduino_flight_data_name = flight_log_code.multi_string_data_formatter(
+        data["flight_log_generator_input"]["arduino_flight_data_name"], flight_dates, "arduino_flight_data_name")
+    flight_data_file_names = []
+    for name in excel_file_names:
+        flight_data_file_names.append(str(name) + ".xlsx")
 
     # Assigns variables - checks if any information is entered into the input
     # file for the directories before creating new directories in the current
@@ -167,7 +179,6 @@ def autoflpy(input_file='Input_File.json'):
             print("Flight log folder found. Will use this folder to store "
                   "generated flight log files.")
     flight_data_file_path = (excel_file_path + os.sep)
-    flight_data_file_name = excel_file_names + ".xlsx"
     if data["flight_log_generator_input"][
         "arduino_flight_data_file_path"] != "" and \
         os.path.exists(data["flight_log_generator_input"]
@@ -186,8 +197,6 @@ def autoflpy(input_file='Input_File.json'):
         copyfile(base_path + 'test_arduino.CSV', arduino_flight_data_file_path
                  + 'test_arduino.CSV')
 
-    arduino_flight_data_name = data["flight_log_generator_input"][
-        "arduino_flight_data_name"]
     flight_log_file_name_header = "Generated_flight_log_"
     if data["flight_log_generator_input"][
         "checklist_data_file_path"] != "" and \
@@ -213,8 +222,6 @@ def autoflpy(input_file='Input_File.json'):
                           ) is False:
             copyfile(base_path + 'Checklists_nominal.xlsx', checklist_file_path
                      + 'Checklists_nominal.xlsx')
-    start_time_hours = data["flight_log_generator_input"]["start_time_hours"]
-    end_time_hours = data["flight_log_generator_input"]["end_time_hours"]
     if data["flight_log_generator_input"][
         "metar_file_path"] != "" and \
         os.path.exists(
@@ -243,14 +250,14 @@ def autoflpy(input_file='Input_File.json'):
                  images_path + 'Your_logo_file_name_here.png')
     # Finds the nearest airfield for METAR information
     icao_airfield = nearest_ICAO_finder.icao_finder(flight_data_file_path,
-                                                    flight_data_file_name)
+                                                    flight_data_file_names)
 
     # Runs the flight log generator
     flight_log_code.flight_log_maker(template_file_path,
                                      template_file_name,
                                      flight_log_file_path,
                                      flight_data_file_path,
-                                     flight_data_file_name,
+                                     flight_data_file_names,
                                      arduino_flight_data_file_path,
                                      arduino_flight_data_name,
                                      flight_dates,
