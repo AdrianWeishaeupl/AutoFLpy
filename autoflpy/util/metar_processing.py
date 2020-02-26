@@ -140,9 +140,9 @@ def metar_returner(metar_data, contents, month, year, number_of_flights,
                           "\\n\",\n     \"<br><br><br><br>\\n\",\n"
         # Adds the metar data to the text file.
         # TODO: shorten hyperlink (metar_data[-1])
-        metar_text += "    \"This METAR data was from:" + metar_data[-1] + "\"" + "\\n,\n"
+        metar_text += "    \"This METAR data was from:" + metar_data[-1] + "\\n\"," + "\"\\n\",\n"
 
-    metar_text = metar_text[:-6]  # Removes the "\\n,\n" from the last line for json comparability
+    metar_text = metar_text[:-7]  # Removes the "," + "\"\\n\",\n from the last line for json compatibility
 
     # Creates replacement text for the METAR key.
     metar_replacement = "\n  {\n " + \
