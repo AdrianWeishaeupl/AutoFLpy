@@ -80,6 +80,7 @@ def flight_log_maker(template_file_path, template_file_name,
             directories_present.append(False)
         # Assigns file name based on excel data
         compressed_data_file_name += str(flight_data_file_names[flight])[:-5] + "-"  # [:-5] removes the ".xslx"
+    compressed_data_file_name = compressed_data_file_name[:-1]  # [:-1] removes the last "-"
 
     if all(directories_present):  # If all are true, carry on.
         print('Importing xlsx data')
@@ -110,7 +111,7 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = line_remover(contents, "GRAPH_LINE")
 
     # Assigns file name based on excel data
-    compressed_data_file_path = flight_data_file_path + compressed_data_file_name[:-1] + ".pkl"  # [:-1] removes the "-"
+    compressed_data_file_path = flight_data_file_path + compressed_data_file_name + ".pkl"
     # This replaces the file path to the compressed data
     contents = contents.replace("COMPRESSED_DATA_FILE_PATH", "\\\"" +
                                 (compressed_data_file_path
@@ -187,58 +188,74 @@ def flight_log_maker(template_file_path, template_file_name,
             hours_valid.append(False)
     # Checks to see if ICAO code is valid, if not then the Metar information is
     # removed
-    if (icao_airfields != "data" or icao_airfields != "") and all(hours_valid) is True:
-        # Retrieves METAR data.
-        metar_data = metar_finder(icao_airfields, str(flight_dates)[:4],
-                                  str(flight_dates)[4:6], str(flight_dates)[6:8],
-                                  str(flight_dates)[4:6], str(flight_dates)[6:8],
-                                  start_times_hours, end_times_hours,
-                                  metar_file_path)
-        # Checks to see if METAR data is available.
-        if len(metar_data) != 0:
-            # Checks to see if the quota limit has been reached.
-            if metar_data[0] == "Quota limit reached.":
-                # If the limit has been reached then it puts in a line of code
-                # to re-try when the quota limit has been reached.
-                contents = metar_quota_returner(contents,
-                                                flight_log_file_name_header +
-                                                str(flight_dates) + "_" +
-                                                str(flight_numbers) +
-                                                ".ipynb", icao_airfields,
-                                                str(flight_dates)[:4],
-                                                str(flight_dates)[4:6],
-                                                str(flight_dates)[6:8],
-                                                str(flight_dates)[4:6],
-                                                str(flight_dates)[6:8],
-                                                start_times_hours,
-                                                end_times_hours,
-                                                metar_file_path,
-                                                replace_key="METAR_" +
-                                                            "INFORMATION")
-                # Replaces JFLTS METAR text with nothing if data is available.
-                contents = contents.replace("METAR_LINE", "")
-                contents = contents.replace("METAR_TEXT", "")
-            else:
-                # Includes METAR data into the contents.
-                contents = metar_returner(metar_data, contents,
-                                          int(str(flight_dates)[4:6]),
-                                          int(str(flight_dates)[:4]),
-                                          replace_key="METAR_INFORMATION")
-                # Replaces JFLTS METAR text with nothing if data is available.
-                contents = contents.replace("METAR_LINE", "")
-                contents = contents.replace("METAR_TEXT", "")
+    metar_data_list = []
+    metar_generated = []
+    for flight in range(number_of_flights):
+        flight_date = str(flight_dates[flight])
+        if (icao_airfields[flight] != "data" or icao_airfields[flight] != "") and all(hours_valid) is True:
+            # Retrieves METAR data.
+            metar_data_list.append(metar_finder(icao_airfields[flight], flight_date[:4],
+                                                flight_date[4:6], flight_date[6:8],
+                                                flight_date[4:6], flight_date[6:8],
+                                                start_times_hours[flight], end_times_hours[flight],
+                                                metar_file_path))
+            metar_generated.append(True)
         else:
-            contents = no_metar_returner(icao_airfields, str(flight_dates)[:4],
-                                         str(flight_dates)[4:6],
-                                         str(flight_dates)[6:8],
-                                         str(flight_dates)[4:6],
-                                         str(flight_dates)[6:8],
-                                         start_times_hours, end_times_hours,
-                                         contents,
-                                         replace_key="METAR_INFORMATION")
-            # Replaces JFLTS METAR text with nothing if data is available
-            contents = contents.replace("METAR_LINE", "")
-            contents = contents.replace("METAR_TEXT", "")
+            metar_generated.append(False)
+
+    # Generates a list of months and years from flight_dates to be used in the metar functions
+    months = []
+    years = []
+    for flight in range(number_of_flights):
+        months.append(int(str(flight_dates[flight])[4:6]))
+        years.append(int(str(flight_dates[flight])[:4]))
+
+    if all(metar_generated) is not False:
+        for metar_data in metar_data_list:
+            # Checks to see if METAR data is available.
+            if len(metar_data) != 0:
+                # Checks to see if the quota limit has been reached.
+                if metar_data[0] == "Quota limit reached.":
+                    # If the limit has been reached then it puts in a line of code
+                    # to re-try when the quota limit has been reached.
+                    contents = metar_quota_returner(contents,
+                                                    flight_log_file_name_header +
+                                                    compressed_data_file_name +
+                                                    ".ipynb", icao_airfields,
+                                                    str(flight_dates)[:4],
+                                                    str(flight_dates)[4:6],
+                                                    str(flight_dates)[6:8],
+                                                    str(flight_dates)[4:6],
+                                                    str(flight_dates)[6:8],
+                                                    start_times_hours,
+                                                    end_times_hours,
+                                                    metar_file_path,
+                                                    replace_key="METAR_" +
+                                                                "INFORMATION")
+                    # Replaces JFLTS METAR text with nothing if data is available.
+                    contents = contents.replace("METAR_LINE", "")
+                    contents = contents.replace("METAR_TEXT", "")
+                else:
+                    # Includes METAR data into the contents.
+                    contents = metar_returner(metar_data, contents,
+                                              months,
+                                              years, number_of_flights,
+                                              replace_key="METAR_INFORMATION")
+                    # Replaces JFLTS METAR text with nothing if data is available.
+                    contents = contents.replace("METAR_LINE", "")
+                    contents = contents.replace("METAR_TEXT", "")
+            else:
+                contents = no_metar_returner(icao_airfields, str(flight_dates)[:4],
+                                             str(flight_dates)[4:6],
+                                             str(flight_dates)[6:8],
+                                             str(flight_dates)[4:6],
+                                             str(flight_dates)[6:8],
+                                             start_times_hours, end_times_hours,
+                                             contents,
+                                             replace_key="METAR_INFORMATION")
+                # Replaces JFLTS METAR text with nothing if data is available
+                contents = contents.replace("METAR_LINE", "")
+                contents = contents.replace("METAR_TEXT", "")
     else:
         # Removes METAR related cells and lines.
         contents = cell_remover(contents, "METAR_INFORMATION")
@@ -281,8 +298,7 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = contents.replace("RUNWAY_INFORMATION", "")
 
     # Creates a new flight log from the contents
-    flight_log_creator(contents, flight_log_file_path, flight_dates,
-                       flight_numbers, flight_log_file_name_header)
+    flight_log_creator(contents, flight_log_file_path, compressed_data_file_name, flight_log_file_name_header)
     print('Pickling data')
     # Compresses the flight data for faster loading
     compile_and_compress(flight_data_file_path, flight_data_file_names,
@@ -797,15 +813,14 @@ def flight_data_and_axis(new_frames):
     return [flight_identifier, values_list]
 
 
-def flight_log_creator(contents, file_path, date, flight_number,
+def flight_log_creator(contents, file_path, file_name_data,
                        file_name_header="Flight_Log_"):
     """This creates or overwrites a file with the name file_name_header date
      flight_numbers.ipynb  and fills the file with the
     contents provided as an input."""
     # Creates file with name
     print('Creating new flight log')
-    file = open(file_path + os.sep + file_name_header + str(date) + "_" +
-                str(flight_number) + ".ipynb", "w+")
+    file = open(file_path + os.sep + file_name_header + file_name_data + ".ipynb", "w+")
     # Extracts contents.
     file.write(contents)
     # Closes the file.
@@ -977,9 +992,10 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     values_list = []
     for data_set in range(len(flight_data_file_name)):
         # Excel Sheets
-        frame_list = flight_data(flight_data_file_path[data_set], flight_data_file_name[data_set])
+        print(flight_data_file_name[data_set])
+        frame_list = flight_data(flight_data_file_path, flight_data_file_name[data_set])
         # Retrieves arduino flight data
-        arduino_flight_data_frame = arduino_micro_frame(arduino_data_file_path[data_set],
+        arduino_flight_data_frame = arduino_micro_frame(arduino_data_file_path,
                                                         arduino_data_file_name[data_set])
         # Appends arduino frame to flight data from pixhawk
         frame_list.append(arduino_flight_data_frame)
