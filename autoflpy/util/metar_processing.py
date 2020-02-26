@@ -19,7 +19,19 @@ else:
 
 def metar_finder(location, year, month, day, month_end, day_end,
                  start_time_hours, end_time_hours, metar_file_path=""):
-    """This grabs url if it is not already available."""
+    """This grabs url if it is not already available.
+
+    If the METAR is already cached, the cached file is returned
+
+    If the quota limit has been reached, returns a list of variables:
+    ["Quota limit reached.", location, year, month, day,
+        month_end, day_end, start_time_hours, end_time_hours,
+        metar_file_path]
+
+    If no METAR data is found, returns an empty string
+
+    If METAR data is called from the API, return data with url at the end
+    """
     # End time to actual end time in hours
     print('Checking for METAR')
     end_time_hours = str(int(end_time_hours) - 1)
@@ -94,6 +106,7 @@ def metar_finder(location, year, month, day, month_end, day_end,
     # If there is no METAR data then the empty list is returned.
     if len(metar_data) == 0:
         return metar_data
+    # TODO: find a way of shortening the URL
     # Adds url to end
     full_text += url
     # Creates a new text file to locally store and append the data to.
