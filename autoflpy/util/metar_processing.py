@@ -120,24 +120,30 @@ def metar_finder(location, year, month, day, month_end, day_end,
     return metar_data
 
 
-def metar_returner(metar_data, contents, month, year,
+def metar_returner(metar_data, contents, month, year, number_of_flights,
                    replace_key="METAR_INFORMATION"):
     """Replaces the key word in a cell with METAR information from the day"""
     # finds the locations that the metars were recorded from.
-    metar_text = "    \"The METARs for " + \
-                 str(mtr.Metar(metar_data[0], month=month, year=year))[9:13] + \
-                 " were:\\n\",\n    \"\\n\",\n"
-    # Goes through the metars and creates a list of metars from that day.
-    for metar in metar_data[:-1]:
-        # Uses the metar function to get the data from the metar and display
-        # the data labeled nicely
-        metar_text += "    \"" + \
-                      str(mtr.Metar(metar[6:], month=month, year=year
-                                    ))[14:].replace(
-                          "\n", "\\n\",\n    \"\\n\",\n    \"") + \
-                      "\\n\",\n     \"<br><br><br><br>\\n\",\n"
-    # Adds the metar data to the text file.
-    metar_text += "    \"This METAR data was from:" + metar_data[-1] + "\""
+    metar_text = ""
+    for flight in range(number_of_flights):
+        metar_text += "    \"The METARs for " + \
+                      str(mtr.Metar(metar_data[0], month=month[flight], year=year[flight]))[9:13] + \
+                      " were:\\n\",\n    \"\\n\",\n"
+        # Goes through the metars and creates a list of metars from that day.
+        for metar in metar_data[:-1]:
+            # Uses the metar function to get the data from the metar and display
+            # the data labeled nicely
+            metar_text += "    \"" + \
+                          str(mtr.Metar(metar[6:], month=month[flight], year=year[flight]
+                                        ))[14:].replace(
+                              "\n", "\\n\",\n    \"\\n\",\n    \"") + \
+                          "\\n\",\n     \"<br><br><br><br>\\n\",\n"
+        # Adds the metar data to the text file.
+        # TODO: shorten hyperlink (metar_data[-1])
+        metar_text += "    \"This METAR data was from:" + metar_data[-1] + "\"" + "\\n,\n"
+
+    metar_text = metar_text[:-6]  # Removes the "\\n,\n" from the last line for json comparability
+
     # Creates replacement text for the METAR key.
     metar_replacement = "\n  {\n " + \
                         "  \"cell_type\": \"markdown\",\n" + \
@@ -197,6 +203,7 @@ def metar_quota_returner(contents, file_name, location, year,
                          replace_key="METAR_INFORMATION"):
     """Puts metar_replacer function in to replace METAR_INFORMATION cell"""
     """Replaces the key word in a cell with METAR information from the day"""
+    # TODO: Make this work for dictionary inputs
     # Creates replacement text for the METAR key.
     metar_replacement = "\n  {\n " + \
                         "  \"cell_type\": \"markdown\",\n" + \
@@ -228,6 +235,7 @@ def metar_replacer(file_path, file_name, location, year, month, day,
                    month_end, day_end, start_time_hours, end_time_hours,
                    metar_file_path):
     """This will replace the code with the METAR data if available."""
+    # TODO: Make this work for dictionary inputs
     # finds metar data.
     metar_data = metar_finder(location, year, month, day, month_end, day_end,
                               start_time_hours, end_time_hours,
