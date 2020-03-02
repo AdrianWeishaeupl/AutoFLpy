@@ -121,15 +121,15 @@ def autoflpy(input_file='Input_File.json'):
         runway_data_multi, flight_dates, "runway_data")
 
     # Runs the xlsx converter
-    #log_to_xlsx.log_reader_multi(log_file_path,
-    #                             name_converter_file_path,
-    #                             data_sources_path,
-    #                             excel_file_path,
-    #                             excel_file_names,
-    #                             flight_dates,
-    #                             flight_numbers,
-    #                             weather_data_lists,
-    #                             runway_data_lists)
+    log_to_xlsx.log_reader_multi(log_file_path,
+                                 name_converter_file_path,
+                                 data_sources_path,
+                                 excel_file_path,
+                                 excel_file_names,
+                                 flight_dates,
+                                 flight_numbers,
+                                 weather_data_lists,
+                                 runway_data_lists)
 
     start_times_hours = flight_log_code.multi_string_data_formatter(
         data["flight_log_generator_input"]["start_time_hours"], flight_dates, "start_time_hours")
@@ -251,9 +251,7 @@ def autoflpy(input_file='Input_File.json'):
                  images_path + 'Your_logo_file_name_here.png')
     # Finds the nearest airfield for METAR information
     icao_airfields = nearest_ICAO_finder.multi_icao_finder(flight_data_file_path,
-                                                          flight_data_file_names, excel_file_names)
-
-    icao_airfields = ["EGHE", "EGHE"]
+                                                           flight_data_file_names, excel_file_names)
 
     # Runs the flight log generator
     flight_log_code.flight_log_maker(template_file_path,
