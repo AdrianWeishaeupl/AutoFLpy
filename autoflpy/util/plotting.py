@@ -45,44 +45,23 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     reference_y_unit = None
     reference_x_unit = None
     reference_x_heading = None
-    arm_plot_data = None
     plot_data_map = None
     xlabel = None
 
-    # List of data to plot returns plot_data which has structure:
-    # [axis, [data_source, column]]
-    plot_data = []
     plt.rcParams["figure.figsize"] = (15, 3)
 
     # Changes the values list to only include the data
     values_list, flight_data_list, single_flight, number_of_flights = single_flight_detection(values_list)
 
+    # Formats the arm_data and checks that all the data is present
     arm_data, arm_plot_data = arm_data_formatting(arm_data, values_list, number_of_flights, flight_data_list)
 
-
-    for data in plot_information:
-        values_list_index = 0
-        # sets value_found to a default of False
-        # Checks to see if the 'data source' recorded in the graph list
-        # matches the 'data sources' in the list structure values_list.
-        for values_list_data in values_list:
-            # Finds data source.
-            if data[2] == values_list_data[0].lower():
-                data.append(values_list_index)
-                # Goes through each column searching for a match.
-                for column in values_list[values_list_index][1:]:
-                    # Checks to see if they have the same title.
-                    if column[0].lower() == data[1]:
-                        # if they do then the data is appended.
-                        plot_data.append([data[0], column, data[2]])
-                        # exits for loop if data has been appended.
-                        break
-            values_list_index += 1
+    plot_data = select_plot_data_single(values_list, plot_information, number_of_flights)
 
     # Checks if the plot in question is a map plot
     if len(plot_data) != 0:
-        if "Latitude" in [plot_data[0][1][0], plot_data[1][1][0]]:
-            if "Longitude" in [plot_data[0][1][0], plot_data[1][1][0]]:
+        if "Latitude" in [plot_data[0][0][1][0], plot_data[0][1][1][0]]:  # Checks only the first data set
+            if "Longitude" in [plot_data[0][0][1][0], plot_data[0][1][1][0]]:  # Checks only the first data set
                 mapplot_active = True
             else:
                 mapplot_active = False
@@ -101,7 +80,6 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
             plot_data_map = []
             for index in map_info:
                 values_list_index = 0
-                # sets value_found to a default of False
                 # Checks to see if the 'data source' recorded in the graph list
                 # matches the 'data sources' in the list structure values_list.
                 for values_list_data in values_list:
@@ -392,7 +370,6 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     reference_y_unit = None
     reference_x_unit = None
     reference_x_heading = None
-    arm_plot_data = None
     xlabel = None
 
     # List of data to plot returns plot data which has structure:
@@ -404,6 +381,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     # Changes the values list to only include the data
     values_list, flight_data_list, single_flight, number_of_flights = single_flight_detection(values_list)
 
+    # Formats the arm_data and checks that all the data is present
     arm_data, arm_plot_data = arm_data_formatting(arm_data, values_list, number_of_flights, flight_data_list)
 
     # Goes through all the elements in the left list
@@ -418,26 +396,27 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # list then it is appended to this list
         if element[0] == "x" and element not in plot_information_left:
             plot_information_left.append(element)
-    for information in plot_information:
-        plot_data = []
-        for data in information:
-            values_list_index = 0
-            # sets value_found to a default of False
-            # Checks to see if the 'data source' recorded in the graph list
-            # matches the 'data sources' in the list structure values_list.
-            for values_list_data in values_list:
-                # Finds data source.
-                if data[2] == values_list_data[0].lower():
-                    data.append(values_list_index)
-                    # Goes through each column searching for a match.
-                    for column in values_list[values_list_index][1:]:
-                        # Checks to see if they have the same title.
-                        if column[0].lower() == data[1]:
-                            # if they do then the data is appended.
-                            plot_data.append([data[0], column, data[2]])
-                            # exits for loop if data has been appended.
-                            break
-                values_list_index += 1
+    # TODO: look at the following:
+    for data_set in range(number_of_flights):
+        for information in plot_information:
+            plot_data = []
+            for data in information:
+                values_list_index = 0
+                # Checks to see if the 'data source' recorded in the graph list
+                # matches the 'data sources' in the list structure values_list.
+                for values_list_data in values_list[data_set]:
+                    # Finds data source.
+                    if data[2] == values_list_data[0].lower():
+                        data.append(values_list_index)
+                        # Goes through each column searching for a match.
+                        for column in values_list[data_set][values_list_index][1:]:
+                            # Checks to see if they have the same title.
+                            if column[0].lower() == data[1]:
+                                # if they do then the data is appended.
+                                plot_data.append([data[0], column, data[2]])
+                                # exits for loop if data has been appended.
+                                break
+                    values_list_index += 1
 
         # Goes through the graph list and finds the matching values in the
         # values_list and then appends these values to a new list with x or y
@@ -1143,15 +1122,14 @@ def single_flight_detection(values_list):
 
 def arm_data_formatting(arm_data, values_list, number_of_flights, flight_data_list):
     """Takes in arm data and formats it correctly"""
-
+    arm_plot_data = None
     if arm_data is True:
+        arm_plot_data = []
         # Imports data for the arming/disarming if it is present.
         arm_info = [["id", "ev"], ["time", "ev"]]
-        arm_plot_data = []
         for data_set in range(number_of_flights):
             for index in arm_info:
                 values_list_index = 0
-                # sets value_found to a default of False
                 # Checks to see if the 'data source' recorded in the graph list
                 # matches the 'data sources' in the list structure values_list.
                 for values_list_data in values_list[data_set]:
@@ -1227,3 +1205,33 @@ def arm_data_plotting(arm_data, arm_plot_data, number_of_flights, axes_limits_ce
                 print("Time armed: ", round(disarm_times[1][section] - arm_times[1][section], 2), "s")
             except IndexError:
                 continue
+
+
+def select_plot_data_single(values_list, plot_information, number_of_flights):
+    """
+    List of data to plot returns plot_data which has structure:
+    [[[axis, [data_source, column], [axis, [data_source, column]],
+     [[axis, [data_source, column], [axis, [data_source, column]]]"""
+    plot_data = []
+    for data_set in range(number_of_flights):
+        plot_data_temp = []  # Will become a set of x and y data sets
+        for data in plot_information:
+            values_list_index = 0
+            # Checks to see if the 'data source' recorded in the graph list
+            # matches the 'data sources' in the list structure values_list.
+            for values_list_data in values_list[data_set]:
+                # Finds data source.
+                if data[2] == values_list_data[0].lower():
+                    data.append(values_list_index)
+                    # Goes through each column searching for a match.
+                    for column in values_list[data_set][values_list_index][1:]:
+                        # Checks to see if they have the same title.
+                        if column[0].lower() == data[1]:
+                            # if they do then the data is appended.
+                            plot_data_temp.append([data[0], column, data[2]])
+                            # exits for loop if data has been appended.
+                            break
+                values_list_index += 1
+        plot_data.append(plot_data_temp)
+
+    return plot_data
