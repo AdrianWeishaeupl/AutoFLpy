@@ -242,7 +242,6 @@ def metar_replacer(file_path, file_name, location, year, month, day,
     """This will replace the code with the METAR data if available."""
     # TODO: Known bug: if only one metar_replacer is run in the workbook when multiple are present, the un-run cells
     #  will be removed without any metar information being entered.
-    
     # Finds metar data.
     metar_data = metar_finder(location, year, month, day, month_end, day_end,
                               start_time_hours, end_time_hours,
