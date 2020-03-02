@@ -204,9 +204,11 @@ def flight_log_maker(template_file_path, template_file_name,
             metar_generated.append(False)
 
     # Generates a list of months and years from flight_dates to be used in the metar functions
+    days = []
     months = []
     years = []
     for flight in range(number_of_flights):
+        days.append(int(str(flight_dates[flight])[6:8]))
         months.append(int(str(flight_dates[flight])[4:6]))
         years.append(int(str(flight_dates[flight])[:4]))
 
@@ -222,14 +224,14 @@ def flight_log_maker(template_file_path, template_file_name,
                                                     flight_log_file_name_header +
                                                     compressed_data_file_name +
                                                     ".ipynb", icao_airfields,
-                                                    str(flight_dates)[:4],
-                                                    str(flight_dates)[4:6],
-                                                    str(flight_dates)[6:8],
-                                                    str(flight_dates)[4:6],
-                                                    str(flight_dates)[6:8],
+                                                    years,
+                                                    months,
+                                                    days,
+                                                    months,
+                                                    days,
                                                     start_times_hours,
                                                     end_times_hours,
-                                                    metar_file_path,
+                                                    metar_file_path, number_of_flights,
                                                     replace_key="METAR_" +
                                                                 "INFORMATION")
                     # Replaces JFLTS METAR text with nothing if data is available.
@@ -267,9 +269,11 @@ def flight_log_maker(template_file_path, template_file_name,
     runway_information = ""
     for flight in range(number_of_flights):
         weather_information += dictionary_reader(weather_data_lists[flight], debug_name="Weather data",
-                                                 units_present=True)
+                                                 units_present=True) + ","
         runway_information += dictionary_reader(runway_data_lists[flight], debug_name="Runway data",
-                                                units_present=False)
+                                                units_present=False) + ","
+    weather_information = weather_information[:-1]  # Removes the last "," for json formatting
+    runway_information = runway_information[:-1]  # Removes the last "," for json formatting
 
     if weather_information != "\"\\n\"":  # If information is present, add it to the content.
         contents = contents.replace("\"WEATHER_INFORMATION\"", "\"<h2>Weather Information</h2><a class=\\\"anchor\\\"" +
@@ -1078,7 +1082,6 @@ def multi_dictionary_data_formatter(dictionaries, flight_dates, debug_name):
     """
 
     dictionary = []
-    dictionary_data_temp = {}
 
     # Checks that the dictionary data lengths are equal to the number of flights
     for item in dictionaries.values():
@@ -1091,6 +1094,7 @@ def multi_dictionary_data_formatter(dictionaries, flight_dates, debug_name):
     # Formats dictionaries data as lists of data dictionaries
     for flight in range(len(flight_dates)):
         # Creates a new dictionary for each set of data
+        dictionary_data_temp = {}
         for key in dictionaries.keys():
             dictionary_data_temp[key] = dictionaries[key].replace(" ", "").split(",")[flight]
         dictionary.append(dictionary_data_temp)
