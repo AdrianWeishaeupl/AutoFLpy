@@ -54,44 +54,56 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     plot_data = []
     plt.rcParams["figure.figsize"] = (15, 3)
 
+    # Changes the values list to only include the data
     values_list, flight_data_list, single_flight, number_of_flights = single_flight_detection(values_list)
 
     print("SINGLE FLIGHT", single_flight)
     print("FLIGHT DATA LIST", flight_data_list)
     print("THIS IS A PRINT")
+
     if arm_data is True:
         # Imports data for the arming/disarming if it is present.
         arm_info = [["id", "ev"], ["time", "ev"]]
         arm_plot_data = []
         index = []
-        for index in arm_info:
-            values_list_index = 0
-            # sets value_found to a default of False
-            # Checks to see if the 'data source' recorded in the graph list
-            # matches the 'data sources' in the list structure values_list.
-            for values_list_data in values_list:
-                # Finds data source.
-                if index[1] == values_list_data[0].lower():
-                    index.append(values_list_index)
-                    # Finds corresponding time source.
-                    # Goes through each column searching for a match.
-                    for column in values_list[values_list_index][1:]:
-                        # Checks to see if they have the same title.
-                        if column[0].lower() == index[0]:
-                            # if they do then the data is appended.
-                            arm_plot_data.append(column)
-                            # exits for loop if data has been appended.
-                            break
-                values_list_index += 1
+        for data_set in range(number_of_flights):
+            for index in arm_info:
+                values_list_index = 0
+                # sets value_found to a default of False
+                # Checks to see if the 'data source' recorded in the graph list
+                # matches the 'data sources' in the list structure values_list.
+                for values_list_data in values_list[data_set]:
+                    # Finds data source.
+                    if index[1] == values_list_data[0].lower():
+                        index.append(values_list_index)
+                        # Finds corresponding time source.
+                        # Goes through each column searching for a match.
+                        for column in values_list[data_set][values_list_index][1:]:
+                            # Checks to see if they have the same title.
+                            if column[0].lower() == index[0]:
+                                # if they do then the data is appended.
+                                arm_lable = flight_data_list[data_set]
+                                arm_plot_data.append([arm_lable, column])
+                                # exits for loop if data has been appended.
+                                break
+                    values_list_index += 1
+
+    arm_data_list = []
     if arm_data is True:
-        if len(arm_plot_data) != 0:
+        for data_set in range(number_of_flights):
+            if len(arm_plot_data[1]) != 0:
+                arm_data_list.append(True)
+            else:
+                # Sets arm_data to false.
+                arm_data_list.append(False)
+                print("Arm data is not present for data set {}".format(str(flight_data_list[data_set])))
+        if all(arm_data_list) is True:
             arm_data = True
         else:
+            arm_data = False
             # Data has not been imported properly or is not present.
             print("Arm data is not present or has not been imported properly. Make sure \"EV\" is present in the "
                   "Data_sources.txt file, then run autoflpy again to re-generate the data.")
-            # Sets arm_data to false.
-            arm_data = False
 
     for data in plot_information:
         values_list_index = 0
@@ -385,29 +397,30 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     if arm_data is True:
         arm_times = []
         disarm_times = []
-        for event in range(len(arm_plot_data[0][2])):
-            # arm_plot_data[0][2] is the list of events that occurred in the flight.
-            if str(arm_plot_data[0][2][event]) == "10":
-                # 10 is the event that signifies that the drone is armed
-                arm_times.append(arm_plot_data[1][2][event])
-                # arm_plot_data[1][2] = times associated with the events.
-            if str(arm_plot_data[0][2][event]) == "11":
-                # 11 is the event that signifies that the drone is disarmed
-                disarm_times.append(arm_plot_data[1][2][event])
-                # arm_plot_data[1][2] = times associated with the events.
+        for data_set in range(number_of_flights):
+            for event in range(len(arm_plot_data[data_set][0][2])):
+                # arm_plot_data[flight][0][2] is the list of events that occurred in the flight.
+                if str(arm_plot_data[data_set][0][2][event]) == "10":
+                    # 10 is the event that signifies that the drone is armed
+                    arm_times.append([arm_plot_data[data_set], arm_plot_data[data_set][1][2][event]])
+                    # arm_plot_data[flight][1][2] = times associated with the events.
+                if str(arm_plot_data[data_set][0][2][event]) == "11":
+                    # 11 is the event that signifies that the drone is disarmed
+                    disarm_times.append([arm_plot_data[data_set], arm_plot_data[data_set][1][2][event]])
+                    # arm_plot_data[flight][1][2] = times associated with the events.
 
-        for times in arm_times:
+        for times in range(len(arm_times)):
             # Plot the arm events:
             plt.axvline(times, color="g")
-            plt.annotate("ARM", [times, axes_limits_center_y])
-        for times in disarm_times:
+            plt.annotate("ARM {}".format(arm_times[0][times]), [arm_times[1][times], axes_limits_center_y])
+        for times in range(len(disarm_times)):
             # Plot the disarm events:
             plt.axvline(times, color="r")
-            plt.annotate("DISARM", [times, axes_limits_center_y])
+            plt.annotate("DISARM {}".format(disarm_times[0][times]), [disarm_times[1][times], axes_limits_center_y])
         # Prints time armed:
         for section in range(len(arm_times)):
             try:
-                print("Time armed: ", round(disarm_times[section] - arm_times[section], 2), "s")
+                print("Time armed: ", round(disarm_times[1][section] - arm_times[1][section], 2), "s")
             except IndexError:
                 continue
 
@@ -459,6 +472,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     plot_list = []
     plt.rcParams["figure.figsize"] = (15, 3)
 
+    # Changes the values list to only include the data
     values_list, flight_data_list, single_flight, number_of_flights = single_flight_detection(values_list)
 
     print("SINGLE FLIGHT", single_flight)
