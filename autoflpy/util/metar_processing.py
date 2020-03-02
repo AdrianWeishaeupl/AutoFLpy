@@ -120,21 +120,21 @@ def metar_finder(location, year, month, day, month_end, day_end,
     return metar_data
 
 
-def metar_returner(metar_data, contents, month, year, number_of_flights,
+def metar_returner(metar_data, contents, months, years, number_of_flights,
                    replace_key="METAR_INFORMATION"):
     """Replaces the key word in a cell with METAR information from the day"""
     # finds the locations that the metars were recorded from.
     metar_text = ""
     for flight in range(number_of_flights):
         metar_text += "    \"The METARs for " + \
-                      str(mtr.Metar(metar_data[0], month=month[flight], year=year[flight]))[9:13] + \
+                      str(mtr.Metar(metar_data[flight], month=months[flight], year=years[flight]))[9:13] + \
                       " were:\\n\",\n    \"\\n\",\n"
         # Goes through the metars and creates a list of metars from that day.
         for metar in metar_data[:-1]:
             # Uses the metar function to get the data from the metar and display
             # the data labeled nicely
             metar_text += "    \"" + \
-                          str(mtr.Metar(metar[6:], month=month[flight], year=year[flight]
+                          str(mtr.Metar(metar[6:], month=months[flight], year=years[flight]
                                         ))[14:].replace(
                               "\n", "\\n\",\n    \"\\n\",\n    \"") + \
                           "\\n\",\n     \"<br><br><br><br>\\n\",\n"
@@ -199,11 +199,12 @@ def no_metar_returner(location, year, month, day, month_end, day_end,
 
 def metar_quota_returner(contents, file_name, location, year,
                          month, day, month_end, day_end, start_time_hours,
-                         end_time_hours, metar_file_path,
+                         end_time_hours, metar_file_path, number_of_flights,
                          replace_key="METAR_INFORMATION"):
     """Puts metar_replacer function in to replace METAR_INFORMATION cell"""
     """Replaces the key word in a cell with METAR information from the day"""
     # TODO: Make this work for dictionary inputs
+    metar_information = ""
     # Creates replacement text for the METAR key.
     metar_replacement = "\n  {\n " + \
                         "  \"cell_type\": \"markdown\",\n" + \
@@ -213,30 +214,36 @@ def metar_quota_returner(contents, file_name, location, year,
                         "   ]\n" + \
                         "  },"
     # Creates some text to replace the cell.
-    metar_information = "  {\n " + \
-                        "  \"cell_type\": \"code\",\n" + \
-                        "   \"execution_count\": null,\n" + \
-                        "   \"metadata\": {},\n" + \
-                        "   \"outputs\": [],\n" + \
-                        "   \"source\": [\n" + \
-                        "    \"# METAR REPLACER\\n\",\n    \"\\n\",\n" + \
-                        "    \"metar_replacer(os.getcwd(), \\\"" + file_name + "\\\", \\\"" + \
-                        location + "\\\", \\\"" + year + "\\\", \\\"" + month + "\\\", \\\"" + \
-                        day + "\\\", \\\"" + month_end + "\\\", \\\"" + day_end + \
-                        "\\\", \\\"" + start_time_hours + "\\\", \\\"" + end_time_hours + \
-                        "\\\", \\\"" + metar_file_path.replace("\\", jupyter_sep) + \
-                        "\\\")\"\n   ]\n" + \
-                        "  },"
+    for flight in range(number_of_flights):
+        metar_information += "  {\n " + \
+                             "  \"cell_type\": \"code\",\n" + \
+                             "   \"execution_count\": null,\n" + \
+                             "   \"metadata\": {},\n" + \
+                             "   \"outputs\": [],\n" + \
+                             "   \"source\": [\n" + \
+                             "    \"# METAR REPLACER{}\\n\",\n    \"\\n\",\n".format(flight) + \
+                             "    \"metar_replacer(os.getcwd(), \\\"" + file_name + "\\\", \\\"" + \
+                             location[flight] + "\\\", \\\"" + str(year[flight]) + "\\\", \\\"" + \
+                             str(month[flight]) + "\\\", \\\"" + \
+                             str(day[flight]) + "\\\", \\\"" + str(month_end[flight]) + "\\\", \\\"" +\
+                             str(day_end[flight]) + \
+                             "\\\", \\\"" + str(start_time_hours[flight]) + "\\\", \\\"" +\
+                             str(end_time_hours[flight]) + "\\\", \\\"" + str(flight) + \
+                             "\\\", \\\"" + metar_file_path.replace("\\", jupyter_sep) + \
+                             "\\\")\"\n   ]\n" + \
+                             "  },"
     contents = contents.replace(metar_replacement, metar_information)
     return contents
 
 
 def metar_replacer(file_path, file_name, location, year, month, day,
-                   month_end, day_end, start_time_hours, end_time_hours,
+                   month_end, day_end, start_time_hours, end_time_hours, flight,
                    metar_file_path):
     """This will replace the code with the METAR data if available."""
-    # TODO: Make this work for dictionary inputs
-    # finds metar data.
+    # TODO: Known bug: if only one metar_replacer is run in the workbook when multiple are present, the un-run cells
+    #  will be removed without any metar information being entered.
+    
+    # Finds metar data.
     metar_data = metar_finder(location, year, month, day, month_end, day_end,
                               start_time_hours, end_time_hours,
                               metar_file_path)
@@ -253,13 +260,13 @@ def metar_replacer(file_path, file_name, location, year, month, day,
     # Creates an index showing where the last open curly bracket was.
     bracket_index = 0
     for line in lines:
-        if "# METAR REPLACER" in line:
+        if "# METAR REPLACER{}".format(flight) in line:
             break
         if line == "  {":
             # Records position of last bracket.
             bracket_index = index
         index += 1
-    lines = cell_remover(contents, "# METAR REPLACER").split("\n")
+    lines = cell_remover(contents, "# METAR REPLACER{}".format(flight)).split("\n")
     # Lines for the METAR_returner code to replace.
     metar_information = "\n  {\n " + \
                         "  \"cell_type\": \"markdown\",\n" + \
@@ -276,7 +283,7 @@ def metar_replacer(file_path, file_name, location, year, month, day,
     # Reassembles contents from lines
     for line in lines:
         contents += line + "\n"
-    contents = metar_returner(metar_data, contents, int(month), int(year),
+    contents = metar_returner(metar_data, contents, [int(month)], [int(year)], 1,
                               replace_key="METAR_INFORMATION")
     file = open(file_path + os.sep + file_name, "w+")
     # Extracts contents.
