@@ -3,7 +3,7 @@ import textwrap
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.interpolate as interp
-from requests import  HTTPError
+from requests import HTTPError
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import autoflpy.util.analysis.take_off_detection as take_off_detection
 
@@ -21,7 +21,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                   map_info=("altitude", "gps"), map_info_limits=(None, None), arm_data=False,
                   title_text=None):
     """ Goes through graph data, finds source and gets required data from
-    values. plot information structure, [x, name, data_source].
+    values. plot_information structure, [x, name, data_source].
 
     scale represents the amount of zoom on the second latitude longitude plot
     if this is present.
@@ -49,13 +49,17 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     plot_data_map = None
     xlabel = None
 
-    # List of data to plot returns plot data which has structure:
+    # List of data to plot returns plot_data which has structure:
     # [axis, [data_source, column]]
     plot_data = []
     plt.rcParams["figure.figsize"] = (15, 3)
 
-    if arm_data is True:
+    values_list, flight_data_list, single_flight, number_of_flights = single_flight_detection(values_list)
 
+    print("SINGLE FLIGHT", single_flight)
+    print("FLIGHT DATA LIST", flight_data_list)
+    print("THIS IS A PRINT")
+    if arm_data is True:
         # Imports data for the arming/disarming if it is present.
         arm_info = [["id", "ev"], ["time", "ev"]]
         arm_plot_data = []
@@ -428,7 +432,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                             legend_location=1, arm_data=False,
                             title_text=None):
     """ Goes through graph data, finds source and gets required data from
-    values. plot information structure, [x, name, data_source], plots data on
+    values. plot_information structure, [x, name, data_source], plots data on
     left and right axis as specified as inputs, legend location will specify
     where the legend should go.
 
@@ -454,6 +458,12 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     plot_information = [plot_information_left, plot_information_right]
     plot_list = []
     plt.rcParams["figure.figsize"] = (15, 3)
+
+    values_list, flight_data_list, single_flight, number_of_flights = single_flight_detection(values_list)
+
+    print("SINGLE FLIGHT", single_flight)
+    print("FLIGHT DATA LIST", flight_data_list)
+    print("THIS IS A PRINT")
 
     if arm_data is True:
         # Imports data for the arming/disarming if it is present.
@@ -1227,3 +1237,23 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
 
     graph_plotter([["x", "time", "vibe"], ["y", "vibex", "vibe"], ["y", "vibey", "vibe"], ["y", "vibez", "vibe"]],
                   values_list, x_limits, y_limits, marker_list, arm_data=arm_data)
+
+
+def single_flight_detection(values_list):
+    """Determines the number of flights and splits the values list into an index list and a new values_list"""
+    # Checks if multiple flights have been entered. This is used to determine the labels of lines and markers
+    flight_data_list = []  # Meta data of the flights
+    number_of_flights = len(values_list)
+    if len(values_list) == 1:
+        single_flight = True
+        values_list = [values_list[1]]  # Reassigns only the data to the values_list. Extra brackets are to keep the
+        # list format the same as the multiple flights list
+    else:
+        single_flight = False
+        values_list_temp = []
+        for item in range(len(values_list)):
+            values_list_temp.append(values_list[item][1])
+            flight_data_list.append(values_list[item][0])
+        values_list = values_list_temp  # Reassigns only the data to the values_list
+
+    return values_list, flight_data_list, single_flight, number_of_flights
