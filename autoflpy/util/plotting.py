@@ -320,11 +320,21 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     if plot_info == 3:
         for pair in xy_pairs:
             # plots x against y values.
-            plt.plot(pair[0][2], pair[1][2], label=pair[1][0] + " (" + pair[1][1] + ")")
+            if single_flight is True:
+                plt.plot(pair[0][2], pair[1][2], label=(pair[1][0] + " (" + pair[1][1] + ") "))
+            else:
+                plt.plot(pair[0][2], pair[1][2], label=(pair[1][0] + " (" + pair[1][1] + ") "+ str(pair[2])))
+
         # Puts in first item.
         text = xy_pairs[0][1][0]
-        for pair in xy_pairs[1:-1]:
-            text += ", " + pair[1][0]
+        if single_flight is True:
+            for pair in xy_pairs[1:-1]:
+                text += ", " + pair[1][0]
+        else:
+            # Finds the last set of data for titles
+            data_set_len = int(len(xy_pairs) / number_of_flights)
+            for pair in xy_pairs[data_set_len + 1:-1]:
+                text += ", " + pair[1][0]
         # Adds and to end of text
         text += " and " + xy_pairs[len(xy_pairs) - 1][1][0]
         # Plots Legend.
@@ -1224,16 +1234,18 @@ def arm_data_plotting(arm_data, arm_plot_data, number_of_flights, axes_limits_ce
             # Plot the arm events:
             plt.axvline(arm_times[times][1], color="g")
             if single_flight is False:
-                plt.annotate("ARM {}".format(arm_times[times][0]), [arm_times[times][1],
-                                                                    axes_limits_center_y*0.5*(1+times)])
+                plt.annotate("ARM {}".format(arm_times[times][0]), [arm_times[times][1], 2*axes_limits_center_y -
+                                                                    axes_limits_center_y*0.2*(1+times)])
+                # The last part locates the label at an incrementally changing position from the top of the figure
+                # downwards
             else:
                 plt.annotate("ARM", [arm_times[times][1], axes_limits_center_y])
         for times in range(len(disarm_times)):
             # Plot the disarm events:
             plt.axvline(disarm_times[times][1], color="r")
             if single_flight is False:
-                plt.annotate("DISARM {}".format(disarm_times[times][0]), [disarm_times[times][1],
-                                                                          axes_limits_center_y*0.5*(1+times)])
+                plt.annotate("DISARM {}".format(disarm_times[times][0]), [disarm_times[times][1], 2*axes_limits_center_y
+                                                                          - axes_limits_center_y*0.2*(1+times)])
             else:
                 plt.annotate("DISARM", [disarm_times[times][1], axes_limits_center_y])
         # Prints time armed:
