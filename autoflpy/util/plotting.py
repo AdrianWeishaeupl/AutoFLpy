@@ -51,10 +51,10 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     plt.rcParams["figure.figsize"] = (15, 3)
 
     # Changes the values list to only include the data
-    values_list, flight_data_list, single_flight, number_of_flights = single_flight_detection(values_list)
+    values_list, flight_dates_list, single_flight, number_of_flights = single_flight_detection(values_list)
 
     # Formats the arm_data and checks that all the data is present
-    arm_data, arm_plot_data = arm_data_formatting(arm_data, values_list, number_of_flights, flight_data_list)
+    arm_data, arm_plot_data = arm_data_formatting(arm_data, values_list, number_of_flights, flight_dates_list)
 
     #
     plot_data = select_plot_data_single(values_list, plot_information, number_of_flights)
@@ -196,6 +196,8 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     y_list = []
 
     for data_set in range(number_of_flights):
+        x_list_temp = []
+        y_list_temp = []
         for xy_data in plot_data[data_set]:
             # Checks to see what plot info equals.
             if plot_info == 1:
@@ -209,23 +211,27 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
             if plot_info == 2 or plot_info == 3:
                 # Goes through all data in cell.
                 if xy_data[0] == "x":
-                    x_list.append(xy_data)
+                    x_list_temp.append([xy_data, flight_dates_list[data_set]])
                 if xy_data[0] == "y":
-                    y_list.append(xy_data)
+                    y_list_temp.append([xy_data, flight_dates_list[data_set]])
+        x_list.append(x_list_temp)
+        y_list.append(y_list_temp)
+
     # Checks through each x_data item.
     xy_pairs = []
     xy_pairs_units = []
-    # TODO: Edit this section:
+
     if plot_info == 2 or plot_info == 3:
-        for x_data in x_list:
-            # Checks through each y data item.
-            for y_data in y_list:
-                # if the x and y data have the same source then they can be
-                # plotted together
-                if x_data[2] == y_data[2]:
-                    # Appends which x values and y values that can be plotted
-                    # against each other.
-                    xy_pairs.append([x_data[1], y_data[1]])
+        for data_set in range(number_of_flights):
+            for x_data in x_list[data_set]:
+                # Checks through each y data item.
+                for y_data in y_list[data_set]:
+                    # if the x and y data have the same source then they can be
+                    # plotted together
+                    if x_data[0][2] == y_data[0][2]:
+                        # Appends which x values and y values that can be plotted
+                        # against each other.
+                        xy_pairs.append([x_data[0][1], y_data[0][1], flight_dates_list[data_set]])
 
     if plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude' and map_modules_imported is True:
         # Plots a map behind latitude and longitude data.
@@ -253,7 +259,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
             title = "Latitude v Longitude"
     elif plot_info == 1:
         for data_set in range(number_of_flights):
-            plt.plot(x[data_set][2], y[data_set][2], label=flight_data_list[data_set])
+            plt.plot(x[data_set][2], y[data_set][2], label=flight_dates_list[data_set])
             # plots x name with unit in brackets.
         # The rest assumes that all data has the same x and y labels as set 0
         plt.xlabel(x[0][0] + " (" + x[0][1] + ")")
@@ -274,14 +280,27 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         for pair in xy_pairs:
             if pair[1][0][:4] == "Vibe":
                 # plots log y values for vibration data.
-                plt.semilogy(pair[0][2], pair[1][2], label=pair[1][0])
+                if single_flight is True:
+                    plt.semilogy(pair[0][2], pair[1][2], label=pair[1][0])
+                else:
+                    plt.semilogy(pair[0][2], pair[1][2], label=(str(pair[1][0]) + " " + str(pair[2])))
             else:
                 # plots x against y values.
-                plt.plot(pair[0][2], pair[1][2], label=pair[1][0])
+                if single_flight is True:
+                    plt.plot(pair[0][2], pair[1][2], label=pair[1][0])
+                else:
+                    plt.plot(pair[0][2], pair[1][2], label=(str(pair[1][0]) + " " + str(pair[2])))
         # Puts in first item.
         text = xy_pairs[0][1][0]
-        for pair in xy_pairs[1:-1]:
-            text += ", " + pair[1][0]
+        if single_flight is True:
+            for pair in xy_pairs[1:-1]:
+                text += ", " + pair[1][0]
+        else:
+            # Finds the last set of data for titles
+            data_set_len = int(len(xy_pairs)/number_of_flights)
+            for pair in xy_pairs[data_set_len + 1:-1]:
+                text += ", " + pair[1][0]
+
         # Adds and to end of text
         text += " and " + xy_pairs[len(xy_pairs) - 1][1][0]
         # Plots Legend.
@@ -354,7 +373,6 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                     # Plots the markers
                     plt.axvline(marker, color="k")
                     plt.annotate(marker, [marker, axes_limits_center_y])
-
     plt.grid(which='both', axis='both', linewidth=0.2, color="0.1")
     plt.show()
 
