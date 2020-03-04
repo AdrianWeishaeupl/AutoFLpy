@@ -1087,6 +1087,8 @@ def multi_dictionary_data_formatter(dictionaries, flight_dates, debug_name):
     for item in dictionaries.values():
         if len(item.replace(" ", "").split(",")) == len(flight_dates):
             pass
+        elif len(item.replace(" ", "").split(",")) == 0:
+            pass
         else:
             raise IndexError("{} data content does not match the number"
                              " of flights entered ({}).".format(debug_name, len(flight_dates)))
