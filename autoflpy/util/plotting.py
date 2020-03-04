@@ -207,7 +207,6 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                 # Checks to see if the data being viewed is x data.
                 if xy_data[0] == "y":
                     y.append(xy_data[1])
-            # TODO: Check plot_info == 2 and 3
             if plot_info == 2 or plot_info == 3:
                 # Goes through all data in cell.
                 if xy_data[0] == "x":
@@ -421,10 +420,10 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     plt.rcParams["figure.figsize"] = (15, 3)
 
     # Changes the values list to only include the data
-    values_list, flight_data_list, single_flight, number_of_flights = single_flight_detection(values_list)
+    values_list, flight_dates_list, single_flight, number_of_flights = single_flight_detection(values_list)
 
     # Formats the arm_data and checks that all the data is present
-    arm_data, arm_plot_data = arm_data_formatting(arm_data, values_list, number_of_flights, flight_data_list)
+    arm_data, arm_plot_data = arm_data_formatting(arm_data, values_list, number_of_flights, flight_dates_list)
 
     # Goes through all the elements in the left list
     for element in plot_information_left:
@@ -438,66 +437,53 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # list then it is appended to this list
         if element[0] == "x" and element not in plot_information_left:
             plot_information_left.append(element)
-    # TODO: look at the following:
-    for data_set in range(number_of_flights):
-        for information in plot_information:
-            plot_data = []
-            for data in information:
-                values_list_index = 0
-                # Checks to see if the 'data source' recorded in the graph list
-                # matches the 'data sources' in the list structure values_list.
-                for values_list_data in values_list[data_set]:
-                    # Finds data source.
-                    if data[2] == values_list_data[0].lower():
-                        data.append(values_list_index)
-                        # Goes through each column searching for a match.
-                        for column in values_list[data_set][values_list_index][1:]:
-                            # Checks to see if they have the same title.
-                            if column[0].lower() == data[1]:
-                                # if they do then the data is appended.
-                                plot_data.append([data[0], column, data[2]])
-                                # exits for loop if data has been appended.
-                                break
-                    values_list_index += 1
 
-        # Goes through the graph list and finds the matching values in the
-        # values_list and then appends these values to a new list with x or y
-        # stated. Returns plot data which has structure:
-        # [axis, [data_source, column]] This will go through all the data and
-        # plot it. Plot info is used to inform the code what graph style that
-        # it needs to plot. A final plot info of 0 means that the combination
-        # of x and y values is invalid and so the cell will be automatically
-        # removed. A final plot info of 1 means that there is just x and y,
-        # a final plot info of 2 means that there are n x values which must
-        # have the same name and unit (ie be the same information as the first
-        # x but from a different data source) and multiple y values with the
-        # same unit. A final plot info of 3 means that there are multiple y
-        # values which do not have the same unit and n x values which must have
-        # the same name and unit.
+    plot_data = []
+    for information in plot_information:
+        plot_data.append(select_plot_data_single(values_list, information, number_of_flights))
+    # Goes through the graph list and finds the matching values in the
+    # values_list and then appends these values to a new list with x or y
+    # stated. Returns plot data which has structure:
+    # [axis, [data_source, column]] This will go through all the data and
+    # plot it. Plot info is used to inform the code what graph style that
+    # it needs to plot. A final plot info of 0 means that the combination
+    # of x and y values is invalid and so the cell will be automatically
+    # removed. A final plot info of 1 means that there is just x and y,
+    # a final plot info of 2 means that there are n x values which must
+    # have the same name and unit (ie be the same information as the first
+    # x but from a different data source) and multiple y values with the
+    # same unit. A final plot info of 3 means that there are multiple y
+    # values which do not have the same unit and n x values which must have
+    # the same name and unit.
+    plot_info = 0
+    # checks the length of the cell, if there is one x and y value to
+    # plot
+    if len(plot_data[0][0]) == 2:  # Assumes all flights have the same data available as the first
+        plot_info = 1
+    if len(plot_data[0][0]) > 2:  # Assumes all flights have the same data available as the first
+        plot_info = 2
+    print("PLOT INFO 1", plot_info)
+    # Used to count the number of Xs
+    x_count = 0
+    for xy in plot_data[0][0]:
+        if xy[0][0][0] == "x":  # Assumes all flights have the same data available as the first
+            x_count += 1
+    print("X COUNT", x_count)
+    # if x count equals to 0 then plot info is set to 0
+    if x_count == 0:
         plot_info = 0
-        # checks the length of the cell, if there is one x and y value to
-        # plot
-        if len(plot_data) == 2:
-            plot_info = 1
-        if len(plot_data) > 2:
-            plot_info = 2
-        # Used to count the number of Xs
-        x_count = 0
-        for xy in plot_data:
-            if xy[0] == "x":
-                x_count += 1
-        # if x count equals to 0 then plot info is set to 0
-        if x_count == 0:
-            plot_info = 0
-        # If all the values are x's then plot info must be 0.
-        if x_count == len(plot_data):
-            plot_info = 0
-        # If there is more than 1 x value
-        if x_count > 1:
-            first_x_unit = True
-            if plot_info == 2:
-                # Check through the cells that contain x.
-                for xy_data in plot_data:
+    # If all the values are x's then plot info must be 0.
+    if x_count == len(plot_data[0][0]):
+        plot_info = 0
+    print("PLOT INFO 2", plot_info)
+    # TODO: Fix the plot_info. Make sure it is correct for all 3 values
+    # If there is more than 1 x value
+    if x_count > 1:
+        first_x_unit = True
+        if plot_info == 2:
+            # Check through the cells that contain x.
+            for data_set in range(number_of_flights):
+                for xy_data in plot_data[data_set]:
                     if xy_data[0] == "x":
                         # Check if this is the first x value unit that has been
                         # evaluated.
@@ -519,17 +505,20 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                                 # different units.
                                 plot_info = 0
                                 break
-            else:
-                # If there are two variables (plot info = 1) and both variables
-                # are x variables then do not plot the data.
-                plot_info = 0
-        # Sets first unit to True, so that the reference values are recorded
-        # when the first lot of y data arrives.
-        first_y_unit = True
-        # If there is more than 1 y value
-        if plot_info == 2:
-            # Check through the cells that contain y.
-            for xy_data in plot_data:
+
+        else:
+            # If there are two variables (plot info = 1) and both variables
+            # are x variables then do not plot the data.
+            plot_info = 0
+    print("PLOT INFO 3", plot_info)
+    # Sets first unit to True, so that the reference values are recorded
+    # when the first lot of y data arrives.
+    first_y_unit = True
+    # If there is more than 1 y value
+    if plot_info == 2:
+        # Check through the cells that contain y.
+        for data_set in range(number_of_flights):
+            for xy_data in plot_data[data_set]:
                 if xy_data[0] == "y":
                     # Check if this is the first unit
                     if first_y_unit is True:
@@ -545,8 +534,9 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                         else:
                             plot_info = 3
                             break
-        # Appends data to list
-        plot_list.append([plot_info, plot_data])
+    # Appends data to list
+    plot_list.append([plot_info, plot_data])
+    print("LEN", len(plot_list[0]))
     # Plots data
     graph, axis_1 = plt.subplots()
     # Renames data to make it compatible with older code.
@@ -560,33 +550,42 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     x_list = []
     # Counts number of y.
     y_list = []
+    print("PLOT INFO 4", plot_info)
 
-    for xy_data in plot_data:
-        # Checks to see what plot info equals.
-        if plot_info == 1:
-            # Checks to see if the current data being viewed is y data
+    for data_set in range(number_of_flights):
+        x_list_temp = []
+        y_list_temp = []
+        for xy_data in plot_data[0][data_set]:
+            # Checks to see what plot info equals.
+            if plot_info == 1:
+                # Checks to see if the current data being viewed is y data
+                if xy_data[0] == "x":
+                    x = xy_data[1]
+                # Checks to see if the data being viewed is x data.
+                if xy_data[0] == "y":
+                    y = xy_data[1]
+            # Goes through all data in cell.
             if xy_data[0] == "x":
-                x = xy_data[1]
-            # Checks to see if the data being viewed is x data.
+                x_list_temp.append([xy_data, flight_dates_list[data_set]])
             if xy_data[0] == "y":
-                y = xy_data[1]
-        # Goes through all data in cell.
-        if xy_data[0] == "x":
-            x_list.append(xy_data)
-        if xy_data[0] == "y":
-            y_list.append(xy_data)
+                y_list_temp.append([xy_data, flight_dates_list[data_set]])
+        x_list.append(x_list_temp)
+        y_list.append(y_list_temp)
+
     # Checks through each x_data item.
     xy_pairs = []
-    for x_data in x_list:
-        # Checks through each y data item.
-        for y_data in y_list:
-            # if the x and y data have the same source then they can be
-            # plotted together
-            if x_data[2] == y_data[2]:
-                # Appends which x values and y values that can be plotted
-                # against each other.
-                xy_pairs.append([x_data[1], y_data[1]])
-    if plot_info == 1:
+    for data_set in range(number_of_flights):
+        for x_data in x_list[data_set]:
+            # Checks through each y data item.
+            for y_data in y_list[data_set]:
+                # if the x and y data have the same source then they can be
+                # plotted together
+                if x_data[0][2] == y_data[0][2]:
+                    # Appends which x values and y values that can be plotted
+                    # against each other.
+                    xy_pairs.append([x_data[0][1], y_data[0][1], flight_dates_list[data_set]])
+
+    if plot_info == 1:  # TODO: Check this works for multiple flights
         line = axis_1.plot(x[2], y[2], label=y[0],
                            color="C" + str(line_count))
         # plots x name with unit in brackets.
@@ -604,19 +603,27 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     if plot_info == 2:
         for pair in xy_pairs:
             # plots x against y values.
-            line = axis_1.plot(pair[0][2], pair[1][2], label=pair[1][0],
-                               color="C" + str(line_count))
+            if single_flight is True:
+                line = axis_1.plot(pair[0][2], pair[1][2], label=pair[1][0],
+                                   color="C" + str(line_count))
+            else:
+                line = axis_1.plot(pair[0][2], pair[1][2], label=(str(pair[1][0]) + " " + str(pair[2])),
+                                   color="C" + str(line_count))
             # Increments line count
             line_count += 1
             # Appends current line to list of lines.
             lines += line
         # Puts in first item.
         text = xy_pairs[0][1][0]
-        for pair in xy_pairs[1:-1]:
-            text += ", " + pair[1][0]
-        # Adds and to end of text
-        if len(xy_pairs) != 1:
-            text += ", " + xy_pairs[len(xy_pairs) - 1][1][0]
+        if single_flight is True:
+            for pair in xy_pairs[1:-1]:
+                text += ", " + pair[1][0]
+        else:
+            # Finds the last set of data for titles
+            data_set_len = int(len(xy_pairs)/number_of_flights)
+            for pair in xy_pairs[data_set_len + 1:-1]:
+                text += ", " + pair[1][0]
+
         # Plots Legend.
         # Plots Y label.
         axis_1.set_ylabel(text + " (" + xy_pairs[0][1][1] + ")")
@@ -631,13 +638,18 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     if plot_info == 3:
         for pair in xy_pairs:
             # plots x against y values.
-            line = axis_1.plot(pair[0][2], pair[1][2], label=(pair[1][0] + " (" + pair[1][1] + ")"),
-                               color="C" + str(line_count))
+            if single_flight is True:
+                line = axis_1.plot(pair[0][2], pair[1][2], label=(str(pair[1][0]) + " (" + str(pair[1][1]) + ")"),
+                                   color="C" + str(line_count))
+            else:
+                line = axis_1.plot(pair[0][2], pair[1][2], label=(str(pair[1][0]) + " (" + str(pair[1][1]) + ")") + " "
+                                   + str(pair[2]), color="C" + str(line_count))
             # Increments line count
             line_count += 1
             # Appends current line to list of lines.
             lines += line
         # Puts in first item.
+        # TODO: Change generated title
         text = xy_pairs[0][1][0]
         for pair in xy_pairs[1:-1]:
             text += ", " + pair[1][0]
@@ -653,8 +665,8 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     # Records plot info for the left axis
     plot_info_left = plot_info
     # Renames data to make it compatible with older code.
-    plot_info = plot_list[1][0]
-    plot_data = plot_list[1][1]
+    plot_info = plot_list[0][0]
+    plot_data = plot_list[0][1]
     axis_2 = axis_1.twinx()
     # If there is Y axis data for the Right hand axis then plot the label
     if plot_info != 0:
@@ -663,31 +675,40 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     x_list = []
     # Counts number of y.
     y_list = []
-    for xy_data in plot_data:
-        # Checks to see what plot info equals.
-        if plot_info == 1:
-            # Checks to see if the current data being viewed is y data
+    for data_set in range(number_of_flights):
+        x_list_temp = []
+        y_list_temp = []
+        for xy_data in plot_data[1][data_set]:
+            # Checks to see what plot info equals.
+            if plot_info == 1:
+                # Checks to see if the current data being viewed is y data
+                if xy_data[0] == "x":
+                    x = xy_data[1]
+                # Checks to see if the data being viewed is x data.
+                if xy_data[0] == "y":
+                    y = xy_data[1]
+            # Goes through all data in cell.
             if xy_data[0] == "x":
-                x = xy_data[1]
-            # Checks to see if the data being viewed is x data.
+                x_list_temp.append([xy_data, flight_dates_list[data_set]])
             if xy_data[0] == "y":
-                y = xy_data[1]
-        # Goes through all data in cell.
-        if xy_data[0] == "x":
-            x_list.append(xy_data)
-        if xy_data[0] == "y":
-            y_list.append(xy_data)
+                y_list_temp.append([xy_data, flight_dates_list[data_set]])
+        x_list.append(x_list_temp)
+        y_list.append(y_list_temp)
+
     # Checks through each x_data item.
     xy_pairs = []
-    for x_data in x_list:
-        # Checks through each y data item.
-        for y_data in y_list:
-            # if the x and y data have the same source then they can be
-            # plotted together
-            if x_data[2] == y_data[2]:
-                # Appends which x values and y values that can be plotted
-                # against each other.
-                xy_pairs.append([x_data[1], y_data[1]])
+
+    for data_set in range(number_of_flights):
+        for x_data in x_list[data_set]:
+            # Checks through each y data item.
+            for y_data in y_list[data_set]:
+                # if the x and y data have the same source then they can be
+                # plotted together
+                if x_data[0][2] == y_data[0][2]:
+                    # Appends which x values and y values that can be plotted
+                    # against each other.
+                    xy_pairs.append([x_data[0][1], y_data[0][1], flight_dates_list[data_set]])
+
     if plot_info == 1:
         line = axis_2.plot(x[2], y[2], label=y[0],
                            color="C" + str(line_count))
@@ -705,21 +726,32 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     if plot_info == 2:
         for pair in xy_pairs:
             # plots x against y values.
-            line = plt.plot(pair[0][2], pair[1][2], label=pair[1][0],
-                            color="C" + str(line_count))
+            if single_flight is True:
+                line = axis_1.plot(pair[0][2], pair[1][2], label=pair[1][0],
+                                   color="C" + str(line_count))
+            else:
+                line = axis_1.plot(pair[0][2], pair[1][2], label=(str(pair[1][0]) + " " + str(pair[2])),
+                                   color="C" + str(line_count))
             # Increments line count
             line_count += 1
             # Appends current line to list of lines.
             lines += line
         # Puts in first item.
         text = xy_pairs[0][1][0]
-        for pair in xy_pairs[1:-1]:
-            text += ", " + pair[1][0]
-        # Adds and to end of text
-        if len(xy_pairs) != 1:
-            text += ", " + xy_pairs[len(xy_pairs) - 1][1][0]
+
+        # Puts in first item.
+        text = xy_pairs[0][1][0]
+        if single_flight is True:
+            for pair in xy_pairs[1:-1]:
+                text += ", " + pair[1][0]
+        else:
+            # Finds the last set of data for titles
+            data_set_len = int(len(xy_pairs)/number_of_flights)
+            for pair in xy_pairs[data_set_len + 1:-1]:
+                text += ", " + pair[1][0]
+
         # Plots Y label.
-        axis_2.set_ylabel(text + " (" + xy_pairs[0][1][1] + ")")
+        axis_2.set_ylabel(str(text) + " (" + str(xy_pairs[0][1][1]) + ")")
         # Plots X label.
         axis_2.set_xlabel(xy_pairs[0][0][0] + " (" + xy_pairs[0][0][1] + ")")
         xlabel = xy_pairs[0][0][0]  # For determining if the x axis is time.
@@ -826,6 +858,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                     plt.annotate(marker, [marker, axes_limits_center_y])
 
     plt.grid(which='both', axis='both', linewidth=0.2, color="0.1")
+    print("PLOT INFO", plot_info)
     plt.show()
 
 
