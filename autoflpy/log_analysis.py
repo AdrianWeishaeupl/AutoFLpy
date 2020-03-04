@@ -65,17 +65,18 @@ def autoflpy(input_file='Input_File.json'):
 
     # Sets  variables from the input file to be used.
     # If no log file path has been entered, go to the standard log path.
+    log_file_paths = []
     if data["log_to_xlsx_input"]["log_file_path"] != "" and os.path.exists(
       data["log_to_xlsx_input"]["log_file_path"]) is True:
         for file in data["log_to_xlsx_input"]["log_file_name"].replace(" ", "").split(","):
-            log_file_path = (data["log_to_xlsx_input"][
+            log_file_paths.append(data["log_to_xlsx_input"][
                                  "log_file_path"] + os.sep + file)
     else:
         # Creates a new directory to look for files.
         log_file_base_path = (default_storage_path + "log_files" + os.sep
                               )
         for file in data["log_to_xlsx_input"]["log_file_name"].replace(" ", "").split(","):
-            log_file_path = (log_file_base_path + os.sep + file)
+            log_file_paths.append(log_file_base_path + os.sep + file)
         try:
             os.makedirs(log_file_base_path)
             # Raises error and gives advice on how to continue.
@@ -121,7 +122,7 @@ def autoflpy(input_file='Input_File.json'):
         runway_data_multi, flight_dates, "runway_data")
 
     # Runs the xlsx converter
-    log_to_xlsx.log_reader_multi(log_file_path,
+    log_to_xlsx.log_reader_multi(log_file_paths,
                                  name_converter_file_path,
                                  data_sources_path,
                                  excel_file_path,
