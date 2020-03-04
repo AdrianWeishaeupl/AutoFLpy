@@ -1113,7 +1113,7 @@ def multi_string_data_formatter(data_string, flight_dates, debug_name):
 
     data_list = str(data_string).replace(" ", "").split(",")
 
-    if len(data_list) != len(flight_dates):
+    if len(data_list) != len(flight_dates) and len(data_list) != 0:
         raise IndexError("{} data entered does not have the same length as the number of flights ({})"
                          .format(debug_name, len(flight_dates)))
 
