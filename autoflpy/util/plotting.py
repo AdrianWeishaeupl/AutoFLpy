@@ -61,12 +61,15 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
 
     # Checks if the plot in question is a map plot
     if len(plot_data) != 0:
-        if "Latitude" in [plot_data[0][0][1][0], plot_data[0][1][1][0]]:  # Checks only the first data set
-            if "Longitude" in [plot_data[0][0][1][0], plot_data[0][1][1][0]]:  # Checks only the first data set
-                mapplot_active = True
+        try:
+            if "Latitude" in [plot_data[0][0][1][0], plot_data[0][1][1][0]]:  # Checks only the first data set
+                if "Longitude" in [plot_data[0][0][1][0], plot_data[0][1][1][0]]:  # Checks only the first data set
+                    mapplot_active = True
+                else:
+                    mapplot_active = False
             else:
                 mapplot_active = False
-        else:
+        except IndexError:
             mapplot_active = False
     else:
         mapplot_active = False
@@ -347,6 +350,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         else:
             title = text + " v " + xy_pairs[0][0][0]
     # if plot info is equal to 0 then nothing is returned
+    print("PLOT INFO", plot_info)
     if plot_info == 0:
         print('No data present or variables entered incorrectly.')
         return
@@ -413,9 +417,6 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     reference_x_heading = None
     xlabel = None
 
-    # List of data to plot returns plot data which has structure:
-    # [axis, [data_source, column]]
-    plot_information = [plot_information_left, plot_information_right]
     plot_list = []
     plt.rcParams["figure.figsize"] = (15, 3)
 
@@ -438,6 +439,10 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         if element[0] == "x" and element not in plot_information_left:
             plot_information_left.append(element)
 
+    # List of data to plot returns plot data which has structure:
+    # [axis, [data_source, column]]
+    plot_information = [plot_information_left, plot_information_right]
+
     plot_data = []
     for information in plot_information:
         plot_data.append(select_plot_data_single(values_list, information, number_of_flights))
@@ -458,6 +463,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     plot_info = 0
     # checks the length of the cell, if there is one x and y value to
     # plot
+    # TODO: This needs changing.. Assumption is wrong.
     if len(plot_data[0][0]) == 2:  # Assumes all flights have the same data available as the first
         plot_info = 1
     if len(plot_data[0][0]) > 2:  # Assumes all flights have the same data available as the first
@@ -1126,14 +1132,15 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
 
     # TODO: Create a function to automatically tune the sensitivity - start high and reduce it until it doesn't make
     #  sense anymore.
-
-    take_off_time_alt, take_off_groundspeed, take_off_time_spd = \
-        take_off_detection.take_off_point_finder(values_list, alt_sensitivity=alt_sensitivity,
-                                                 groundspeed_sensitivity=groundspeed_sensitivity)
-
     if take_off_time is None:
+        take_off_time_alt, take_off_groundspeed, take_off_time_spd = \
+            take_off_detection.take_off_point_finder(values_list, alt_sensitivity=alt_sensitivity,
+                                                     groundspeed_sensitivity=groundspeed_sensitivity)
         take_off_time = take_off_time_alt
         take_off_time_calculated = True
+    else:
+        take_off_groundspeed = None
+        take_off_time_spd = None
 
     # Prints calculated times
     if take_off_time_calculated is True:
