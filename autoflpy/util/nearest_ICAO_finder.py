@@ -88,5 +88,5 @@ def uav_lat_long(file_path, file_name):
     uav_lat = float(sheet['F2'].value)
     uav_long = float(sheet['G2'].value)
     uav_position = np.array([[uav_lat], [uav_long]])
-    print('UAV position = ' + str(uav_position))
+    print('UAV position = ' + str(uav_lat) + ', ' + str(uav_long))
     return uav_position

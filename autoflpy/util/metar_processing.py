@@ -128,7 +128,6 @@ def metar_returner(metar_data, contents, months, years, number_of_flights,
     metar_text = ""
     for flight in range(number_of_flights):
         if "https://" not in metar_data[flight]:
-            print("METAR DATA FLIGHT", metar_data[flight])
             metar_text += "    \"The METARs for " + \
                           str(mtr.Metar(metar_data[flight], month=months[flight], year=years[flight]))[9:13] + \
                           " were:\\n\",\n    \"\\n\",\n"
