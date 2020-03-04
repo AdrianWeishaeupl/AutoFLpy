@@ -998,11 +998,12 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
         # Excel Sheets
         print(flight_data_file_name[data_set])
         frame_list = flight_data(flight_data_file_path, flight_data_file_name[data_set])
-        # Retrieves arduino flight data
-        arduino_flight_data_frame = arduino_micro_frame(arduino_data_file_path,
-                                                        arduino_data_file_name[data_set])
-        # Appends arduino frame to flight data from pixhawk
-        frame_list.append(arduino_flight_data_frame)
+        # Retrieves arduino flight data if present
+        if arduino_data_file_name != ['']:
+            arduino_flight_data_frame = arduino_micro_frame(arduino_data_file_path,
+                                                            arduino_data_file_name[data_set])
+            # Appends arduino frame to flight data from pixhawk
+            frame_list.append(arduino_flight_data_frame)
         # Sorts frames by time
         sorted_frames = flight_data_time_sorter(frame_list)
         # Creates a list of all the values.
