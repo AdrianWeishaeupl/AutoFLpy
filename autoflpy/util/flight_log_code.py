@@ -1082,12 +1082,17 @@ def multi_dictionary_data_formatter(dictionaries, flight_dates, debug_name):
     """
 
     dictionary = []
+    # Removes any blank fields in the dictionaries:
+    for key in dictionaries.keys():
+        if dictionaries[key] == "":
+            dictionaries = remove_dictionary_key(dictionaries, key)
+        else:
+            pass
+
 
     # Checks that the dictionary data lengths are equal to the number of flights
     for item in dictionaries.values():
         if len(item.replace(" ", "").split(",")) == len(flight_dates):
-            pass
-        elif len(item.replace(" ", "").split(",")) == 0:
             pass
         else:
             raise IndexError("{} data content does not match the number"
@@ -1104,6 +1109,13 @@ def multi_dictionary_data_formatter(dictionaries, flight_dates, debug_name):
     return dictionary
 
 
+def remove_dictionary_key(dictionary, key):
+    """Used to delete a key in a dictionary"""
+    new_dictionary = dict(dictionary)
+    del new_dictionary[key]
+    return new_dictionary
+
+
 def multi_string_data_formatter(data_string, flight_dates, debug_name):
     """Takes a string of multiple inputs separated by a "," and separates this into a list of multiple inputs.
 
@@ -1114,8 +1126,7 @@ def multi_string_data_formatter(data_string, flight_dates, debug_name):
     """
 
     data_list = str(data_string).replace(" ", "").split(",")
-
-    if len(data_list) != len(flight_dates) and len(data_list) != 0:
+    if len(data_list) != len(flight_dates) and data_list != [""]:
         raise IndexError("{} data entered does not have the same length as the number of flights ({})"
                          .format(debug_name, len(flight_dates)))
 
