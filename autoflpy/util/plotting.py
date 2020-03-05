@@ -466,28 +466,21 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         plot_info = 0
         # checks the length of the cell, if there is one x and y value to
         # plot
-        # TODO: This needs changing.. Assumption is wrong.
         if len(plot_data[0][0]) == 2:  # Assumes all flights have the same data available as the first
             plot_info = 1
         if len(plot_data[0][0]) > 2:  # Assumes all flights have the same data available as the first
             plot_info = 2
-        print("PLOT INFO 1", plot_info)
         # Used to count the number of Xs
         x_count = 0
         for xy in plot_data[0][0]:
             if xy[0] == "x":  # Assumes all flights have the same data available as the first
                 x_count += 1
-        print("X COUNT", x_count)
         # if x count equals to 0 then plot info is set to 0
         if x_count == 0:
             plot_info = 0
         # If all the values are x's then plot info must be 0.
-        # TODO: ISSUE HERE:
         if x_count == len(plot_data[0][0]):
             plot_info = 0
-        print("PLOT INFO 2", plot_info)
-        # TODO: Fix the plot_info. Make sure it is correct for all 3 values
-        # TODO: Make sure that the data is being assigned correctly - looks like only one set is being plotted
         # If there is more than 1 x value
         if x_count > 1:
             first_x_unit = True
@@ -521,7 +514,6 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                 # If there are two variables (plot info = 1) and both variables
                 # are x variables then do not plot the data.
                 plot_info = 0
-        print("PLOT INFO 3", plot_info)
         # Sets first unit to True, so that the reference values are recorded
         # when the first lot of y data arrives.
         first_y_unit = True
@@ -547,7 +539,6 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                                 break
         # Appends data to list
         plot_list.append([plot_info, plot_data])
-    print("LEN", len(plot_list[0]))
     # Plots data
     graph, axis_1 = plt.subplots()
     # Renames data to make it compatible with older code.
@@ -561,20 +552,12 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     x_list = []
     # Counts number of y.
     y_list = []
-    print("PLOT INFO 4", plot_info)
+
 
     for data_set in range(number_of_flights):
         x_list_temp = []
         y_list_temp = []
         for xy_data in plot_data[data_set]:
-            # Checks to see what plot info equals.
-            if plot_info == 1:
-                # Checks to see if the current data being viewed is y data
-                if xy_data[0] == "x":
-                    x = xy_data[1]
-                # Checks to see if the data being viewed is x data.
-                if xy_data[0] == "y":
-                    y = xy_data[1]
             # Goes through all data in cell.
             if xy_data[0] == "x":
                 x_list_temp.append([xy_data, flight_dates_list[data_set]])
@@ -596,18 +579,26 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                     # against each other.
                     xy_pairs.append([x_data[0][1], y_data[0][1], flight_dates_list[data_set]])
 
-    if plot_info == 1:  # TODO: Check this works for multiple flights
-        line = axis_1.plot(x[2], y[2], label=y[0],
-                           color="C" + str(line_count))
+    if plot_info == 1:
+        line_count = 0
+        for data_set in range(number_of_flights):
+            if single_flight is True:
+                line = axis_1.plot(xy_pairs[data_set][0][2], xy_pairs[data_set][1][2], label=xy_pairs[data_set][1][0],
+                                   color="C" + str(line_count))
+            else:
+                line = axis_1.plot(xy_pairs[data_set][0][2], xy_pairs[data_set][1][2],
+                                   label=(str(xy_pairs[data_set][1][0]) + " " + str(xy_pairs[data_set][2])),
+                                   color="C" + str(line_count))
+            lines += line
+            line_count = line_count + 1
         # plots x name with unit in brackets.
-        axis_1.set_xlabel(x[0] + " (" + x[1] + ")")
-        xlabel = x[0]  # For determining if the x axis is time.
+        axis_1.set_xlabel(str(xy_pairs[0][0][0]) + " (" + str(xy_pairs[0][0][1]) + ")")
+        xlabel = x_list[0]  # For determining if the x axis is time.
         # plots y name with unit in brackets.
-        axis_1.set_ylabel(y[0] + " (" + y[1] + ")")
+        axis_1.set_ylabel(str(xy_pairs[0][1][0]) + " (" + str(xy_pairs[0][1][1]) + ")")
         # plots title for graph.
-        title = y[0]
-        line_count = 1
-        lines += line
+        title = xy_pairs[0][1][0]
+
 
     # If y units have the same unit then this will format the graphs as
     # required.
@@ -690,14 +681,6 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         x_list_temp = []
         y_list_temp = []
         for xy_data in plot_data[data_set]:
-            # Checks to see what plot info equals.
-            if plot_info == 1:
-                # Checks to see if the current data being viewed is y data
-                if xy_data[0] == "x":
-                    x = xy_data[1]
-                # Checks to see if the data being viewed is x data.
-                if xy_data[0] == "y":
-                    y = xy_data[1]
             # Goes through all data in cell.
             if xy_data[0] == "x":
                 x_list_temp.append([xy_data, flight_dates_list[data_set]])
@@ -721,17 +704,21 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                     xy_pairs.append([x_data[0][1], y_data[0][1], flight_dates_list[data_set]])
 
     if plot_info == 1:
-        line = axis_2.plot(x[2], y[2], label=y[0],
-                           color="C" + str(line_count))
-        # Increments line count
-        line_count += 1
-        # Appends current line to list of lines.
-        lines += line
+        for data_set in range(number_of_flights):
+            if single_flight is True:
+                line = axis_2.plot(xy_pairs[data_set][0][2], xy_pairs[data_set][1][2], label=xy_pairs[data_set][1][0],
+                                   color="C" + str(line_count))
+            else:
+                line = axis_2.plot(xy_pairs[data_set][0][2], xy_pairs[data_set][1][2],
+                                   label=(str(xy_pairs[data_set][1][0]) + " " + str(xy_pairs[data_set][2])),
+                                   color="C" + str(line_count))
+            lines += line
+            line_count = line_count + 1
         # plots y name with unit in brackets.
-        axis_2.set_ylabel(y[0] + " (" + y[1] + ")")
+        axis_2.set_ylabel(str(xy_pairs[0][1][0]) + " (" + str(xy_pairs[0][1][1]) + ")")
         # plots title for graph.
-        text = y[0] + " v " + x[0]
-        xlabel = x[0]  # For determining if the x axis is time.
+        text = str(xy_pairs[0][1][0]) + " v " + str(xy_pairs[0][0][0])
+        xlabel = xy_pairs[0][0][0]  # For determining if the x axis is time.
     # If y units have the same unit then this will format the graphs as
     # required.
     if plot_info == 2:
