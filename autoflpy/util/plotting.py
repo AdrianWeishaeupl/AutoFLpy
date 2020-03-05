@@ -80,6 +80,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         # Adds data series to be called for the time of the map_info and GPS time (later used for interpolating
         # the data)
         map_info = [map_info, ["time", str(map_info[1])], ["time", "gps"]]
+        # TODO: This code needs adjusting
         try:
             data_map = []
             plot_data_map = []
@@ -218,6 +219,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                     y_list_temp.append([xy_data, flight_dates_list[data_set]])
         x_list.append(x_list_temp)
         y_list.append(y_list_temp)
+
 
     # Checks through each x_data item.
     xy_pairs = []
@@ -445,109 +447,112 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
 
     plot_data = []
     for information in plot_information:
+        plot_data = []
         plot_data.append(select_plot_data_single(values_list, information, number_of_flights))
-    # Goes through the graph list and finds the matching values in the
-    # values_list and then appends these values to a new list with x or y
-    # stated. Returns plot data which has structure:
-    # [axis, [data_source, column]] This will go through all the data and
-    # plot it. Plot info is used to inform the code what graph style that
-    # it needs to plot. A final plot info of 0 means that the combination
-    # of x and y values is invalid and so the cell will be automatically
-    # removed. A final plot info of 1 means that there is just x and y,
-    # a final plot info of 2 means that there are n x values which must
-    # have the same name and unit (ie be the same information as the first
-    # x but from a different data source) and multiple y values with the
-    # same unit. A final plot info of 3 means that there are multiple y
-    # values which do not have the same unit and n x values which must have
-    # the same name and unit.
-    plot_info = 0
-    # checks the length of the cell, if there is one x and y value to
-    # plot
-    # TODO: This needs changing.. Assumption is wrong.
-    if len(plot_data[0][0]) == 2:  # Assumes all flights have the same data available as the first
-        plot_info = 1
-    if len(plot_data[0][0]) > 2:  # Assumes all flights have the same data available as the first
-        plot_info = 2
-    print("PLOT INFO 1", plot_info)
-    # Used to count the number of Xs
-    x_count = 0
-    for xy in plot_data[0][0]:
-        if xy[0][0][0] == "x":  # Assumes all flights have the same data available as the first
-            x_count += 1
-    print("X COUNT", x_count)
-    # if x count equals to 0 then plot info is set to 0
-    if x_count == 0:
+        # Goes through the graph list and finds the matching values in the
+        # values_list and then appends these values to a new list with x or y
+        # stated. Returns plot data which has structure:
+        # [axis, [data_source, column]] This will go through all the data and
+        # plot it. Plot info is used to inform the code what graph style that
+        # it needs to plot. A final plot info of 0 means that the combination
+        # of x and y values is invalid and so the cell will be automatically
+        # removed. A final plot info of 1 means that there is just x and y,
+        # a final plot info of 2 means that there are n x values which must
+        # have the same name and unit (ie be the same information as the first
+        # x but from a different data source) and multiple y values with the
+        # same unit. A final plot info of 3 means that there are multiple y
+        # values which do not have the same unit and n x values which must have
+        # the same name and unit.
         plot_info = 0
-    # If all the values are x's then plot info must be 0.
-    if x_count == len(plot_data[0][0]):
-        plot_info = 0
-    print("PLOT INFO 2", plot_info)
-    # TODO: Fix the plot_info. Make sure it is correct for all 3 values
-    # If there is more than 1 x value
-    if x_count > 1:
-        first_x_unit = True
+        # checks the length of the cell, if there is one x and y value to
+        # plot
+        # TODO: This needs changing.. Assumption is wrong.
+        if len(plot_data[0][0]) == 2:  # Assumes all flights have the same data available as the first
+            plot_info = 1
+        if len(plot_data[0][0]) > 2:  # Assumes all flights have the same data available as the first
+            plot_info = 2
+        print("PLOT INFO 1", plot_info)
+        # Used to count the number of Xs
+        x_count = 0
+        for xy in plot_data[0][0]:
+            if xy[0] == "x":  # Assumes all flights have the same data available as the first
+                x_count += 1
+        print("X COUNT", x_count)
+        # if x count equals to 0 then plot info is set to 0
+        if x_count == 0:
+            plot_info = 0
+        # If all the values are x's then plot info must be 0.
+        # TODO: ISSUE HERE:
+        if x_count == len(plot_data[0][0]):
+            plot_info = 0
+        print("PLOT INFO 2", plot_info)
+        # TODO: Fix the plot_info. Make sure it is correct for all 3 values
+        # TODO: Make sure that the data is being assigned correctly - looks like only one set is being plotted
+        # If there is more than 1 x value
+        if x_count > 1:
+            first_x_unit = True
+            if plot_info == 2:
+                # Check through the cells that contain x.
+                for data_set in range(number_of_flights):
+                    for xy_data in plot_data[0][data_set]:
+                        if xy_data[0] == "x":
+                            # Check if this is the first x value unit that has been
+                            # evaluated.
+                            if first_x_unit is True:
+                                # If it is then it sets it to be the reference unit
+                                reference_x_unit = xy_data[1][1]
+                                # Sets a reference heading for the x data.
+                                reference_x_heading = xy_data[1][0]
+                                first_x_unit = False
+                            else:
+                                # Sets the unit of the next item
+                                unit = xy_data[1][1]
+                                # Sets the heading of the next item
+                                heading = xy_data[1][0]
+                                if reference_x_unit == unit and reference_x_heading == heading:
+                                    plot_info = 2
+                                else:
+                                    # Removes graph if the x values provided have
+                                    # different units.
+                                    plot_info = 0
+                                    break
+
+            else:
+                # If there are two variables (plot info = 1) and both variables
+                # are x variables then do not plot the data.
+                plot_info = 0
+        print("PLOT INFO 3", plot_info)
+        # Sets first unit to True, so that the reference values are recorded
+        # when the first lot of y data arrives.
+        first_y_unit = True
+        # If there is more than 1 y value
         if plot_info == 2:
-            # Check through the cells that contain x.
+            # Check through the cells that contain y.
             for data_set in range(number_of_flights):
-                for xy_data in plot_data[data_set]:
-                    if xy_data[0] == "x":
-                        # Check if this is the first x value unit that has been
-                        # evaluated.
-                        if first_x_unit is True:
-                            # If it is then it sets it to be the reference unit
-                            reference_x_unit = xy_data[1][1]
-                            # Sets a reference heading for the x data.
-                            reference_x_heading = xy_data[1][0]
-                            first_x_unit = False
+                for xy_data in plot_data[0][data_set]:
+                    if xy_data[0] == "y":
+                        # Check if this is the first unit
+                        if first_y_unit is True:
+                            # If it is then it sets it to be the reference unit.
+                            reference_y_unit = xy_data[1][1]
+                            first_y_unit = False
                         else:
-                            # Sets the unit of the next item
+                            # If this is the second y value found.
                             unit = xy_data[1][1]
-                            # Sets the heading of the next item
-                            heading = xy_data[1][0]
-                            if reference_x_unit == unit and reference_x_heading == heading:
+                            # If the units are constant then plot them together
+                            if reference_y_unit == unit:
                                 plot_info = 2
                             else:
-                                # Removes graph if the x values provided have
-                                # different units.
-                                plot_info = 0
+                                plot_info = 3
                                 break
-
-        else:
-            # If there are two variables (plot info = 1) and both variables
-            # are x variables then do not plot the data.
-            plot_info = 0
-    print("PLOT INFO 3", plot_info)
-    # Sets first unit to True, so that the reference values are recorded
-    # when the first lot of y data arrives.
-    first_y_unit = True
-    # If there is more than 1 y value
-    if plot_info == 2:
-        # Check through the cells that contain y.
-        for data_set in range(number_of_flights):
-            for xy_data in plot_data[data_set]:
-                if xy_data[0] == "y":
-                    # Check if this is the first unit
-                    if first_y_unit is True:
-                        # If it is then it sets it to be the reference unit.
-                        reference_y_unit = xy_data[1][1]
-                        first_y_unit = False
-                    else:
-                        # If this is the second y value found.
-                        unit = xy_data[1][1]
-                        # If the units are constant then plot them together
-                        if reference_y_unit == unit:
-                            plot_info = 2
-                        else:
-                            plot_info = 3
-                            break
-    # Appends data to list
-    plot_list.append([plot_info, plot_data])
+        # Appends data to list
+        plot_list.append([plot_info, plot_data])
     print("LEN", len(plot_list[0]))
     # Plots data
     graph, axis_1 = plt.subplots()
     # Renames data to make it compatible with older code.
     plot_info = plot_list[0][0]
-    plot_data = plot_list[0][1]
+    plot_data = plot_list[0][1][0]
     # Counts how many lines are being drawn.
     line_count = 0
     # Creates a list with a label in it for the axis.
@@ -561,7 +566,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     for data_set in range(number_of_flights):
         x_list_temp = []
         y_list_temp = []
-        for xy_data in plot_data[0][data_set]:
+        for xy_data in plot_data[data_set]:
             # Checks to see what plot info equals.
             if plot_info == 1:
                 # Checks to see if the current data being viewed is y data
@@ -671,8 +676,8 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     # Records plot info for the left axis
     plot_info_left = plot_info
     # Renames data to make it compatible with older code.
-    plot_info = plot_list[0][0]
-    plot_data = plot_list[0][1]
+    plot_info = plot_list[1][0]
+    plot_data = plot_list[1][1][0]
     axis_2 = axis_1.twinx()
     # If there is Y axis data for the Right hand axis then plot the label
     if plot_info != 0:
@@ -684,7 +689,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     for data_set in range(number_of_flights):
         x_list_temp = []
         y_list_temp = []
-        for xy_data in plot_data[1][data_set]:
+        for xy_data in plot_data[data_set]:
             # Checks to see what plot info equals.
             if plot_info == 1:
                 # Checks to see if the current data being viewed is y data
@@ -864,7 +869,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                     plt.annotate(marker, [marker, axes_limits_center_y])
 
     plt.grid(which='both', axis='both', linewidth=0.2, color="0.1")
-    print("PLOT INFO", plot_info)
+    print("PLOT LIST INFO", plot_list[0][0], plot_list[1][0])
     plt.show()
 
 
