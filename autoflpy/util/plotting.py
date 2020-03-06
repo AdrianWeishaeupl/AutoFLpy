@@ -625,14 +625,13 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             lines += line
         # Puts in first item.
         text = xy_pairs[0][1][0]
-        # TODO: Fix title for plot_info == 2
         if single_flight is True:
             for pair in xy_pairs[1:-1]:
                 text += ", " + pair[1][0]
         else:
             # Finds the last set of data for titles
             data_set_len = int(len(xy_pairs)/number_of_flights)
-            for pair in xy_pairs[data_set_len + 1:-1]:
+            for pair in xy_pairs[data_set_len + 1:]:
                 text += ", " + pair[1][0]
 
         # Plots Legend.
@@ -660,10 +659,16 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             # Appends current line to list of lines.
             lines += line
         # Puts in first item.
-        # TODO: Fix title for plot_info == 3
         text = xy_pairs[0][1][0]
-        for pair in xy_pairs[1:-1]:
-            text += ", " + pair[1][0]
+        if single_flight is True:
+            for pair in xy_pairs[1:-1]:
+                text += ", " + pair[1][0]
+        else:
+            # Finds the last set of data for titles
+            data_set_len = int(len(xy_pairs) / number_of_flights)
+            for pair in xy_pairs[data_set_len + 2:]:
+                text += ", " + pair[1][0]
+
         # Adds and to end of text
         if len(xy_pairs) != 1:
             text += ", " + xy_pairs[len(xy_pairs) - 1][1][0]
@@ -745,16 +750,13 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             lines += line
         # Puts in first item.
         text = xy_pairs[0][1][0]
-        # TODO: Fix title for plot_info == 2
-        # Puts in first item.
-        text = xy_pairs[0][1][0]
         if single_flight is True:
             for pair in xy_pairs[1:-1]:
                 text += ", " + pair[1][0]
         else:
             # Finds the last set of data for titles
             data_set_len = int(len(xy_pairs)/number_of_flights)
-            for pair in xy_pairs[data_set_len + 1:-1]:
+            for pair in xy_pairs[data_set_len + 1:]:
                 text += ", " + pair[1][0]
 
         # Plots Y label.
@@ -777,10 +779,15 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             lines += line
         # Puts in first item.
         text = xy_pairs[0][1][0]
-        for pair in xy_pairs[1:-1]:
-            text += ", " + pair[1][0]
+        if single_flight is True:
+            for pair in xy_pairs[1:-1]:
+                text += ", " + pair[1][0]
+        else:
+            # Finds the last set of data for titles
+            data_set_len = int(len(xy_pairs) / number_of_flights)
+            for pair in xy_pairs[data_set_len + 2:]:
+                text += ", " + pair[1][0]
         # Adds and to end of text
-        # TODO: Fix title for plot_info == 3
         if len(xy_pairs) != 1:
             text += ", " + xy_pairs[len(xy_pairs) - 1][1][0] + " v " + xy_pairs[len(xy_pairs) - 1][0][0]
         # Plots X label.
