@@ -562,7 +562,6 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     # Counts number of y.
     y_list = []
 
-
     for data_set in range(number_of_flights):
         x_list_temp = []
         y_list_temp = []
@@ -1190,8 +1189,9 @@ def single_flight_detection(values_list):
     number_of_flights = len(values_list)
     if len(values_list) == 1:
         single_flight = True
-        values_list = [values_list[1]]  # Reassigns only the data to the values_list. Extra brackets are to keep the
+        values_list = [values_list[0][1]]  # Reassigns only the data to the values_list. Extra brackets are to keep the
         # list format the same as the multiple flights list
+        flight_data_list = [""]
     else:
         single_flight = False
         values_list_temp = []
