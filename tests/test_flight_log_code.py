@@ -93,8 +93,8 @@ class TestFlightLogCode(unittest.TestCase):
         # Imports data from template.
         with open(self.base_path + 'test_Input_File.json') as file:
             self.data = json.load(file)
-        self.flight_number = self.data["log_to_xlsx_input"]["flight_number"]
-        self.flight_date = self.data["log_to_xlsx_input"]["date"]
+        self.flight_number = self.data["log_to_xlsx_input"]["flight_number"].replace(" ", "").split(",")
+        self.flight_date = self.data["log_to_xlsx_input"]["date"].replace(" ", "").split(",")
         self.template_file_path = self.base_path
         self.template_file_name = self.data["flight_log_generator_input"][
             "template_file_name"]
@@ -105,19 +105,20 @@ class TestFlightLogCode(unittest.TestCase):
         self.arduino_flight_data_file_path = self.base_path + self.data[
             "flight_log_generator_input"]["arduino_flight_data_file_path"]
         self.arduino_flight_data_name = self.data["flight_log_generator_input"
-        ]["arduino_flight_data_name"]
+        ]["arduino_flight_data_name"].replace(" ", "").split(",")
         self.flight_log_file_name_header = "test_generated_flight_log"
         self.checklist_file_path = self.base_path
         self.start_time_hours = self.data["flight_log_generator_input"][
-            "start_time_hours"]
+            "start_time_hours"].replace(" ", "").split(",")
         self.end_time_hours = self.data["flight_log_generator_input"][
-            "end_time_hours"]
+            "end_time_hours"].replace(" ", "").split(",")
         self.metar_file_path = self.base_path + self.data[
             "flight_log_generator_input"]["metar_file_path"]
-        self.weather_data = self.data["weather_data"]
         self.comp_data_file_path = self.flight_data_file_path + self.flight_data_file_name[:-5] + ".pkl"
-        self.weather_data = self.data["weather_data"]
-        self.runway_data = self.data["runway_data"]
+        self.weather_data = flight_log_code.multi_dictionary_data_formatter(self.data["weather_data"], self.flight_date
+                                                                            , "weather_data")
+        self.runway_data = flight_log_code.multi_dictionary_data_formatter(self.data["runway_data"], self.flight_date,
+                                                                           "runway_data")
 
     def tearDown(self):
         # Removes generated flight log.
@@ -215,10 +216,10 @@ class TestFlightLogCode(unittest.TestCase):
         # Generates content
         content = flight_log_code.contents_opener(self.template_file_path,
                                                   self.template_file_name)
+        file_name_data = str(self.flight_date[0]) + "_" + str(self.flight_number[0])
         # Runs the flight log creator code
         flight_log_code.flight_log_creator(content, self.base_path,
-                                           self.flight_date,
-                                           self.flight_number,
+                                           file_name_data,
                                            self.flight_log_file_name_header)
         # Checks the file was created correctly
         file_exists = os.path.exists(self.base_path
@@ -326,8 +327,7 @@ class TestFlightLogCode(unittest.TestCase):
                            'CTUN', 'AOA', 'Action', 'ArduinoMicro']
         # Checks that the titles are present and in the correct palace
         for item in range(len(expected_titles)):
-            self.assertEqual(flight_data_and_axis[item][0],
-                             expected_titles[item])
+            self.assertEqual(expected_titles[item], flight_data_and_axis[1][item][0])
 
     def test_file_type_finder(self):
         # Detects xlsx files from the test_files folder
