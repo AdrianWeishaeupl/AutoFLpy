@@ -18,7 +18,7 @@ except ImportError:
 
 def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                   y_limits=("y_min", "y_max"), marker_list=(), scale=0.01,
-                  map_info=("altitude", "gps"), map_info_limits=(None, None), arm_data=False,
+                  map_info=["altitude", "gps"], map_info_limits=(None, None), arm_data=False,
                   title_text=None):
     """ Goes through graph data, finds source and gets required data from
     values. plot_information structure, [x, name, data_source].
@@ -75,40 +75,43 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         mapplot_active = False
 
     # Imports the map data used for colouring the line on the latitude-longitude plot.
-    # TODO: Decide how to plot two different flights on the map/two maps?
     if len(map_info) == 2 and mapplot_active is True:
         # Adds data series to be called for the time of the map_info and GPS time (later used for interpolating
         # the data)
         map_info = [map_info, ["time", str(map_info[1])], ["time", "gps"]]
-        # TODO: This code needs adjusting
-        try:
-            data_map = []
-            plot_data_map = []
-            for index in map_info:
-                values_list_index = 0
-                # Checks to see if the 'data source' recorded in the graph list
-                # matches the 'data sources' in the list structure values_list.
-                for values_list_data in values_list:
-                    # Finds data source.
-                    if index[1] == values_list_data[0].lower():
-                        data_map.append(values_list_index)
-                        # Finds corresponding time source.
-                        # Goes through each column searching for a match.
-                        for column in values_list[values_list_index][1:]:
-                            # Checks to see if they have the same title.
-                            if column[0].lower() == index[0]:
-                                # if they do then the data is appended.
-                                plot_data_map.append(column)
-                                # exits for loop if data has been appended.
-                                break
-                    values_list_index += 1
-        except IndexError:
-            print('map_info input variables not found. Check the input spelling and that the variable exists.')
+        data_map = []
+        plot_data_map = []
+        for data_set in range(number_of_flights):
+            data_map_temp = []
+            plot_data_map_temp = []
+            try:
+                for index in map_info:
+                    values_list_index = 0
+                    # Checks to see if the 'data source' recorded in the graph list
+                    # matches the 'data sources' in the list structure values_list.
+                    for values_list_data in values_list[data_set]:
+                        # Finds data source.
+                        if index[1] == values_list_data[0].lower():
+                            data_map_temp.append([values_list_index, flight_dates_list[data_set]])
+                            # Finds corresponding time source.
+                            # Goes through each column searching for a match.
+                            for column in values_list[data_set][values_list_index][1:]:
+                                # Checks to see if they have the same title.
+                                if column[0].lower() == index[0]:
+                                    # if they do then the data is appended.
+                                    plot_data_map_temp.append([column, flight_dates_list[data_set]])
+                                    break
+
+                        values_list_index += 1
+                data_map.append(data_map_temp)
+                plot_data_map.append(plot_data_map_temp)
+            except IndexError:
+                print('map_info input variables not found. Check the input spelling and that the variable exists.')
+
     elif map_info != 2 and mapplot_active is True:
         print('map_info variable entered incorrectly. Format should be: map_info=["data", "data_set"].')
     else:
         pass
-
     # Goes through the graph list and finds the matching values in the values_
     # list and then appends these values to a new list with x or y stated.
     # returns plot data which has structure: [axis, [data_source, column]]
@@ -237,19 +240,28 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                         # against each other.
                         xy_pairs.append([x_data[0][1], y_data[0][1], flight_dates_list[data_set]])
 
-    if plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude' and map_modules_imported is True:
-        # Plots a map behind latitude and longitude data.
-        plt.rcParams["figure.figsize"] = (15, 15)
-        # Assigns data to variables
-        lat = y[2]
-        long = x[2]
-        # Plots map with data
-        backplt_map(lat, long, z_var=plot_data_map, text_title=title_text, z_var_limits=map_info_limits)
-        backplt_map(lat, long, z_var=plot_data_map, scale_factor=(1 / scale), text_title=title_text,
-                    z_var_limits=map_info_limits)
+    if plot_info == 1 and x[0][0] == 'Longitude' and y[0][0] == 'Latitude' and map_modules_imported is True:
+        # Plots a separate map for each flight
+        if title_text is None:
+            generate_title = True
+        for data_set in range(number_of_flights):
+            # Plots a map behind latitude and longitude data.
+            plt.rcParams["figure.figsize"] = (15, 15)
+            # Assigns data to variables
+            lat = y[data_set][2]
+            long = x[data_set][2]
+            if generate_title is True:
+                title_text = "Latitude v Longitude for " + str(flight_dates_list[data_set])
+            # Plots map with data
+            backplt_map(lat, long, z_var=plot_data_map[data_set], text_title=title_text,
+                        z_var_limits=map_info_limits)
+            # Plots a second map only if one flight is being analysed
+            if single_flight is True:
+                backplt_map(lat, long, z_var=plot_data_map[data_set], scale_factor=float(1 / scale),
+                            text_title=title_text, z_var_limits=map_info_limits)
         return
 
-    elif plot_info == 1 and x[0] == 'Longitude' and y[0] == 'Latitude' and map_modules_imported is False:
+    elif plot_info == 1 and x[0][0] == 'Longitude' and y[0][0] == 'Latitude' and map_modules_imported is False:
         # Print the following if the map modules are not installed.
         print('Backplotting map modules not installed. Check that geopandas, '
               + 'contextily and pyproj are installed correctly for this '
@@ -352,7 +364,6 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         else:
             title = text + " v " + xy_pairs[0][0][0]
     # if plot info is equal to 0 then nothing is returned
-    print("PLOT INFO", plot_info)
     if plot_info == 0:
         print('No data present or variables entered incorrectly.')
         return
@@ -412,8 +423,6 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     # TODO: KEEP AN EYE ON THESE:
     text = None
     title = None
-    x = None
-    y = None
     reference_y_unit = None
     reference_x_unit = None
     reference_x_heading = None
@@ -617,6 +626,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             lines += line
         # Puts in first item.
         text = xy_pairs[0][1][0]
+        # TODO: Fix title for plot_info == 2
         if single_flight is True:
             for pair in xy_pairs[1:-1]:
                 text += ", " + pair[1][0]
@@ -651,7 +661,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             # Appends current line to list of lines.
             lines += line
         # Puts in first item.
-        # TODO: Change generated title
+        # TODO: Fix title for plot_info == 3
         text = xy_pairs[0][1][0]
         for pair in xy_pairs[1:-1]:
             text += ", " + pair[1][0]
@@ -736,7 +746,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
             lines += line
         # Puts in first item.
         text = xy_pairs[0][1][0]
-
+        # TODO: Fix title for plot_info == 2
         # Puts in first item.
         text = xy_pairs[0][1][0]
         if single_flight is True:
@@ -771,6 +781,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         for pair in xy_pairs[1:-1]:
             text += ", " + pair[1][0]
         # Adds and to end of text
+        # TODO: Fix title for plot_info == 3
         if len(xy_pairs) != 1:
             text += ", " + xy_pairs[len(xy_pairs) - 1][1][0] + " v " + xy_pairs[len(xy_pairs) - 1][0][0]
         # Plots X label.
@@ -856,7 +867,6 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                     plt.annotate(marker, [marker, axes_limits_center_y])
 
     plt.grid(which='both', axis='both', linewidth=0.2, color="0.1")
-    print("PLOT LIST INFO", plot_list[0][0], plot_list[1][0])
     plt.show()
 
 
@@ -865,7 +875,6 @@ def backplt_map(lat, long, z_var, scale_factor=1, text_title=None, z_var_limits=
     This plots a map behind some latitude-longitude data and colours the line according to a third variable (z_var).
 
     """
-
     # Sets titles for the data frame
     column_titles = np.array(['index', 'lat, long'])
     index = range(len(lat))
@@ -914,14 +923,14 @@ def backplt_map(lat, long, z_var, scale_factor=1, text_title=None, z_var_limits=
 
     # Processes data for the colour scale:
     # Interpolates the data for the colour series over the data's time scale
-    # z_var[1][2] = colour variable time data
-    # z_var[0][2] = colour variable data
-    z_var_interp = interp.interp1d(z_var[1][2], z_var[0][2])
+    # z_var[1][0][2] = colour variable time data
+    # z_var[0][0][2] = colour variable data
+    z_var_interp = interp.interp1d(z_var[1][0][2], z_var[0][0][2])
 
     # Creates the data series of same length as the latitude/longitude data:
-    # z_var[2][2] = gps time data
+    # z_var[2][0][2] = gps time data
     colour_data_uncut = []
-    for point in [p for p in z_var[2][2] if min(z_var[1][2]) <= p <= max(z_var[1][2])]:
+    for point in [p for p in z_var[2][0][2] if min(z_var[1][0][2]) <= p <= max(z_var[1][0][2])]:
         colour_data_uncut.append(z_var_interp(point))
 
     # TODO: THIS NEEDS FIXING IN A WAY THAT WORKS BETTER. NEED TO MATCH THE TIME STAMPS OF THE LOCATION DATA WITH
@@ -962,6 +971,7 @@ def backplt_map(lat, long, z_var, scale_factor=1, text_title=None, z_var_limits=
         upper_limit = None
 
     # Adds geometry data
+    # Highlights user defined outliers
     for index in range(len(colour_data)):
         if lower_limit is not None:
             if colour_data[index] <= lower_limit:
@@ -971,7 +981,6 @@ def backplt_map(lat, long, z_var, scale_factor=1, text_title=None, z_var_limits=
             if colour_data[index] >= upper_limit:
                 high_colour_lat_values.append(geometry_data[0][index])
                 high_colour_long_values.append(geometry_data[1][index])
-
     if scale_factor <= 200:
         # Plots the geometry data using matplotlib
         plt.plot(geometry_data[0], geometry_data[1], 'r', zorder=1,
@@ -1069,7 +1078,7 @@ def backplt_map(lat, long, z_var, scale_factor=1, text_title=None, z_var_limits=
     if text_title is not None:
         map_title = text_title
     elif scale_factor <= 5:
-        map_title += " v " + str(z_var[0][0])
+        map_title += " v " + str(z_var[0][0][0])
 
     # Splits title if its width exceeds 60
     wraped_title = textwrap.wrap(map_title, width=60)
@@ -1089,9 +1098,9 @@ def backplt_map(lat, long, z_var, scale_factor=1, text_title=None, z_var_limits=
         # Plots the colour map
         cbar = plt.colorbar(mapplot, cax=cax)
         # Adds a label to the colour bar
-        # z_var[0][0] = colour variable name
-        # z_var[0][1] = colour variable units
-        cbar.ax.set_ylabel(str(z_var[0][0]) + " (" + str(z_var[0][1]) + ")", rotation=90)
+        # z_var[0][0][0] = colour variable name
+        # z_var[0][0][1] = colour variable units
+        cbar.ax.set_ylabel(str(z_var[0][0][0]) + " (" + str(z_var[0][0][1]) + ")", rotation=90)
 
     plt.show()
     return
