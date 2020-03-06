@@ -16,18 +16,19 @@ def take_off_point_finder(values_list, alt_sensitivity=0.3, groundspeed_sensitiv
     # Imports GPS data
     gps_index = [["altitude", "gps"], ["groundspeed", "gps"], ["time", "gps"]]
     gps_data = []
+
     for index in gps_index:
         values_list_index = 0
         # sets value_found to a default of False
         # Checks to see if the 'data source' recorded in the graph list
         # matches the 'data sources' in the list structure values_list.
-        for values_list_data in values_list:
+        for values_list_data in values_list[0][1]:
             # Finds data source.
             if index[1] == values_list_data[0].lower():
                 index.append(values_list_index)
                 # Finds corresponding time source.
                 # Goes through each column searching for a match.
-                for column in values_list[values_list_index][1:]:
+                for column in values_list[0][1][values_list_index][1:]:
                     # Checks to see if they have the same title.
                     if column[0].lower() == index[0]:
                         # if they do then the data is appended.
