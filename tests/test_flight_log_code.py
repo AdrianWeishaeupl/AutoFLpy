@@ -117,8 +117,10 @@ class TestFlightLogCode(unittest.TestCase):
         self.comp_data_file_path = self.flight_data_file_path + self.flight_data_file_name[:-5] + ".pkl"
         self.weather_data = flight_log_code.multi_dictionary_data_formatter(self.data["weather_data"], self.flight_date
                                                                             , "weather_data")
+        self.weather_data_dict = self.data["weather_data"]
         self.runway_data = flight_log_code.multi_dictionary_data_formatter(self.data["runway_data"], self.flight_date,
                                                                            "runway_data")
+        self.runway_data_dict = self.data["runway_data"]
 
     def tearDown(self):
         # Removes generated flight log.
@@ -352,9 +354,9 @@ class TestFlightLogCode(unittest.TestCase):
 
     def test_dictionary_reader(self):
         # Returns a string of formatted weather data
-        read_data = flight_log_code.dictionary_reader(self.weather_data, units_present=True)
+        read_data = flight_log_code.dictionary_reader(self.weather_data_dict, units_present=True)
         # Adds a string of formatted runway data
-        read_data += flight_log_code.dictionary_reader(self.runway_data, units_present=False)
+        read_data += flight_log_code.dictionary_reader(self.runway_data_dict, units_present=False)
         expected_results = ["Action time : 12:34 hh:mm", "Pressure : 1234567 Pa", "Temperature : -12.3 C",
                             "Wind direction : 123 degrees", "Wind speed : 12.3 mps", "take off direction : 321",
                             "runway surface : XYZ", "surface condition : ZYX"]
