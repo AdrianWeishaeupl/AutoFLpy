@@ -5,8 +5,8 @@
 		"excel_data_file_path": "",
 		"date": "20190110",
 		"flight_number": "1"
-	},
-	
+		
+	},	
 	"flight_log_generator_input": {
 		"template_file_path": "",
 		"template_file_name": "",
