@@ -174,9 +174,10 @@ def no_metar_returner(location, year, month, day, month_end, day_end,
     """Replaces the key word in a cell with note that no METAR information was
     available from the day"""
     # finds the locations that the metars were recorded from.
-    metar_text = "    \"No METARs for " + location + " for the date " + day + \
-                 month + year + " to the date " + day_end + month_end + year + " from a starting time of " \
-                 + start_time_hours + ":00 and an end time of " + str(int(end_time_hours) - 1) + ":59.\\n\""
+    metar_text = "    \"No METARs for " + str(location) + " for the date " + str(day) + \
+                 str(month) + str(year) + " to the date " + str(day_end) + str(month_end) + str(year) + \
+                 " from a starting time of " \
+                 + str(start_time_hours) + ":00 and an end time of " + str(int(end_time_hours) - 1) + ":59.\\n\""
     # Creates replacement text for the METAR key.
     metar_replacement = "\n  {\n " + \
                         "  \"cell_type\": \"markdown\",\n" + \
