@@ -343,7 +343,7 @@ class TestFlightLogCode(unittest.TestCase):
 
     def test_compile_and_compress(self):
         # Runs the compiler and compressor.
-        flight_log_code.compile_and_compress(self.flight_data_file_path, self.flight_data_file_name,
+        flight_log_code.compile_and_compress(self.flight_data_file_path, [self.flight_data_file_name],
                                              self.arduino_flight_data_file_path, self.arduino_flight_data_name,
                                              self.comp_data_file_path)
         pickle_file_name = self.base_path + "test_xlsx.pkl"  # Defines the file name
