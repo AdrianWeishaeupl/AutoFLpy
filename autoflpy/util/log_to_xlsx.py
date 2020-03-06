@@ -163,7 +163,6 @@ def log_reader_multi(log_file_paths, name_converter_file_path, data_sources_path
     """Runs the log_reader for once per flight log entered in the Input_file.json"""
     for flight in range(len(flight_numbers)):
         print("Creating workbook for {}".format(excel_file_names[flight]))
-        print()
 
         log_reader(log_file_paths[flight], name_converter_file_path, data_sources_path, excel_file_path,
                    excel_file_names[flight], flight_dates[flight], flight_numbers[flight], weather_data_multi[flight],
