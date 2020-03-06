@@ -991,7 +991,7 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     """
     This is used to compile all the entered data. This is then pickled and saved for faster loading.
 
-    flight_data_file_path, flight_data_file_names, arduino_data_file_path and arduino_data_file_name are of type list.
+    flight_data_file_names and arduino_data_file_name are of type list.
     """
     values_list = []
     for data_set in range(len(flight_data_file_name)):
