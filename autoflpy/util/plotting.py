@@ -1129,15 +1129,19 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
     ["vibez", "vibe"]
     """
     take_off_time_calculated = False
+    number_of_flights = len(values_list)
 
     # TODO: Create a function to automatically tune the sensitivity - start high and reduce it until it doesn't make
     #  sense anymore.
-    if take_off_time is None:
+    if take_off_time is None and number_of_flights == 1:
         take_off_time_alt, take_off_groundspeed, take_off_time_spd = \
             take_off_detection.take_off_point_finder(values_list, alt_sensitivity=alt_sensitivity,
                                                      groundspeed_sensitivity=groundspeed_sensitivity)
         take_off_time = take_off_time_alt
         take_off_time_calculated = True
+    elif take_off_time is None:
+        raise SyntaxError("Automated take-off detection only works for a single flight. To use this system with "
+                          "multiple flights, manually select the take-off time using the take_off_time argument")
     else:
         take_off_groundspeed = None
         take_off_time_spd = None
