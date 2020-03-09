@@ -14,7 +14,9 @@ import pickle as pk
 
 def load_values_list_from_pickle(data_file_path):
     # Uncompress the data.
-    values_list = pk.load(open(data_file_path, "rb"))
+    data = open(data_file_path, "rb")
+    values_list = pk.load(data)
+    data.close()
     return values_list
 
 
@@ -44,9 +46,9 @@ class TestTakeOffDetection(unittest.TestCase):
             take_off_groundspeed_list.append(take_off_groundspeed)
             take_off_time_spd_list.append(take_off_time_spd)
 
-        expected_take_off_time_alt_list = [33.214209, 33.414129, 33.614049, 34.413729, 34.813569]
-        expected_take_off_groundspeed_list = [20.248, 21.471999999999998, 22.54, 25.416, 26.299]
-        expected_take_off_time_spd_list = [30.813503, 30.813503, 31.014256, 31.414096, 31.614016]
+        expected_take_off_time_alt_list = [33.21, 33.41, 33.61, 34.41, 34.81]
+        expected_take_off_groundspeed_list = [20.25, 21.47, 22.54, 25.42, 26.30]
+        expected_take_off_time_spd_list = [30.81, 30.81, 31.01, 31.41, 31.61]
 
         # Compares the generated values to the expected values
         for item in range(len(sensitivity_list)):
@@ -60,8 +62,8 @@ class TestTakeOffDetection(unittest.TestCase):
         # values_list[0] is the GPS data set
         # values_list[0][x] is a single set of data as [descriptor, units, [data]]
         # values_list[0][x][2] is a single set of data
-        data_set_altitude = values_list[0][8][2]
-        data_set_groundspeed = values_list[0][9][2]
+        data_set_altitude = values_list[0][1][0][8]
+        data_set_groundspeed = values_list[0][1][0][9]
         data_sets = [data_set_altitude, data_set_groundspeed]
 
         constant_value_points_list = []
@@ -73,7 +75,7 @@ class TestTakeOffDetection(unittest.TestCase):
         for sensitivity in sensitivities:
             for data_set in data_sets:
                 constant_value_points, mean, data_point, rms_error = \
-                    take_off_detection.significant_data_change_via_rms_error(data_set, sensitivity)
+                    take_off_detection.significant_data_change_via_rms_error(data_set[2], sensitivity)
                 constant_value_points_list.append(constant_value_points)
                 mean_list.append(mean)
                 data_point_list.append(data_point)

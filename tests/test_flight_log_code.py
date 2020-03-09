@@ -102,6 +102,7 @@ class TestFlightLogCode(unittest.TestCase):
             "flight_log_generator_input"]["flight_log_destination"]
         self.flight_data_file_path = self.base_path  # Path to xlsx file
         self.flight_data_file_name = "test_xlsx.xlsx"
+        self.flight_data_file_name_list = ["test_xlsx.xlsx"]
         self.arduino_flight_data_file_path = self.base_path + self.data[
             "flight_log_generator_input"]["arduino_flight_data_file_path"]
         self.arduino_flight_data_name = self.data["flight_log_generator_input"
@@ -114,7 +115,7 @@ class TestFlightLogCode(unittest.TestCase):
             "end_time_hours"].replace(" ", "").split(",")
         self.metar_file_path = self.base_path + self.data[
             "flight_log_generator_input"]["metar_file_path"]
-        self.comp_data_file_path = self.flight_data_file_path + self.flight_data_file_name[:-5] + ".pkl"
+        self.comp_data_file_path = self.flight_data_file_path + "test_xlsx.pkl"
         self.weather_data = flight_log_code.multi_dictionary_data_formatter(self.data["weather_data"], self.flight_date
                                                                             , "weather_data")
         self.weather_data_dict = self.data["weather_data"]
@@ -126,16 +127,17 @@ class TestFlightLogCode(unittest.TestCase):
         # Removes generated flight log.
         base_path = os.path.join(os.path.dirname(__file__),
                                  "test_files") + os.sep
-        generated_file_name = base_path + \
-                              "test_generated_flight_log20190123_2.ipynb"
-        if os.path.exists(generated_file_name):
-            os.remove(generated_file_name)
+        generated_file_names = [base_path + "test_generated_flight_logtest_xlsx.ipynb", base_path +
+                               "test_generated_flight_log20190123_2.ipynb"]
+        for item in range(len(generated_file_names)):
+            if os.path.exists(generated_file_names[item]):
+                os.remove(generated_file_names[item])
 
         # Removes pickled data.
-        pickle_file_name = base_path + \
-                           "test_xlsx.pkl"
-        if os.path.exists(pickle_file_name):
-            os.remove(pickle_file_name)
+        pickle_file_names = [base_path + "test_xlsx.pkl"]
+        for item in range(len(pickle_file_names)):
+            if os.path.exists(pickle_file_names[item]):
+                os.remove(pickle_file_names[item])
 
     def test_flight_log_maker(self):
         self.ICAO_airfield = nearest_ICAO_finder.icao_finder(
@@ -145,7 +147,7 @@ class TestFlightLogCode(unittest.TestCase):
                                          self.template_file_name,
                                          self.flight_log_file_path,
                                          self.flight_data_file_path,
-                                         self.flight_data_file_name,
+                                         self.flight_data_file_name_list,
                                          self.arduino_flight_data_file_path,
                                          self.arduino_flight_data_name,
                                          self.flight_date,
@@ -160,8 +162,7 @@ class TestFlightLogCode(unittest.TestCase):
                                          self.runway_data)
         # This code tests the flight_log_maker function.
         # First, check that a file has been created.
-        test_flight_log_file_path = self.base_path + \
-                                    'test_generated_flight_log20190123_2.ipynb'
+        test_flight_log_file_path = self.base_path + 'test_generated_flight_logtest_xlsx.ipynb'
         if os.path.exists(test_flight_log_file_path) is True:
             file_exists = True
         else:
@@ -202,8 +203,8 @@ class TestFlightLogCode(unittest.TestCase):
             # Filters the checklist for the correct data
             filtered_frame = \
                 flight_log_code.checklist_finder(frame_list,
-                                                 self.flight_number,
-                                                 self.flight_date)
+                                                 self.flight_number[0],
+                                                 self.flight_date[0])
             # Check that the correct data was output
             battery_voltage = filtered_frame['Battery Voltages'][2]
             self.assertEqual('25.2', str(battery_voltage))
@@ -240,9 +241,9 @@ class TestFlightLogCode(unittest.TestCase):
             self.checklist_file_path, "Checklists_emergency.xlsx")
         # Filters checklist for the current flight
         filtered_frame_nominal = flight_log_code.checklist_finder(
-            frame_list_nominal, self.flight_number, self.flight_date)
+            frame_list_nominal, self.flight_number[0], self.flight_date[0])
         filtered_frame_emergency = flight_log_code.checklist_finder(
-            frame_list_emergency, self.flight_number, self.flight_date)
+            frame_list_emergency, self.flight_number[0], self.flight_date[0])
         # Runs the flight_log_checklist code
         content = \
             flight_log_code.flight_log_checklist(filtered_frame_nominal,

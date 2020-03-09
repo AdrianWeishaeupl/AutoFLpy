@@ -53,8 +53,8 @@ class TestMetarProcessing(unittest.TestCase):
                                                    '01', '23', '9', '10',
                                                    self.base_path)
         # Runs METAR returner
-        content = metar_processing.metar_returner(metar_data, content, 1,
-                                                  2019,
+        content = metar_processing.metar_returner(metar_data, content, [1],
+                                                  [2019], 1,
                                                   replace_key="METAR_"
                                                   "INFORMATION")
         # Assigns expected metar information
@@ -75,7 +75,7 @@ class TestMetarProcessing(unittest.TestCase):
         # Runs no_METAR_returner code
         content = metar_processing.no_metar_returner('EGHE', '2019', '01', '23',
                                                      '01', '23', '9', '10',
-                                                     content, replace_key="META"
+                                                     content, 1, replace_key="META"
                                                      "R_INFORMATION")
         # Assigns expected content
         expected_content = 'No METARs for EGHE for the date 23012019 to the date 23012019 from a '\
@@ -83,6 +83,7 @@ class TestMetarProcessing(unittest.TestCase):
         # Checks that the expected content is present in the content
         information_present = check_str_in_content(expected_content,
                                                    content)
+        print(content)
         self.assertEqual(1, information_present)
 
     def test_METAR_quota_returner(self):
@@ -97,7 +98,7 @@ class TestMetarProcessing(unittest.TestCase):
         content = metar_processing.metar_quota_returner(content, 'test20190123',
                                                         'EGHE', '2019', '01',
                                                         '23', '01', '23', '9',
-                                                        '10', self.base_path,
+                                                        '10', self.base_path, 1,
                                                         replace_key="METAR_INFO"
                                                         "RMATION")
         expected_content = 'metar_replacer(os.getcwd(),'
@@ -120,7 +121,7 @@ class TestMetarProcessing(unittest.TestCase):
         metar_processing.metar_replacer(self.template_file_path,
                                         template_temp_name,
                                         'EGHE', '2019', '01', '23',
-                                        '01', '23', '9', '10',
+                                        '01', '23', '9', '10', 0,
                                         self.base_path)
         # Check information was replaced correctly
         # Re-reads content
