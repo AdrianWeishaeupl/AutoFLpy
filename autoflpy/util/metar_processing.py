@@ -180,7 +180,8 @@ def no_metar_returner(location, year, month, day, month_end, day_end,
                       str(month[flight]) + str(year[flight]) + " to the date " + str(day_end[flight]) + \
                       str(month_end[flight]) + str(year[flight]) + \
                       " from a starting time of " + str(start_time_hours[flight]) + ":00 and an end time of " + \
-                      str(int(end_time_hours[flight]) - 1) + ":59.\\n\""
+                      str(int(end_time_hours[flight]) - 1) + ":59.\\n\",\n"
+    metar_text = metar_text[:-1]  # Removes "," from the end for json validity.
     # Creates replacement text for the METAR key.
     metar_replacement = "\n  {\n " + \
                         "  \"cell_type\": \"markdown\",\n" + \
