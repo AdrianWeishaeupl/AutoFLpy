@@ -176,11 +176,11 @@ def no_metar_returner(location, year, month, day, month_end, day_end,
     metar_text = ""
     for flight in range(number_of_flights):
         # finds the locations that the metars were recorded from.
-        metar_text += "    \"No METARs for " + str(location) + " for the date " + str(day) + \
-                      str(month) + str(year) + " to the date " + str(day_end) + \
-                      str(month_end) + str(year) + \
+        metar_text += "    \"No METARs for " + str(location[flight]) + " for the date " + str(day[flight]) + \
+                      str(month[flight]) + str(year[flight]) + " to the date " + str(day_end[flight]) + \
+                      str(month_end[flight]) + str(year[flight]) + \
                       " from a starting time of " + str(start_time_hours[flight]) + ":00 and an end time of " + \
-                      str(int(end_time_hours) - 1) + ":59.\\n\""
+                      str(int(end_time_hours[flight]) - 1) + ":59.\\n\""
     # Creates replacement text for the METAR key.
     metar_replacement = "\n  {\n " + \
                         "  \"cell_type\": \"markdown\",\n" + \

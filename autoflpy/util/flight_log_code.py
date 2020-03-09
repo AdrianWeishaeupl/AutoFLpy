@@ -1090,7 +1090,6 @@ def multi_dictionary_data_formatter(dictionaries, flight_dates, debug_name):
         else:
             pass
 
-
     # Checks that the dictionary data lengths are equal to the number of flights
     for item in dictionaries.values():
         if len(item.replace(" ", "").split(",")) == len(flight_dates):

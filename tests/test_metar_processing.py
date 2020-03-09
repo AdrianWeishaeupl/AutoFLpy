@@ -73,8 +73,8 @@ class TestMetarProcessing(unittest.TestCase):
                                                          content)
         self.assertEqual(1, metar_information_present)
         # Runs no_METAR_returner code
-        content = metar_processing.no_metar_returner('EGHE', '2019', '01', '23',
-                                                     '01', '23', '9', '10',
+        content = metar_processing.no_metar_returner(['EGHE'], ['2019'], ['01'], ['23'],
+                                                     ['01'], ['23'], ['9'], ['10'],
                                                      content, 1, replace_key="META"
                                                      "R_INFORMATION")
         # Assigns expected content
@@ -96,9 +96,9 @@ class TestMetarProcessing(unittest.TestCase):
         self.assertEqual(1, metar_information_present)
         # Runs METAR_quota_returner
         content = metar_processing.metar_quota_returner(content, 'test20190123',
-                                                        'EGHE', '2019', '01',
-                                                        '23', '01', '23', '9',
-                                                        '10', self.base_path, 1,
+                                                        ['EGHE'], ['2019'], ['01'],
+                                                        ['23'], ['01'], ['23'], ['9'],
+                                                        ['10'], self.base_path, 1,
                                                         replace_key="METAR_INFO"
                                                         "RMATION")
         expected_content = 'metar_replacer(os.getcwd(),'
