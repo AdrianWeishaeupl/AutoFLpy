@@ -253,7 +253,7 @@ def flight_log_maker(template_file_path, template_file_name,
                                              str(flight_dates)[4:6],
                                              str(flight_dates)[6:8],
                                              start_times_hours, end_times_hours,
-                                             contents,
+                                             contents, number_of_flights,
                                              replace_key="METAR_INFORMATION")
                 # Replaces JFLTS METAR text with nothing if data is available
                 contents = contents.replace("METAR_LINE", "")
