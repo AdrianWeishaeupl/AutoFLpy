@@ -77,12 +77,11 @@ class TestMetarProcessing(unittest.TestCase):
                                                      content, 1, replace_key="META"
                                                      "R_INFORMATION")
         # Assigns expected content
-        expected_content = 'No METARs for EGHE for the date 23012019 to the date 23012019 from a '\
-            'starting time of 9:00 and an end time of 9:59.'
+        expected_content = 'No METARs for EGHE for the date 23/01/2019 to the date 23/01/2019 from a starting time of' \
+                           ' 9:00 and an end time of 9:59.'
         # Checks that the expected content is present in the content
         information_present = check_str_in_content(expected_content,
                                                    content)
-        print(content)
         self.assertEqual(1, information_present)
 
     def test_METAR_quota_returner(self):
