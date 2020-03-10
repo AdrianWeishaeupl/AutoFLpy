@@ -2,6 +2,12 @@
 History
 =======
 
+1.1.2 (2020-03-09)
+------------------
+
+* Multi-flight comparison functionality added
+
+
 1.1.1 (2020-02-19)
 ------------------
 

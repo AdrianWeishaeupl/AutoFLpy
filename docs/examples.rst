@@ -98,3 +98,25 @@ The following figure shows the use of this feature.
 .. image:: images/Ex_take_off.png
 	:width: 900
 	:alt: Image of the take off data plotted through the take_off_graph function.
+
+
+Multiple Flight Comparison
+--------------------------
+
+Autoflpy allows for the user to compare multiple flights in the same Jupyter Notebook. To do this, data should be entered into the Input_File.json for each flight separated by a ",". For example::
+
+"log_to_xlsx_input": {
+		"log_file_name": "Flight1.log, Flight2.log",
+		"log_file_path": "",
+		"excel_data_file_path": "",
+		"date": "20190309, 20190209",
+		"flight_number": "1, 2"}
+
+Variables are entered into the plotting functions as usual and plotted for both sets of data if present. Some functionality is reduced including the automated take-off detection (reverted to manual only) and plotting the arm data when plotting multiple flights simultaneously.
+
+To aid with the lining up of data, the time_x_offset argument can be added to the plot to allow the user to shift the data along the time axis. It should only be used in the first figure to be plotted and, as it directly edits the imported data, all subsequent figures will be plotted with the new data. This argument takes one number for each flight being plotted and subtracts this from the time data:
+
+.. image:: images/Ex_time_x_offset.png
+	:width: 900
+	:alt: Image of two simulated flights with the time axes shifted through the time_x_offset argument.
+

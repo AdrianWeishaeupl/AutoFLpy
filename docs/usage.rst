@@ -3,7 +3,7 @@ Usage
 =====
 
 First time users
-----------------
+================
 
 AutoFLpy is a code designed to allow drone pilots and operators to easily analyse flight data in the field. It works by reading the data collected by the flight computer (eg. PixHawk) and plotting the data in a Jupyter Notebook. This notebook is fully customisable and allows the user to plot any variable collected by its self or with other data in the same plot.
 
@@ -48,6 +48,7 @@ The Input_file.json is structured as follows::
 		}
 	}
 
+For analysing multiple flights in the same Jupyter Notebook, enter the data for the subsequent flights into the Input_File.json separated by a comma (,). Please see the examples page for more details.
 
 -----------------
 
@@ -68,17 +69,17 @@ Folder structure generated:
 
 	user_files
 	
-	* arduino_data				Contains sample arduino data. User data can be added here.
+	* arduino_data					Contains sample arduino data. User data can be added here.
 	
 	* checklists					Contains sample checklists. User data can be added here.
 	
 	* excel_file_path				Contains excel files generated from the log files.
 	
-	* flight_logs_generated		Contains the generated flight logs.
+	* flight_logs_generated			Contains the generated flight logs.
 	
-	* log_files					Contains the user input flight data in the .log format.
+	* log_files						Contains the user input flight data in the .log format.
 	
-	* METAR_storage				This acts as a database for the METAR data.
+	* METAR_storage					This acts as a database for the METAR data.
 
 The user should place any flight data to be analysed into the log_files folder if no specific directory is set in the input file.
 
@@ -89,7 +90,7 @@ The following should be noted when editing the default template notebook:
 
 
 Principle of template operation
--------------------------------
+===============================
 The template will only accept capital letters as inputs in the cells. Only certain words in certain configurations will be checked. Autoflpy will use these to add/ remove information or cells based on external information.
 
 Graphs
