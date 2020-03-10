@@ -73,8 +73,7 @@ class TestMetarProcessing(unittest.TestCase):
                                                          content)
         self.assertEqual(1, metar_information_present)
         # Runs no_METAR_returner code
-        content = metar_processing.no_metar_returner(['EGHE'], ['2019'], ['01'], ['23'],
-                                                     ['01'], ['23'], ['9'], ['10'],
+        content = metar_processing.no_metar_returner(['EGHE'], [20190123], [20190123], ['9'], ['10'],
                                                      content, 1, replace_key="META"
                                                      "R_INFORMATION")
         # Assigns expected content
