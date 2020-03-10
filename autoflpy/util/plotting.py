@@ -11,6 +11,7 @@ try:
     import geopandas as gpd
     import contextily as ctx
     from pyproj import Proj as proj, transform
+
     map_modules_imported = True
 except ImportError:
     map_modules_imported = False
@@ -19,7 +20,7 @@ except ImportError:
 def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                   y_limits=("y_min", "y_max"), marker_list=(), scale=0.01,
                   map_info=["altitude", "gps"], map_info_limits=(None, None), arm_data=False,
-                  title_text=None):
+                  title_text=None, time_x_offset=[]):
     """ Goes through graph data, finds source and gets required data from
     values. plot_information structure, [x, name, data_source].
 
@@ -53,10 +54,14 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     # Changes the values list to only include the data
     values_list, flight_dates_list, single_flight, number_of_flights = single_flight_detection(values_list)
 
+    # Applies the user defined offset to the values list (NOTE: This currently works for all figures and only needs to
+    # be done once in the notebook.
+    values_list = manual_time_offset(values_list, time_x_offset, number_of_flights)
+
     # Formats the arm_data and checks that all the data is present
     arm_data, arm_plot_data = arm_data_formatting(arm_data, values_list, number_of_flights, flight_dates_list)
 
-    #
+    # Selects the data to be plotted
     plot_data = select_plot_data_single(values_list, plot_information, number_of_flights)
 
     # Checks if the plot in question is a map plot
@@ -223,7 +228,6 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
         x_list.append(x_list_temp)
         y_list.append(y_list_temp)
 
-
     # Checks through each x_data item.
     xy_pairs = []
     xy_pairs_units = []
@@ -313,7 +317,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                 text += ", " + pair[1][0]
         else:
             # Finds the last set of data for titles
-            data_set_len = int(len(xy_pairs)/number_of_flights)
+            data_set_len = int(len(xy_pairs) / number_of_flights)
             for pair in xy_pairs[data_set_len + 1:-1]:
                 text += ", " + pair[1][0]
 
@@ -339,7 +343,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
             if single_flight is True:
                 plt.plot(pair[0][2], pair[1][2], label=(pair[1][0] + " (" + pair[1][1] + ") "))
             else:
-                plt.plot(pair[0][2], pair[1][2], label=(pair[1][0] + " (" + pair[1][1] + ") "+ str(pair[2])))
+                plt.plot(pair[0][2], pair[1][2], label=(pair[1][0] + " (" + pair[1][1] + ") " + str(pair[2])))
 
         # Puts in first item.
         text = xy_pairs[0][1][0]
@@ -408,7 +412,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                             y_limits_left=("y_min", "y_max"),
                             y_limits_right=("y_min", "y_max"), marker_list=(),
                             legend_location=1, arm_data=False,
-                            title_text=None):
+                            title_text=None, time_x_offset=[]):
     """ Goes through graph data, finds source and gets required data from
     values. plot_information structure, [x, name, data_source], plots data on
     left and right axis as specified as inputs, legend location will specify
@@ -434,6 +438,10 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     # Changes the values list to only include the data
     values_list, flight_dates_list, single_flight, number_of_flights = single_flight_detection(values_list)
 
+    # Applies the user defined offset to the values list (NOTE: This currently works for all figures and only needs to
+    # be done once in the notebook.
+    values_list = manual_time_offset(values_list, time_x_offset, number_of_flights)
+
     # Formats the arm_data and checks that all the data is present
     arm_data, arm_plot_data = arm_data_formatting(arm_data, values_list, number_of_flights, flight_dates_list)
 
@@ -454,7 +462,6 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     # [axis, [data_source, column]]
     plot_information = [plot_information_left, plot_information_right]
 
-    plot_data = []
     for information in plot_information:
         plot_data = []
         plot_data.append(select_plot_data_single(values_list, information, number_of_flights))
@@ -607,7 +614,6 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # plots title for graph.
         title = xy_pairs[0][1][0]
 
-
     # If y units have the same unit then this will format the graphs as
     # required.
     if plot_info == 2:
@@ -630,7 +636,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                 text += ", " + pair[1][0]
         else:
             # Finds the last set of data for titles
-            data_set_len = int(len(xy_pairs)/number_of_flights)
+            data_set_len = int(len(xy_pairs) / number_of_flights)
             for pair in xy_pairs[data_set_len + 1:]:
                 text += ", " + pair[1][0]
 
@@ -653,7 +659,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                                    color="C" + str(line_count))
             else:
                 line = axis_1.plot(pair[0][2], pair[1][2], label=(str(pair[1][0]) + " (" + str(pair[1][1]) + ")") + " "
-                                   + str(pair[2]), color="C" + str(line_count))
+                                                                 + str(pair[2]), color="C" + str(line_count))
             # Increments line count
             line_count += 1
             # Appends current line to list of lines.
@@ -755,7 +761,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
                 text += ", " + pair[1][0]
         else:
             # Finds the last set of data for titles
-            data_set_len = int(len(xy_pairs)/number_of_flights)
+            data_set_len = int(len(xy_pairs) / number_of_flights)
             for pair in xy_pairs[data_set_len + 1:]:
                 text += ", " + pair[1][0]
 
@@ -1286,8 +1292,8 @@ def arm_data_plotting(arm_data, arm_plot_data, number_of_flights, axes_limits_ce
             # Plot the arm events:
             plt.axvline(arm_times[times][1], color="g")
             if single_flight is False:
-                plt.annotate("ARM {}".format(arm_times[times][0]), [arm_times[times][1], 2*axes_limits_center_y -
-                                                                    axes_limits_center_y*0.2*(1+times)])
+                plt.annotate("ARM {}".format(arm_times[times][0]), [arm_times[times][1], 2 * axes_limits_center_y -
+                                                                    axes_limits_center_y * 0.2 * (1 + times)])
                 # The last part locates the label at an incrementally changing position from the top of the figure
                 # downwards
             else:
@@ -1296,8 +1302,9 @@ def arm_data_plotting(arm_data, arm_plot_data, number_of_flights, axes_limits_ce
             # Plot the disarm events:
             plt.axvline(disarm_times[times][1], color="r")
             if single_flight is False:
-                plt.annotate("DISARM {}".format(disarm_times[times][0]), [disarm_times[times][1], 2*axes_limits_center_y
-                                                                          - axes_limits_center_y*0.2*(1+times)])
+                plt.annotate("DISARM {}".format(disarm_times[times][0]),
+                             [disarm_times[times][1], 2 * axes_limits_center_y
+                              - axes_limits_center_y * 0.2 * (1 + times)])
             else:
                 plt.annotate("DISARM", [disarm_times[times][1], axes_limits_center_y])
         # Prints time armed:
@@ -1311,7 +1318,7 @@ def arm_data_plotting(arm_data, arm_plot_data, number_of_flights, axes_limits_ce
 
 def select_plot_data_single(values_list, plot_information, number_of_flights):
     """
-    List of data to plot returns plot_data which has structure:
+    List of data to plot returns values_list which has structure:
     [[[axis, [data_source, column], [axis, [data_source, column]],
      [[axis, [data_source, column], [axis, [data_source, column]]]"""
     plot_data = []
@@ -1337,3 +1344,28 @@ def select_plot_data_single(values_list, plot_information, number_of_flights):
         plot_data.append(plot_data_temp)
 
     return plot_data
+
+
+def manual_time_offset(values_list, time_x_offset, number_of_flights):
+
+    """Applies a manually defined time offset to the "Time" to all time columns in the values_list"""
+
+    # Checks that the time_x_offset is the same length as the number of flights and that it is present
+    if not time_x_offset:
+        return values_list
+    elif len(time_x_offset) != number_of_flights:
+        print("time_x_offset is not the same length as the number of flights. It has not been applied.")
+        return values_list
+
+    # Adds the offset to the time data on the x axis
+    for flight in range(number_of_flights):
+        for sensor_index in range(len(values_list[flight])):
+            for data_set_index in range(len(values_list[flight][sensor_index])):
+                new_time_data = []
+                # Finds any x data with the tag of "Time"
+                if values_list[flight][sensor_index][data_set_index][0] == "Time":
+                    for data_point in values_list[flight][sensor_index][data_set_index][2]:
+                        new_time_data.append(float(data_point) + float(time_x_offset[flight]))
+                    values_list[flight][sensor_index][data_set_index][2] = new_time_data
+
+    return values_list
