@@ -2,7 +2,13 @@
 History
 =======
 
-1.1.2 (2020-03-09)
+1.1.3 (2020-03-10)
+------------------
+
+* METAR bug fixed
+
+
+1.1.2 (2020-03-10)
 ------------------
 
 * Multi-flight comparison functionality added
