@@ -1,3 +1,4 @@
+
 import pandas as pd
 import pickle as pk
 import os
@@ -708,7 +709,6 @@ def flight_data_and_axis(new_frames):
     [[flight, [data source, [name, unit, data],[name, unit, data]]], [flight, [data source, [name, unit, data],
     [name, unit, data]]]]."""
     # TODO: try rewriting this code in a more legible way.
-    # TODO: This needs to be rewritten for multiple flights/logs.
     # Creates an empty list for all the data.
     values_list = []
     # Finds the flight date and number from the data
@@ -1003,8 +1003,9 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
             frame_list.append(arduino_flight_data_frame)
         # Sorts frames by time
         sorted_frames = flight_data_time_sorter(frame_list)
+        values = flight_data_and_axis(sorted_frames)
         # Creates a list of all the values.
-        values_list.append(flight_data_and_axis(sorted_frames))
+        values_list.append(values)
     # Compresses (pickles) the data and saves it in the excel files folder.
     pk.dump(values_list, open(comp_data_file_path, "wb"))
     print('Pickling finished')

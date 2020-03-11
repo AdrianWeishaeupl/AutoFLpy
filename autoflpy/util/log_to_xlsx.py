@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 import os
 from openpyxl import Workbook
@@ -152,8 +151,8 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
 
     # Saves file
     print('Saving workbook')
-    workbook.save(filename=(excel_file_path + os.sep
-                            + excel_file_name + ".xlsx"))
+    xlsx_file_name_and_path = excel_file_path + os.sep + excel_file_name + ".xlsx"
+    workbook.save(filename=xlsx_file_name_and_path)
     print('Log reader finished for {}'.format(str(excel_file_name)))
 
 

@@ -105,12 +105,12 @@ Multiple Flight Comparison
 
 Autoflpy allows for the user to compare multiple flights in the same Jupyter Notebook. To do this, data should be entered into the Input_File.json for each flight separated by a ",". For example::
 
-"log_to_xlsx_input": {
-		"log_file_name": "Flight1.log, Flight2.log",
-		"log_file_path": "",
-		"excel_data_file_path": "",
-		"date": "20190309, 20190209",
-		"flight_number": "1, 2"}
+	"log_to_xlsx_input": {
+			"log_file_name": "Flight1.log, Flight2.log",
+			"log_file_path": "",
+			"excel_data_file_path": "",
+			"date": "20190309, 20190209",
+			"flight_number": "1, 2"}
 
 Variables are entered into the plotting functions as usual and plotted for both sets of data if present. Some functionality is reduced including the automated take-off detection (reverted to manual only) and plotting the arm data when plotting multiple flights simultaneously.
 
