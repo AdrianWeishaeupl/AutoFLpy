@@ -100,6 +100,7 @@ Graphs
 
 .. image:: images/PER_flight_alt.png
 	:width: 900
+	:align: center
 	:alt: Image of a graph generated with AutoFLpy showing altitude and airspeed of a section of a flight.
 
 

@@ -24,10 +24,12 @@ AutoFLpy (Automated Flight Log python) is an open source code to allow you to cr
 
 .. image:: images/Flow_chart_simple.png
 	:width: 500
+	:align: center
 	:alt: Flow chart summarising AutoFLpy operation.
 
 .. image:: images/Report_image.png
 	:width: 700
+	:align: center
 	:alt: Image of a sample generated flight report.
 
 Features
@@ -53,6 +55,7 @@ Features
 
 .. image:: images/SITL_flight_map.png
 	:width: 700
+	:align: center
 	:alt: Image of a flight plotted over a map using AutoFLpy.
 
 Credits
