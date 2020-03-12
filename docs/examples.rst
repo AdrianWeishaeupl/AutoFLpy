@@ -22,7 +22,7 @@ The code cell above the graph is used to define variables used in the plot such 
 	:align: center
 	:alt: Image of a graph generated with AutoFLpy showing a section of the altitude v time plot.
 
-Variables in the same data group (in this case "gps") can be plotted on the same graph either by changing the notebook template (recommended) or by inserting the data tag (eg. ["y", "groundspeed", "gps"]) into the function:
+Variables in the same data group (in this case "gps") can be plotted on the same graph either by changing the Notebook template (recommended) or by inserting the data tag (eg. ["y", "groundspeed", "gps"]) into the function:
 
 .. image:: images/Ex_alt_v_time_3.png
 	:width: 900

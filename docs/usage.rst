@@ -25,7 +25,7 @@ The Input_file.json is structured as follows::
 			"template_file_path": "If blank, finds the default template location",
 			"template_file_name": "If blank, uses the default template",
 			"arduino_flight_data_name": "Name of correctly formatted Arduino data. If blank, uses the name of the sample data",
-			"arduino_flight_data_file_path": "Path to arduino data. If blank, finds the path to the sample data",
+			"arduino_flight_data_file_path": "Path to Arduino data. If blank, finds the path to the sample data",
 			"checklist_data_file_path": "If blank, uses the sample checklist file path",
 			"metar_file_path": "METAR data collected will be stored here. If blank, creates folder in the current directory",
 			"flight_log_destination": "Destination for the generated flight reports. If blank, creates folder in the current directory",
@@ -69,7 +69,7 @@ Folder structure generated:
 
 	user_files
 	
-	* arduino_data					Contains sample `arduino <https://www.arduino.cc/>`_ data. User data in the form of a csv file can be added here.
+	* arduino_data					Contains sample `Arduino <https://www.arduino.cc/>`_ data. User data in the form of a csv file can be added here.
 	
 	* checklists					Contains sample checklists. User data can be added here.
 	

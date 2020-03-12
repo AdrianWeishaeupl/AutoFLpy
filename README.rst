@@ -40,7 +40,7 @@ Features
 * Generates a highly customisable and agile flight summary report using data from .log and input files.
 * Default flight summary includes:
 	* METAR information of the nearest airfield.
-	* Checklist Information (if provided).
+	* Checklist information (if provided).
 	* Plots for:
 		* GPS altitude and velocity.
 		* GPS latitude and longitude plotted on a map**.
@@ -48,7 +48,7 @@ Features
 		* Barometric data throughout the flight.
 		* Flight attitude throughout the flight.
 		* Flight computer vibrational data.
-		* Additional `arduino <https://www.arduino.cc/>`_ and csv data (if supplied).
+		* Additional `Arduino <https://www.arduino.cc/>`_ and csv data (if supplied).
 * Multi-flight simultaneous analysis for comparing different flights.
 * Sample data files included. This will be **created when the code is run for the first time**.
 * Full choice of file paths for the data and outputs can be specified using the input file.
