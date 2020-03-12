@@ -93,7 +93,7 @@ The following should be noted when editing the default template notebook:
 
 Principle of template operation
 ===============================
-The template will only accept capital letters as inputs in the cells. Only certain words in certain configurations will be checked. Autoflpy will use these to add/ remove information or cells based on external information.
+The template will only accept capital letters as inputs in the cells. Only certain words in certain configurations will be checked. AutoFLpy will use these to add/ remove information or cells based on external information.
 
 Graphs
 ------
@@ -209,7 +209,7 @@ The METAR information paragraph created will have an anchor with the id "METAR-I
 
 METAR related information
 -------------------------
-If a cell contains the label METAR_TEXT, autoflpy will search for METAR information at the closest airfield. This also works retrospectively.
+If a cell contains the label METAR_TEXT, AutoFLpy will search for METAR information at the closest airfield. This also works retrospectively.
 
 Weather and runway information
 ------------------------------
@@ -220,7 +220,7 @@ WEATHER_INFORMATION
 RUNWAY_INFORMATION
 
 
-Autoflpy template labels and text
+AutoFLpy template labels and text
 ----------------------------------
 Label					Function
 

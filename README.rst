@@ -16,7 +16,7 @@ AutoFLpy
 
 
 
-Autoflpy (Automated flight log python) is an open source code to allow you to create agile flight reports. This code rapidly creates flight reports for the user given an input file in a matter of minutes and is ideal for a complete analysis and evaluation of flight data. Multiple input data sources are accepted, with the report combining these into a succinct and overseeable document.
+AutoFLpy (Automated Flight Log python) is an open source code to allow you to create agile flight reports. This code rapidly creates flight reports for the user given an input file in a matter of minutes and is ideal for a complete analysis and evaluation of flight data. Multiple input data sources are accepted, with the report combining these into a succinct and overseeable document.
 
 
 * Free software: GPLv3

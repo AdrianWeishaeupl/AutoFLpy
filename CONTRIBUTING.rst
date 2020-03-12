@@ -7,7 +7,7 @@ Contributing
 Contributions are welcome, and they are greatly appreciated! Every little bit
 helps, and credit will always be given.
 
-The code currently works with Ardu Pilot log files taken from the flight computer in the .bin format and converted into the .log format using Mission Planner.
+The code currently works with ArduPilot log files taken from the flight computer in the .bin format and converted into the .log format using Mission Planner.
 
 You can contribute in many ways:
 

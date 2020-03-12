@@ -103,7 +103,7 @@ The following figure shows the use of this feature.
 Multiple Flight Comparison
 --------------------------
 
-Autoflpy allows for the user to compare multiple flights in the same Jupyter Notebook. To do this, data should be entered into the Input_File.json for each flight separated by a ",". For example::
+AutoFLpy allows for the user to compare multiple flights in the same Jupyter Notebook. To do this, data should be entered into the Input_File.json for each flight separated by a ",". For example::
 
 	"log_to_xlsx_input": {
 			"log_file_name": "Flight1.log, Flight2.log",
