@@ -58,6 +58,13 @@ Features
 	:align: center
 	:alt: Image of a flight plotted over a map using AutoFLpy.
 
+
+Disclaimer
+----------
+The examples provided do not imply permission to fly in the areas shown. This software relies on the user to guarantee safe and legal drone operation and accepts no responsibility. If in doubt, follow the `Drone Code <https://dronesafe.uk/drone-code/>`_.
+
+
+
 Credits
 -------
 
