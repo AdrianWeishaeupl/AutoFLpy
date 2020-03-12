@@ -61,7 +61,7 @@ Features
 
 Disclaimer
 ----------
-The examples provided do not imply permission to fly in the areas shown. This software relies on the user to guarantee safe and legal drone operation and accepts no responsibility. If in doubt, follow the `Drone Code <https://dronesafe.uk/drone-code/>`_.
+The examples provided should not be taken to mean that that flights have actually taken place in the areas shown, nor that anyone may have permission to conduct such flights. This software is offered in the hope that it may be useful to users conducting safe and legal drone operations, but the authors offer no guarantees and accept no legal responsibilities in relation to its use. Please ensure that you are aware of and obey all relevant laws, rules and regulations in your jurisdiction (UK users should follow the `Drone Code <https://dronesafe.uk/drone-code/>`_).
 
 
 
