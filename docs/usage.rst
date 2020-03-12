@@ -5,9 +5,9 @@ Usage
 First time users
 ================
 
-AutoFLpy is a code designed to allow drone pilots and operators to easily analyse flight data in the field. It works by reading the data collected by the flight computer (eg. PixHawk) and plotting the data in a Jupyter Notebook. This notebook is fully customisable and allows the user to plot any variable collected by its self or with other data in the same plot.
+AutoFLpy is a code designed to allow drone pilots and operators to perform agile flight data analysis and presentation. It works by reading the data collected by the flight computer (eg. PixHawk) as well as other sources and creating a complete flight test report in the form of a Jupyter Notebook. This notebook is fully customisable and allows the user to plot any variable collected by its self or with other data.
 
-**Upon first time running of the script, sample data will be used to create a sample flight log for the user to look at for inspiration.** 
+**Upon first time running of the script, sample data will be used to create a sample flight report for the user to look at for inspiration.** 
 A folder structure containing the "Input_File.json" and base file paths will also be created. The user can then complete the "Input_File.json" with appropriate information and analyse their own flight data.
 
 The Input_file.json is structured as follows::
@@ -28,7 +28,7 @@ The Input_file.json is structured as follows::
 			"arduino_flight_data_file_path": "Path to arduino data. If blank, finds the path to the sample data",
 			"checklist_data_file_path": "If blank, uses the sample checklist file path",
 			"metar_file_path": "METAR data collected will be stored here. If blank, creates folder in the current directory",
-			"flight_log_destination": "Destination for the generated flight logs. If blank, creates folder in the current directory",
+			"flight_log_destination": "Destination for the generated flight reports. If blank, creates folder in the current directory",
 			"start_time_hours": "HH - 24 hr clock",
 			"end_time_hours": "HH - 24 hr clock"
 		},
@@ -56,11 +56,11 @@ To use AutoFLpy::
 
     from autoflpy import log_analysis
 
-Individual flight logs can be generated using the log_analysis function::
+Individual flight reports can be generated using the log_analysis function::
 
 	log_analysis.autoflpy(input_file='Input_File.json')
 
-When this is run for the first time, a folder structure (user_files) will be created in the current working directory. This will be populated using example data to create an example flight log and the input file.
+When this is run for the first time, a folder structure (user_files) will be created in the current working directory. This will be populated using example data to create an example flight report and the input file.
 
 For changing directories to the data and running your own code, edit the "Input File.json" with the correct data before running the code. A template input file is provided.
 If no input file is given, the default input file will be chosen.
@@ -75,7 +75,7 @@ Folder structure generated:
 	
 	* excel_file_path				Contains excel files generated from the log files.
 	
-	* flight_logs_generated			Contains the generated flight logs.
+	* flight_logs_generated			Contains the generated flight reports.
 	
 	* log_files						Contains the user input flight data in the .log format.
 	
@@ -83,7 +83,9 @@ Folder structure generated:
 
 The user should place any flight data to be analysed into the log_files folder if no specific directory is set in the input file.
 
-The generated flight logs can be found in the "flight_logs_generated" folder if not specific directory is set in the input file. These logs are generated in the form of Jupyter notebooks which should be opened using Jupyter and all cells should be run before converting to other formats. These notebooks are based on a template which can be found where autoflpy is installed as a package ("Default Template (Full Summary).ipynb"). The template can be edited to reflect the users needs.
+Additional data should be saved as a .csv with correctly formatted column headings (VariableName_Unit_DataSet_FlightDateYYYYMMDD_FlightNumber) and placed into the arduino_data folder. The name needs to be entered into the input file.
+
+The generated flight reports can be found in the "flight_logs_generated" folder if not specific directory is set in the input file. These reports are generated in the form of Jupyter notebooks which should be opened using Jupyter and all cells should be run before converting to other formats. An export to HTML is recommended and allows the code used to generate the report to be hidden. These notebooks are based on a template which will be generated in the user_files directory ("Default_Template_(Full_Summary).ipynb"). The template can be edited to reflect the users needs prior to generating the reports.
 
 The following should be noted when editing the default template notebook:
 

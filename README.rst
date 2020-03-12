@@ -16,20 +16,20 @@ AutoFLpy
 
 
 
-Autoflpy (Automated flight log python) is an open source code to allow you to create customisable flight logs in the field. This code automatically creates flight logs for the user given an input file. It currently works with ardupilot log files taken from the flight computer in the .bin format and converted into the .log format using Mission Planner.
+Autoflpy (Automated flight log python) is an open source code to allow you to create agile flight reports. This code rapidly creates flight reports for the user given an input file in a matter of minutes and is ideal for a complete analysis and evaluation of flight data. Multiple input data sources are accepted, with the report combining these into a succinct and overseeable document.
 
 
 * Free software: GPLv3
 * Documentation: https://autoflpy.readthedocs.io.
 
-.. image:: images/SITL_flight_spd.png
+.. image:: images/Report_image.png
 	:width: 700
-	:alt: Image of a graph generated with AutoFLpy showing airspeed and groundspeed.
+	:alt: Image of a sample generated flight report.
 
 Features
 --------
 
-* Generates a highly customisable flight summary using data from .log and input files.
+* Generates a highly customisable and agile flight summary report using data from .log and input files.
 * Default flight summary includes:
 	* METAR information of the nearest airfield.
 	* Checklist Information (if provided).
@@ -59,4 +59,4 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 
-Runways.csv taken from https://github.com/sobester/ADRpy
+Runways.csv adapted from https://github.com/sobester/ADRpy
