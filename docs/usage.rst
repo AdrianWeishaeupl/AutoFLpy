@@ -69,7 +69,7 @@ Folder structure generated:
 
 	user_files
 	
-	* arduino_data					Contains sample arduino data. User data can be added here.
+	* arduino_data					Contains sample `arduino <https://www.arduino.cc/>`_ data. User data in the form of a csv file can be added here.
 	
 	* checklists					Contains sample checklists. User data can be added here.
 	
