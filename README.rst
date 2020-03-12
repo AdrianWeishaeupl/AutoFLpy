@@ -22,6 +22,10 @@ AutoFLpy (Automated Flight Log python) is an open source code to allow you to cr
 * Free software: GPLv3
 * Documentation: https://autoflpy.readthedocs.io.
 
+.. image:: images/Flow_chart_simple.png
+	:width: 700
+	:alt: Flow chart summarising AutoFLpy operation.
+
 .. image:: images/Report_image.png
 	:width: 700
 	:alt: Image of a sample generated flight report.
