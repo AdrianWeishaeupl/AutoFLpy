@@ -12,7 +12,6 @@ import json
 import sys
 from autoflpy.util import flight_log_code
 from datetime import datetime
-from shutil import copyfile
 from autoflpy.util import nearest_ICAO_finder
 from autoflpy.util.testing.check_str_in_content import *
 

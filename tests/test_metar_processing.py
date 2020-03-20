@@ -12,7 +12,9 @@ import os
 import json
 from autoflpy.util import metar_processing
 from shutil import copyfile
+from datetime import datetime
 from autoflpy.util.testing.check_str_in_content import *
+from autoflpy.util.text_manipulation import contents_opener
 
 
 class TestMetarProcessing(unittest.TestCase):
@@ -27,6 +29,14 @@ class TestMetarProcessing(unittest.TestCase):
             self.data = json.load(file)
         self.template_file_path = self.base_path
         self.template_file_name = self.data["flight_log_generator_input"]["template_file_name"]
+
+        copyfile(self.base_path + "test_generated_flight_logtest_metar.ipynb",
+                 self.base_path + "metar_testing.ipynb")
+
+    def tearDown(self):
+        if os.path.exists(self.base_path + "metar_testing.ipynb"):
+            os.remove(self.base_path + "metar_testing.ipynb")
+        pass
 
     def test_METAR_finder(self):
         # Checks if the METAR data exists. If it doesn't, it gets it from the
@@ -136,6 +146,36 @@ class TestMetarProcessing(unittest.TestCase):
         generated_file_name = self.template_file_path + template_temp_name
         if os.path.exists(generated_file_name):
             os.remove(generated_file_name)
+
+    def test_metar_replacer(self):
+        """Tests the metar_replacer()
+        TODO: This test needs to be more thorough
+        """
+        file_path = self.base_path
+        file_name = "metar_testing.ipynb"
+        location = "EGHE_20190123_20190123_9_9"
+        year = "2019"
+        month = "01"
+        day = "23"
+        month_end = "01"
+        day_end = "23"
+        start_time_hours = "9"
+        end_time_hours = "10"
+        flight = 0
+        metar_file_path = self.base_path
+
+        metar_processing.metar_replacer(file_path, file_name, location, year, month, day,
+                                        month_end, day_end, start_time_hours, end_time_hours, flight,
+                                        metar_file_path)
+
+        # Checks that the file was recently created.
+        filetime = os.stat(file_path + file_name)
+        # Finds the time since the file has been created.
+        time_diff = datetime.now() - datetime.fromtimestamp(filetime.st_mtime)
+        # Checks that the time difference is less than 0.5 seconds.
+        self.assertLess(time_diff.microseconds, 5e5)
+        # Check that the files weren't created in the past.
+        self.assertGreaterEqual(time_diff.microseconds, 0)
 
 
 if __name__ == '__main__':
