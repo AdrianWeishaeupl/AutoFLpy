@@ -409,6 +409,38 @@ class TestFlightLogCode(unittest.TestCase):
                 # Key successfully removed, pass the test
                 self.assertTrue(True)
 
+    def test_multi_dictionary_data_formatter(self):
+        """A method to test the multi_dictionary_data_formatter()"""
+        # Create variables
+        dictionary1 = {"DOG": "4F, Squirrel", "Mouse": "Cat, 78", "Donkey": "7, 7", 8906: "Fish , Bird",
+                       "PiG": "Farm, Animal"}
+        debug_name1 = "dict1"
+        flight_dates1 = [0, 1]
+        dictionary2 = {"Face": "Nose, Ear, Mouth"}
+        flight_dates2 = [2, 3]
+        debug_name2 = "TEST"
+
+        # Assigns expected outputs:
+        expected_output_dict1_1 = ["4F", "Cat", "7", "Fish", "Farm"]
+        expected_output_dict1_2 = ["Squirrel", "78", "7", "Bird", "Animal"]
+        key = ["DOG", "Mouse", "Donkey", 8906, "PiG"]
+        expected_output_dict2 = False
+
+        # Runs the method
+        output1 = flight_log_code.multi_dictionary_data_formatter(dictionary1, flight_dates1, debug_name1)
+
+        try:
+            flight_log_code.multi_dictionary_data_formatter(dictionary2, flight_dates2, debug_name2)
+            # Fails if this does not raise an error
+            self.assertTrue(expected_output_dict2)
+        except IndexError:
+            # Passes if an error is raised
+            self.assertFalse(expected_output_dict2)
+
+        for key_index in range(len(dictionary1.keys())):
+            self.assertEqual(output1[0][key[key_index]], expected_output_dict1_1[key_index])
+            self.assertEqual(output1[1][key[key_index]], expected_output_dict1_2[key_index])
+
 
 if __name__ == '__main__':
     unittest.main()
