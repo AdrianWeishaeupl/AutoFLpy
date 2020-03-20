@@ -83,6 +83,29 @@ class TestLogToXlsx(unittest.TestCase):
             worksheet_tester(sheetlist[sheet], cell[sheet],
                              expected_answer[sheet])
 
+    def test_log_reader_multi(self):
+        # Defines relevant variables
+        log_file_paths = [self.log_file_path, self.log_file_path]
+        name_converter_file_path = self.name_converter_file_path
+        data_sources_path = self.data_sources_path
+        excel_file_path = self.excel_file_path
+        excel_file_names = ["test_xlsx", "test_xlsx_multi"]
+        flight_dates = [self.flight_date, "87654321"]
+        flight_numbers = [self.flight_number, "6"]
+        weather_data_multi = [self.weather_data, {'Action_time_hh:mm': 'DE:FG', 'Pressure_Pa': 'HIJ',
+                                                  'Temperature_C': 'KLMN', 'Wind_direction_degrees': 'OP',
+                                                  'Wind_speed_mps': 'ABC'}]
+        runway_data_multi = [self.runway_data, {'runway_surface': '1234', 'surface_condition': '45',
+                                                'take_off_direction': '678'}]
+
+        # Runs the multi-xlsx generator
+        log_to_xlsx.log_reader_multi(log_file_paths, name_converter_file_path, data_sources_path,
+                                     excel_file_path, excel_file_names, flight_dates, flight_numbers,
+                                     weather_data_multi, runway_data_multi)
+
+        # Checks that the second file has been made.
+        self.assertTrue(os.path.exists(self.base_path + "test_xlsx_multi.xlsx"))
+
 
 if __name__ == '__main__':
     unittest.main()
