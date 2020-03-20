@@ -366,6 +366,7 @@ class TestFlightLogCode(unittest.TestCase):
             self.assertTrue(string in read_data)
 
     def test_multi_string_data_formatter(self):
+        """A method to test the multi_string_data_formatter()"""
         # Assigns testing strings
         input1 = "Fish,Ca t,Dog,35, Mouse,   89"
         flight_names_1 = [1, 2, 3, 4, 5, 6]
@@ -392,6 +393,21 @@ class TestFlightLogCode(unittest.TestCase):
         except IndexError:
             # Planned error
             self.assertTrue(True)
+
+    def test_remove_dictionary_key(self):
+        """A method to test the remove_dictionary_key()"""
+        # Create variables
+        dictionary1 = {"DOG": "4F", "Mouse": "Cat", "Donkey": 7, 8906: "Fish", "PiG": "Farm"}
+        keys_to_remove = ["Mouse", 8906, "DOG"]
+        # Remove the keys and check if they have been removed
+        for key_index in range(len(keys_to_remove)):
+            output = flight_log_code.remove_dictionary_key(dictionary1, keys_to_remove[key_index])
+            if keys_to_remove[key_index] in output.keys():
+                # Fail if the key is still present
+                self.assertTrue(False)
+            else:
+                # Key successfully removed, pass the test
+                self.assertTrue(True)
 
 
 if __name__ == '__main__':
