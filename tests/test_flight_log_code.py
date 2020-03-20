@@ -365,6 +365,34 @@ class TestFlightLogCode(unittest.TestCase):
         for string in expected_results:
             self.assertTrue(string in read_data)
 
+    def test_multi_string_data_formatter(self):
+        # Assigns testing strings
+        input1 = "Fish,Ca t,Dog,35, Mouse,   89"
+        flight_names_1 = [1, 2, 3, 4, 5, 6]
+        debug_name_1 = "Input 1"
+        input2 = ""
+        flight_names_2 = [0, 1]
+        debug_name_2 = "Input 2"
+        input3 = "Fail1"
+        flight_names_3 = [7, 8]
+        debug_name_3 = "TEST"
+        # Assigns testing outputs
+        expected_output1 = ["Fish", "Cat", "Dog", "35", "Mouse", "89"]
+        expected_output2 = [""]
+        expected_output3 = False
+        # Tests that the method works as expected
+        self.assertEqual(flight_log_code.multi_string_data_formatter(input1, flight_names_1, debug_name_1),
+                         expected_output1)
+        self.assertEqual(flight_log_code.multi_string_data_formatter(input2, flight_names_2, debug_name_2),
+                         expected_output2)
+        try:
+            flight_log_code.multi_string_data_formatter(input3, flight_names_3, debug_name_3)
+            # Should raise an index error. If not, fail the test.
+            self.assertTrue(expected_output3)
+        except IndexError:
+            # Planned error
+            self.assertTrue(True)
+
 
 if __name__ == '__main__':
     unittest.main()
