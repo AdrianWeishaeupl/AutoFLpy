@@ -99,6 +99,29 @@ class TestTextManipulation(unittest.TestCase):
             # Checks that the line has been removed
             self.assertEqual(0, content_count)
 
+    def test_contents_opener(self):
+        """Tests the contents_opener()"""
+        # Assigns variables
+        file_path = self.base_path
+        file_name1 = "test_data_sources.txt"
+        file_name2 = "METAR_EGHE_20190123_20190123_9_9.txt"
+
+        # Assigns outputs
+        expected_output1 = "Data Sources specified here will be placed in the excel document\nGPS\nAOA\nCTUN\n" \
+                           "RCIN\nARSP\nBARO\nATT\nVIBE"
+        expected_output2 = "METAR EGHE 230950Z 34017KT 9999 SCT025 08/03 Q1007\nMETAR EGHE 230920Z 34017KT 9999" \
+                           " SCT022 08/02 Q1006\nhttps://www.ogimet.com/display_metars2.php?lang=en&lugar=EGHE&t" \
+                           "ipo=ALL&ord=REV&nil=SI&fmt=html&ano=2019&mes=01&day=23&hora=9&anof=2019&mesf=01&dayf=" \
+                           "23&horaf=9&minf=59&send=send"
+
+        # Runs method
+        output1 = text_manipulation.contents_opener(file_path, file_name1)
+        output2 = text_manipulation.contents_opener(file_path, file_name2)
+
+        # Checks results match
+        self.assertEqual(output1, expected_output1)
+        self.assertEqual(output2, expected_output2)
+
 
 if __name__ == '__main__':
     unittest.main()
