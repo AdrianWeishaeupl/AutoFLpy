@@ -3,7 +3,7 @@
 Unit tests for the take_off_detection module
 Created on Tue Feb 18 14:53:20 2020
 
-@author: aw6g15
+@author Adrian Weishaeupl (aw6g15@soton.ac.uk)
 """
 
 from autoflpy.util.analysis import take_off_detection

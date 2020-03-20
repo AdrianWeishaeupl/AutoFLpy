@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+"""
+Unit tests for the text manipulation function
+Created on Tue Feb 18 14:53:20 2020
+
+@author Adrian Weishaeupl (aw6g15@soton.ac.uk)
+"""
+
 import unittest
 import os
 import json

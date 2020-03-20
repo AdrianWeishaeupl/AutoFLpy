@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Unit tests for the flight_log_code.py and the log_to_xlsx.py
-codes. *** WORK IN PROGRESS ***
-No tests are currently written for the GUI.
+Unit tests for the log_to_xlsx.py
+code.
 
 @author Adrian Weishaeupl (aw6g15@soton.ac.uk)
 """

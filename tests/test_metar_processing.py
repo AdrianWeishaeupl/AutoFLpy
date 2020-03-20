@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Unit tests for the metar_processing.py and the log_to_xlsx.py
-codes.
-No tests are currently written for the GUI.
+Unit tests for the metar_processing.py code.
 
 @author Adrian Weishaeupl (aw6g15@soton.ac.uk)
 """

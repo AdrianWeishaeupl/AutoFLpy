@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Unit tests for the flight_log_code.py.
-No tests are currently written for the GUI.
 
 @author Adrian Weishaeupl (aw6g15@soton.ac.uk)
 """
