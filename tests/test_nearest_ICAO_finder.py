@@ -75,6 +75,21 @@ class TestNearestICAOFinder(unittest.TestCase):
         self.assertEqual(expected_lat_long[0], uav_lat_long[0])
         self.assertEqual(expected_lat_long[1], uav_lat_long[1])
 
+    def test_multi_icao_finder(self):
+        """Tests the multi_icao_finder()"""
+        # Assigns variables
+        file_path = self.base_path
+        file_names = [self.excel_file_name, self.excel_file_name]
+        flight_names = ["test_xlsx.xlsx", "test_xlsx.xlsx"]
+
+        # Runs the method
+        icaos = nearest_ICAO_finder.multi_icao_finder(file_path, file_names, flight_names)
+
+        # Tests the results
+        expected_icaos = ["EGHE", "EGHE"]
+        for item in range(len(icaos)):
+            self.assertEqual(icaos[item], expected_icaos[item])
+
 
 if __name__ == '__main__':
     unittest.main()
