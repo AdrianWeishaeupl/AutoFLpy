@@ -1356,6 +1356,8 @@ def manual_time_offset(values_list, time_x_offset, number_of_flights):
     elif len(time_x_offset) != number_of_flights:
         print("time_x_offset is not the same length as the number of flights. It has not been applied.")
         return values_list
+    else:
+        pass
 
     # Adds the offset to the time data on the x axis
     for flight in range(number_of_flights):
