@@ -73,7 +73,25 @@ class TestPlotting(unittest.TestCase):
             self.assertEqual(values_list[0][0][8][2][data_index], plot_data[0][1][1][2][data_index])
 
     def test_arm_data_formatting(self):
-        pass
+        """Test for arm_data_plotting()"""
+        # Assigns variables to be testes
+        arm_data1 = False
+        arm_data2 = True
+
+        # Changes the values list to only include the data
+        values_list, flight_dates_list, single_flight, number_of_flights = \
+            plotting.single_flight_detection(self.values_list)
+
+        # Runs the arm_data_formatting method
+        output1_0, output1_1 = plotting.arm_data_formatting(arm_data1, values_list, number_of_flights, flight_dates_list)
+        output2_0, output2_1 = plotting.arm_data_formatting(arm_data2, values_list, number_of_flights, flight_dates_list)
+
+        # Checks that the outputs are correct
+        self.assertEqual(False, output1_0)
+        self.assertEqual(None, output1_1)
+        self.assertEqual(True, output2_0)
+        self.assertEqual([[['', ['Id', 'unavailable', [10, 11]]], ['', ['Time', 's', [26.894238, 264.634104]]]]],
+                         output2_1)
 
     def test_single_flight_detection(self):
         pass
