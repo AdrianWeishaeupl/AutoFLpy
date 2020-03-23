@@ -22,6 +22,7 @@ class TestPlotting(unittest.TestCase):
         self.base_path = base_path.replace(os.sep, "/")
 
         self.values_list = pk.load(open(base_path + "test_pickled_data.pkl", "rb"))
+        self.values_list_multi = pk.load(open(base_path + "test_pickled_data_multi.pkl", "rb"))
 
     def test_manual_time_offset(self):
         """Test for manual_time_offset()"""
@@ -94,7 +95,21 @@ class TestPlotting(unittest.TestCase):
                          output2_1)
 
     def test_single_flight_detection(self):
-        pass
+        """Tests for single_flight_detection()"""
+        # TODO: Test that the values lists are formatted correctly as well
+
+        # Runs the method
+        values_list1, flight_data_list1, single_flight1, number_of_flights1 = \
+            plotting.single_flight_detection(self.values_list)
+        values_list2, flight_data_list2, single_flight2, number_of_flights2 = \
+            plotting.single_flight_detection(self.values_list_multi)
+
+        self.assertTrue(single_flight1)
+        self.assertFalse(single_flight2)
+        self.assertEqual(1, number_of_flights1)
+        self.assertEqual(2, number_of_flights2)
+        self.assertEqual([''], flight_data_list1)
+        self.assertEqual(['20190110_Flight1', '20190110_Flight2'], flight_data_list2)
 
 
 if __name__ == '__main__':
