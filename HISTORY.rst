@@ -2,6 +2,13 @@
 History
 =======
 
+1.1.4 (2020-03-23)
+------------------
+
+* Documentation updated
+* Unit tests updated
+
+
 1.1.3 (2020-03-10)
 ------------------
 
