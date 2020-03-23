@@ -1253,7 +1253,7 @@ def arm_data_formatting(arm_data, values_list, number_of_flights, flight_data_li
     arm_data_list = []
     if arm_data is True:
         for data_set in range(number_of_flights):
-            if len(arm_plot_data[1]) != 0:
+            if len(arm_plot_data[data_set][1]) != 0:
                 arm_data_list.append(True)
             else:
                 # Sets arm_data to false.
