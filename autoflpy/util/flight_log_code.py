@@ -41,6 +41,12 @@ def flight_log_maker(template_file_path, template_file_name,
     # Sets the number of flights for iterating through the data lists
     number_of_flights = len(flight_dates)
 
+    if number_of_flights > 1:
+        include_metar = False
+        print("Metar is disabled for multiple flights")
+    else:
+        include_metar = True
+
     # loads contents.
     contents = contents_opener(template_file_path, template_file_name)
 
@@ -192,17 +198,18 @@ def flight_log_maker(template_file_path, template_file_name,
     metar_data_list = []
     metar_generated = []
     for flight in range(number_of_flights):
-        flight_date = str(flight_dates[flight])
-        if (icao_airfields[flight] != "data" or icao_airfields[flight] != "") and all(hours_valid) is True:
-            # Retrieves METAR data.
-            metar_data_list.append(metar_finder(icao_airfields[flight], flight_date[:4],
-                                                flight_date[4:6], flight_date[6:8],
-                                                flight_date[4:6], flight_date[6:8],
-                                                start_times_hours[flight], end_times_hours[flight],
-                                                metar_file_path))
-            metar_generated.append(True)
-        else:
-            metar_generated.append(False)
+        if include_metar is True:
+            flight_date = str(flight_dates[flight])
+            if (icao_airfields[flight] != "data" or icao_airfields[flight] != "") and all(hours_valid) is True:
+                # Retrieves METAR data.
+                metar_data_list.append(metar_finder(icao_airfields[flight], flight_date[:4],
+                                                    flight_date[4:6], flight_date[6:8],
+                                                    flight_date[4:6], flight_date[6:8],
+                                                    start_times_hours[flight], end_times_hours[flight],
+                                                    metar_file_path))
+                metar_generated.append(True)
+            else:
+                metar_generated.append(False)
 
     # Generates a list of months and years from flight_dates to be used in the metar functions
     days = []
@@ -213,7 +220,7 @@ def flight_log_maker(template_file_path, template_file_name,
         months.append(int(str(flight_dates[flight])[4:6]))
         years.append(int(str(flight_dates[flight])[:4]))
 
-    if all(metar_generated) is not False:
+    if all(metar_generated) is not False and include_metar is True:
         for metar_data in metar_data_list:
             # Checks to see if METAR data is available.
             if len(metar_data) != 0:
