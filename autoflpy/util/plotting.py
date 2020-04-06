@@ -61,7 +61,7 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     arm_data, arm_plot_data = arm_data_formatting(arm_data, values_list, number_of_flights, flight_dates_list)
 
     # Selects the data to be plotted
-    plot_data = select_plot_data_single(values_list, plot_information, number_of_flights)
+    plot_data = select_plot_data_single(values_list, plot_information.lower(), number_of_flights)
 
     # Checks if the plot in question is a map plot
     if len(plot_data) != 0:
@@ -435,6 +435,10 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
 
     # Changes the values list to only include the data
     values_list, flight_dates_list, single_flight, number_of_flights = single_flight_detection(values_list)
+
+    # Changes characters entered into lower case values:
+    plot_information_right = plot_information_right.lower()
+    plot_information_left = plot_information_left.lower()
 
     # Applies the user defined offset to the values list (NOTE: This currently works for all figures and only needs to
     # be done once in the notebook.
