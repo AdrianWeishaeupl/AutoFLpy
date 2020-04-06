@@ -877,7 +877,6 @@ def flight_data_time_sorter(frame_list):
         # the list data frames.
         d = 0
         # Checks through each of the columns.
-        # TODO: KEEP AN EYE ON THIS:
         frame_duplicate = None
         for column_data in columns:
             if b == 0:

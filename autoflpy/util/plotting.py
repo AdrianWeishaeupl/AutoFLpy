@@ -39,7 +39,6 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
 
     title_text allows the user to give figures custom titles in the form of a string.
     """
-    # TODO: KEEP AN EYE ON THESE:
     title = None
     x = []
     y = []
@@ -424,7 +423,6 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     title_text allows the user to give figures custom titles in the form of a string.
     """
 
-    # TODO: KEEP AN EYE ON THESE:
     text = None
     title = None
     reference_y_unit = None

@@ -126,7 +126,6 @@ def flight_log_graph_contents_replacer(contents):
 
 def flight_log_multiaxis_graph_contents_replacer(contents):
     """Values list is from the function flight_data_and_axis."""
-    # TODO: KEEP AN EYE ON THIS:
     comma = None
 
     lines = contents.split("\n")
