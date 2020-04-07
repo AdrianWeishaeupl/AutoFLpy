@@ -137,15 +137,27 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
 
     # Adds custom weather data to the xlsx document
     worksheet = workbook.create_sheet("WEATHER_DATA")
-    weather_keys = list(weather_data.keys())
+    weather_keys_to_be_named = list(weather_data.keys())
+    weather_keys_to_be_named.append("dummy_time")  # To sort the runway data in flight_data_time_sorter()
+    # Formats names correctly
+    weather_keys = []
+    for key in weather_keys_to_be_named:
+        weather_keys.append(str(key) + "_WEATHER_DATA_" + str(flight_date) + "_Flight" + str(flight_number))
     weather_values = list(weather_data.values())
+    weather_values.append("N/A")
     worksheet.append(weather_keys)
     worksheet.append(weather_values)
 
     # Adds custom runway data to the xlsx document
     worksheet = workbook.create_sheet("RUNWAY_DATA")
-    runway_keys = list(runway_data.keys())
+    runway_keys_to_be_named = list(runway_data.keys())
+    runway_keys_to_be_named.append("dummy_time")  # To sort the runway data in flight_data_time_sorter()
+    # Formats names correctly
+    runway_keys = []
+    for key in runway_keys_to_be_named:
+        runway_keys.append(str(key) + "_RUNWAY_DATA_" + str(flight_date) + "_Flight" + str(flight_number))
     runway_values = list(runway_data.values())
+    runway_values.append("N/A")
     worksheet.append(runway_keys)
     worksheet.append(runway_values)
 
