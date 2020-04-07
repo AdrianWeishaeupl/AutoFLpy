@@ -868,7 +868,11 @@ def flight_data_time_sorter(frame_list):
                     # appends replacement column to dictionary.
                     renamed_time_columns[column_data] = (column_data.replace("_US_", "_s_"))
             except TypeError:  # This exception is for the user collected environmental data time
-                pass
+                if "dummy_time" in column_data.lower():
+                    frame_columns_list.append(column_data)
+                else:
+                    pass
+
         # Creates a copy of the columns to delete parts from.
         frame_copy = frame_data.copy()
         # The variable b will be used to divide the list.
