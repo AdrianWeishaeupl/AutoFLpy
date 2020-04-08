@@ -182,7 +182,7 @@ class TestFlightLogCode(unittest.TestCase):
             self.flight_data_file_name)
         # Checks that the expected frame dimensions are the correct size.
         frame_dimensions = [17780, 95220, 22860, 25400, 57141, 44436, 57132,
-                            19044, 5, 3]
+                            19044, 6, 4]
         if len(frame_list) == 10:
             for frame in range(len(frame_list)):
                 self.assertEqual(frame_list[frame].size,
