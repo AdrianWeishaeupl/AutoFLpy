@@ -26,7 +26,8 @@ def environmental_data_filtering(values_list):
         # Calls the data
         runway_data = list(data_with_index["RUNWAY"])
         weather_data = list(data_with_index["WEATHER"])
-        data_set.append([weather_data, runway_data, values_list[flight][0]])
+        aircraft_data = list(data_with_index["AIRCRAFT"])
+        data_set.append([weather_data, runway_data, aircraft_data, values_list[flight][0]])
     return data_set
 
 
@@ -72,3 +73,12 @@ def runway_data_dictionary(values_list):
         [[runway_dictionary_1, flight_1], [runway_dictionary_2, flight_2]]
         where runway_dictionary is a dictionary of runway data"""
     return environmental_data_dictionary(values_list, 1)
+
+
+def aircraft_data_dictionary(values_list):
+    """Creates a list of dictionary of aircraft_data from a values_list. One dictionary is created per flight
+
+    returns
+        [[aircraft_dictionary_1, flight_1], [aircraft_dictionary_2, flight_2]]
+        where aircraft_dictionary is a dictionary of aircraft data"""
+    return environmental_data_dictionary(values_list, 2)
