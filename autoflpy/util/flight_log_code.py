@@ -325,6 +325,7 @@ def flight_data(file_path, file_name):
     # Creates empty list for frames.
     frame_list = []
     # Extracts data from each sheet.
+
     for sheet in sheet_list:
         frame = pd.read_excel(data, sheet_name=sheet, engine='openpyxl')
         frame_list.append(frame)
@@ -857,7 +858,10 @@ def flight_data_time_sorter(frame_list):
         for column_data in columns:
             # Checks to see if the word time appears in the column.
             try:
-                if "time" in column_data.lower():
+                if "action_time" in column_data.lower():
+                    # Exceptons are passed here.
+                    pass
+                elif "time" in column_data.lower():
                     # If time appears then it is appended to the list time_columns.
                     time_columns.append(column_data)
                     # Divides column by 1*10^6 to return it to seconds.
