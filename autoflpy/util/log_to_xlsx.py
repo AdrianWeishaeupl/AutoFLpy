@@ -16,7 +16,7 @@ Based on work done by Samuel Pearson (sp1g18@soton.ac.uk) (06-08/2019)
 
 
 def log_reader(log_file_path, name_converter_file_path, data_sources_path,
-               excel_file_path, excel_file_name, flight_date, flight_number, weather_data, runway_data):
+               excel_file_path, excel_file_name, flight_date, flight_number, weather_data, runway_data, aircraft_data):
     """Creates a formatted excel file from a log file. """
     print('Starting log reader')
     print('Creating new work book')
@@ -161,6 +161,19 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
     worksheet.append(runway_keys)
     worksheet.append(runway_values)
 
+    # Adds custom aircraft data to the xlsx document
+    worksheet = workbook.create_sheet("AIRCRAFT_DATA")
+    aircraft_keys_to_be_named = list(aircraft_data.keys())
+    aircraft_keys_to_be_named.append("dummy_time")  # To sort the runway data in flight_data_time_sorter()
+    # Formats names correctly
+    aircraft_keys = []
+    for key in aircraft_keys_to_be_named:
+        aircraft_keys.append(str(key) + "_AIRCRAFT_" + str(flight_date) + "_Flight" + str(flight_number))
+    aircraft_values = list(aircraft_data.values())
+    aircraft_values.append("N/A")
+    worksheet.append(aircraft_keys)
+    worksheet.append(aircraft_values)
+    
     # Saves file
     print('Saving workbook')
     xlsx_file_name_and_path = excel_file_path + os.sep + excel_file_name + ".xlsx"
@@ -170,11 +183,11 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
 
 def log_reader_multi(log_file_paths, name_converter_file_path, data_sources_path,
                      excel_file_path, excel_file_names, flight_dates, flight_numbers, weather_data_multi,
-                     runway_data_multi):
+                     runway_data_multi, aircraft_data_multi):
     """Runs the log_reader for once per flight log entered in the Input_file.json"""
     # Iterates through the number of flights
     for flight in range(len(flight_numbers)):
         print("Creating workbook for {}".format(str(excel_file_names[flight])))
         log_reader(log_file_paths[flight], name_converter_file_path, data_sources_path, excel_file_path,
                    excel_file_names[flight], flight_dates[flight], flight_numbers[flight], weather_data_multi[flight],
-                   runway_data_multi[flight])
+                   runway_data_multi[flight], aircraft_data_multi[flight])
