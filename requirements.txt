@@ -15,4 +15,5 @@ pyproj==2.4.1
 openpyxl>=2.6.4, <3.0.2
 numpy>=1.18.1
 scipy>=1.2.1
+ARDpy>=0.1.18
 
