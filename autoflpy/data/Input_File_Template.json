@@ -28,8 +28,19 @@
 	},
 	
 	"runway_data": {
-		"Take_off_direction": "This should be entered in degrees with North being 0.",
+		"Take_off_direction": "This should be entered in degrees with North being 0",
 		"Runway_surface": "What material is the runway? E.g. tarmac/concrete/grass/dirt/ect.",
 		"Surface_condition": "What condition is the runway in? E.g. dry/wet/icy/dusty/damaged/ect."
+	},
+
+	"aircraft_data": {
+		"m_empty_kg": "Empty mass of the aircraft in kg",
+		"m_fuel_kg": "Mass of any consumable fuel in kg",
+		"b_m": "Wing span from wing tip to wing tip in m",
+		"S_m2": "Projected wing area (c * b) in m^2",
+		"c_m": "Mean Aerodynamic Chord in m",
+		"e": "Oswald span efficiency (dependent on your planform shape)",
+		"alpha_setting_deg": "Wing angle of attack offset relative to the fuselage (setting angle) in degrees"
 	}
+
 }
