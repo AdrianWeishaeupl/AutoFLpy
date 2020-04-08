@@ -31,5 +31,16 @@
 		"take_off_direction": "321",
 		"runway_surface": "XYZ",
 		"surface_condition": "ZYX"
+	},
+	
+	"aircraft_data": {
+		"m_empty_kg": "158",
+		"m_fuel_kg": "1234",
+		"b_m": "4321",
+		"S_m2": "27",
+		"c_m": "Y",
+		"e": "X",
+		"alpha_setting_deg": "Z"
 	}
+	
 }
