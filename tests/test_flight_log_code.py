@@ -293,7 +293,7 @@ class TestFlightLogCode(unittest.TestCase):
         data_frames = notebook_results[3]
         # Checks that the frames were split into the correct number of
         # subframes
-        self.assertEqual(len(data_frames), 10)
+        self.assertEqual(len(data_frames), 11)
         # Assigns expected titles
         data_frame_section_titles = [
             'Status_unavailable_GPS_20190123_Flight2',
@@ -304,7 +304,8 @@ class TestFlightLogCode(unittest.TestCase):
             'VibeX_mperspers_VIBE_20190123_Flight2',
             'NavRoll_unavailable_CTUN_20190123_Flight2',
             'AOA_degrees_AOA_20190123_Flight2',
-            'Action_time_hh:mm',
+            'Action_time_hh:mm_WEATHER_20190123_Flight2',
+            'take_off_direction_RUNWAY_20190123_Flight2',
             'Temp0_degC_ArduinoMicro_20190123_Flight2']
         correct_titles = 0
         # Runs through titles. Checks that each title can be called and adds 1
@@ -317,7 +318,7 @@ class TestFlightLogCode(unittest.TestCase):
             except KeyError:
                 self.assertEqual(1, 2)
         # Checks that all titles are correct
-        self.assertEqual(correct_titles, 10)
+        self.assertEqual(correct_titles, 11)
 
     def test_flight_data_and_axis(self):
         # Gets run in the Jupyter Notebook.
@@ -325,7 +326,7 @@ class TestFlightLogCode(unittest.TestCase):
         flight_data_and_axis = notebook_results[4]
         # Assigns expected titles
         expected_titles = ['GPS', 'RCIN', 'BARO', 'ARSP', 'ATT', 'VIBE',
-                           'CTUN', 'AOA', 'Action', 'ArduinoMicro']
+                           'CTUN', 'AOA', 'WEATHER', 'RUNWAY', 'ArduinoMicro']
         # Checks that the titles are present and in the correct palace
         for item in range(len(expected_titles)):
             self.assertEqual(expected_titles[item], flight_data_and_axis[1][item][0])
