@@ -109,17 +109,21 @@ def autoflpy(input_file='Input_File.json'):
                                                                  flight_dates, "flight_numbers")
     # Generates an appropriate file name
     excel_file_names = name_generator.excel_file_name_updater(flight_dates, flight_numbers)
+
     # Imports custom weather data entered into the input file
     weather_data_multi = data["weather_data"]
-
     # Imports custom runway data entered into the input file
     runway_data_multi = data["runway_data"]
+    # Imports custom aircraft data entered in the input file
+    aircraft_data_multi = data["aircraft_data"]
     # Formats the weather data into several separate dictionaries
     weather_data_lists = flight_log_code.multi_dictionary_data_formatter(
         weather_data_multi, flight_dates, "weather_data")
     # Formats the runway data into several separate dictionaries
     runway_data_lists = flight_log_code.multi_dictionary_data_formatter(
         runway_data_multi, flight_dates, "runway_data")
+    aircraft_data_lists = flight_log_code.multi_dictionary_data_formatter(
+        aircraft_data_multi, flight_dates, "aircraft_data")
 
     # Runs the xlsx converter
     log_to_xlsx.log_reader_multi(log_file_paths,
@@ -130,7 +134,8 @@ def autoflpy(input_file='Input_File.json'):
                                  flight_dates,
                                  flight_numbers,
                                  weather_data_lists,
-                                 runway_data_lists)
+                                 runway_data_lists,
+                                 aircraft_data_lists)
 
     start_times_hours = flight_log_code.multi_string_data_formatter(
         data["flight_log_generator_input"]["start_time_hours"], flight_dates, "start_time_hours")
