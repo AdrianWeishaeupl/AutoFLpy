@@ -37,6 +37,7 @@ class TestLogToXlsx(unittest.TestCase):
         self.flight_number = self.data["log_to_xlsx_input"]["flight_number"]
         self.weather_data = self.data["weather_data"]
         self.runway_data = self.data["runway_data"]
+        self.aircraft_data = self.data["aircraft_data"]
 
     def test_log_reader(self):
         # Make sure the test workbook is closed.
@@ -48,7 +49,8 @@ class TestLogToXlsx(unittest.TestCase):
                                self.flight_date,
                                self.flight_number,
                                self.weather_data,
-                               self.runway_data)
+                               self.runway_data,
+                               self.aircraft_data)
 
         def worksheet_tester(sheet, cell, expected_answer):
             """
@@ -96,11 +98,12 @@ class TestLogToXlsx(unittest.TestCase):
                                                   'Wind_speed_mps': 'ABC'}]
         runway_data_multi = [self.runway_data, {'runway_surface': '1234', 'surface_condition': '45',
                                                 'take_off_direction': '678'}]
+        aircraft_data_multi = [self.aircraft_data, self.aircraft_data]
 
         # Runs the multi-xlsx generator
         log_to_xlsx.log_reader_multi(log_file_paths, name_converter_file_path, data_sources_path,
                                      excel_file_path, excel_file_names, flight_dates, flight_numbers,
-                                     weather_data_multi, runway_data_multi)
+                                     weather_data_multi, runway_data_multi, aircraft_data_multi)
 
         # Checks that the second file has been made.
         self.assertTrue(os.path.exists(self.base_path + "test_xlsx_multi.xlsx"))

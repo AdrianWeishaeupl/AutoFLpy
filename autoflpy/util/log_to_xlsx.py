@@ -173,7 +173,7 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
     aircraft_values.append("N/A")
     worksheet.append(aircraft_keys)
     worksheet.append(aircraft_values)
-    
+
     # Saves file
     print('Saving workbook')
     xlsx_file_name_and_path = excel_file_path + os.sep + excel_file_name + ".xlsx"
