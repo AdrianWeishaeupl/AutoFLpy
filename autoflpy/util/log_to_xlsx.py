@@ -142,7 +142,7 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
     # Formats names correctly
     weather_keys = []
     for key in weather_keys_to_be_named:
-        weather_keys.append(str(key) + "_WEATHER_DATA_" + str(flight_date) + "_Flight" + str(flight_number))
+        weather_keys.append(str(key) + "_WEATHER_" + str(flight_date) + "_Flight" + str(flight_number))
     weather_values = list(weather_data.values())
     weather_values.append("N/A")
     worksheet.append(weather_keys)
@@ -155,7 +155,7 @@ def log_reader(log_file_path, name_converter_file_path, data_sources_path,
     # Formats names correctly
     runway_keys = []
     for key in runway_keys_to_be_named:
-        runway_keys.append(str(key) + "_RUNWAY_DATA_" + str(flight_date) + "_Flight" + str(flight_number))
+        runway_keys.append(str(key) + "_RUNWAY_" + str(flight_date) + "_Flight" + str(flight_number))
     runway_values = list(runway_data.values())
     runway_values.append("N/A")
     worksheet.append(runway_keys)
