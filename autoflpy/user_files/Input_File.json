@@ -31,5 +31,16 @@
 		"Take_off_direction": "000",
 		"Runway_surface": "Grass",
 		"Surface_condition": "Dry"
+	},
+	
+	"aircraft_data": {
+		"m_empty_kg": "15",
+		"m_fuel_kg": "1",
+		"b_m": "4",
+		"S_m2": "2",
+		"c_m": "0.55",
+		"e": "1",
+		"alpha_setting_deg": "2.4"
 	}
+	
 }
