@@ -170,8 +170,8 @@ class TestMetarProcessing(unittest.TestCase):
         filetime = os.stat(file_path + file_name)
         # Finds the time since the file has been created.
         time_diff = datetime.now() - datetime.fromtimestamp(filetime.st_mtime)
-        # Checks that the time difference is less than 0.5 seconds.
-        self.assertLess(time_diff.microseconds, 5e5)
+        # Checks that the time difference is less than 0.7 seconds.
+        self.assertLess(time_diff.microseconds, 7e5)
         # Check that the files weren't created in the past.
         self.assertGreaterEqual(time_diff.microseconds, 0)
 
