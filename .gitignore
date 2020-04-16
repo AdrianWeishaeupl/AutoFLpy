@@ -113,3 +113,4 @@ docs/images/Unused
 
 # Code under development
 autoflpy/util/unused/*
+autoflpy/util/analysis/glide_detection.py
