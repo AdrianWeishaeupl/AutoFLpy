@@ -880,11 +880,12 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     plt.show()
 
 
-def backplt_map(lat, long, z_var, scale_factor=1, text_title=None, z_var_limits=(None, None)):
+def backplt_map(lat, long, z_var=None, scale_factor=1, text_title=None, z_var_limits=(None, None)):
     """
     Currently this is a support function to graph_plotter() and should not be used on its own.
     This plots a map behind some latitude-longitude data and colours the line according to a third variable (z_var).
-    # TODO: Replace z_var with simple data lists, titles and units so that this method can be used separately
+    # TODO: Replace z_var with simple data lists, titles and units so that this method can be used separately.
+    # TODO: Make this function recognise if the imports are present.
     """
     # Sets titles for the data frame
     column_titles = np.array(['index', 'lat, long'])
@@ -936,50 +937,59 @@ def backplt_map(lat, long, z_var, scale_factor=1, text_title=None, z_var_limits=
     # Interpolates the data for the colour series over the data's time scale
     # z_var[1][0][2] = colour variable time data
     # z_var[0][0][2] = colour variable data
-    z_var_interp = interp.interp1d(z_var[1][0][2], z_var[0][0][2])
+    if z_var is not None:
+        z_var_interp = interp.interp1d(z_var[1][0][2], z_var[0][0][2])
 
-    # Creates the data series of same length as the latitude/longitude data:
-    # z_var[2][0][2] = gps time data
-    colour_data_uncut = []
-    for point in [p for p in z_var[2][0][2] if min(z_var[1][0][2]) <= p <= max(z_var[1][0][2])]:
-        colour_data_uncut.append(z_var_interp(point))
+        # Creates the data series of same length as the latitude/longitude data:
+        # z_var[2][0][2] = gps time data
+        colour_data_uncut = []
+        for point in [p for p in z_var[2][0][2] if min(z_var[1][0][2]) <= p <= max(z_var[1][0][2])]:
+            colour_data_uncut.append(z_var_interp(point))
 
-    # TODO: THIS NEEDS FIXING IN A WAY THAT WORKS BETTER. NEED TO MATCH THE TIME STAMPS OF THE LOCATION DATA WITH
-    #  THE COLOUR DATA.
-    # Makes sure that the colour data has the same length as the latitude and longitude data
-    colour_data = []
-    if len(geometry_data[0]) != len(colour_data_uncut):
-        for point in colour_data_uncut[:(len(geometry_data) - 1)]:
-            colour_data.append(point)
+        # TODO: THIS NEEDS FIXING IN A WAY THAT WORKS BETTER. NEED TO MATCH THE TIME STAMPS OF THE LOCATION DATA WITH
+        #  THE COLOUR DATA.
+        # Makes sure that the colour data has the same length as the latitude and longitude data
+        colour_data = []
+        if len(geometry_data[0]) != len(colour_data_uncut):
+            for point in colour_data_uncut[:(len(geometry_data) - 1)]:
+                colour_data.append(point)
+        else:
+            colour_data = colour_data_uncut
+
+        # Creates lists of points of latitude and longitude of colour values above and below the limits specified limits
+        # and notes the points
+        low_colour_lat_values = []
+        low_colour_long_values = []
+
+        high_colour_lat_values = []
+        high_colour_long_values = []
+
+        try:
+            lower_limit = z_var_limits[0]
+            upper_limit = z_var_limits[1]
+        except IndexError:
+            print("Limits not entered in the correct format. Format should be [lower_limit, upper_limit] where lower"
+                  "_limit and upper_limit are floats or integers.")
+            lower_limit = None
+            upper_limit = None
+
+        # Checks that the formats are correct for the lower_ and upper_limit(s)
+        if type(lower_limit) is str or type(lower_limit) is float:
+            print("Lower limit type not correct. Format should be [lower_limit, upper_limit] where lower_limit "
+                  "and upper_limit are floats or integers.")
+            lower_limit = None
+        if type(upper_limit) is str or type(upper_limit) is float:
+            print("Upper limit type not correct. Format should be [lower_limit, upper_limit] where lower_limit "
+                  "and upper_limit are floats or integers.")
+            upper_limit = None
     else:
-        colour_data = colour_data_uncut
-
-    # Creates lists of points of latitude and longitude of colour values above and below the limits specified limits
-    # and notes the points
-    low_colour_lat_values = []
-    low_colour_long_values = []
-
-    high_colour_lat_values = []
-    high_colour_long_values = []
-
-    try:
-        lower_limit = z_var_limits[0]
-        upper_limit = z_var_limits[1]
-    except IndexError:
-        print("Limits not entered in the correct format. Format should be [lower_limit, upper_limit] where lower_limit "
-              "and upper_limit are floats or integers.")
         lower_limit = None
         upper_limit = None
-
-    # Checks that the formats are correct for the lower_ and upper_limit(s)
-    if type(lower_limit) is str or type(lower_limit) is float:
-        print("Lower limit type not correct. Format should be [lower_limit, upper_limit] where lower_limit "
-              "and upper_limit are floats or integers.")
-        lower_limit = None
-    if type(upper_limit) is str or type(upper_limit) is float:
-        print("Upper limit type not correct. Format should be [lower_limit, upper_limit] where lower_limit "
-              "and upper_limit are floats or integers.")
-        upper_limit = None
+        colour_data = None
+        low_colour_lat_values = None
+        low_colour_long_values = None
+        high_colour_lat_values = None
+        high_colour_long_values = None
 
     # Adds geometry data
     # Highlights user defined outliers
@@ -997,9 +1007,12 @@ def backplt_map(lat, long, z_var, scale_factor=1, text_title=None, z_var_limits=
         plt.plot(geometry_data[0], geometry_data[1], 'r', zorder=1,
                  linewidth=0.5)
         # Plots the colour data over the base data
-        mapplot = plt.scatter(geometry_data[0], geometry_data[1],
-                              c=colour_data, marker='.',
-                              cmap='gnuplot', zorder=2)
+        if colour_data is not None:
+            mapplot = plt.scatter(geometry_data[0], geometry_data[1],
+                                  c=colour_data, marker='.',
+                                  cmap='gnuplot', zorder=2)
+        else:
+            mapplot = plt.scatter(geometry_data[0], geometry_data[1], marker='.', zorder=2)
         # Plots lower and upper limit data if limits are present.
         if lower_limit is not None:
             plt.scatter(low_colour_lat_values, low_colour_long_values,
