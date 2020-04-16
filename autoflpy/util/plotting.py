@@ -882,8 +882,9 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
 
 def backplt_map(lat, long, z_var, scale_factor=1, text_title=None, z_var_limits=(None, None)):
     """
+    Currently this is a support function to graph_plotter() and should not be used on its own.
     This plots a map behind some latitude-longitude data and colours the line according to a third variable (z_var).
-
+    # TODO: Replace z_var with simple data lists, titles and units so that this method can be used separately
     """
     # Sets titles for the data frame
     column_titles = np.array(['index', 'lat, long'])
