@@ -897,9 +897,16 @@ def backplt_map(lat, long, z_var=None, z_var_unit=None, z_var_data=None, z_var_t
     z_var_unit = String for the units of the variable e.g. "m"
     z_var_data = List of the data to be plotted e.g. [5, 12, 14]
     z_var_time_data = List of the time data accompanying z_var_data in seconds e.g. [1, 2, 3]
-    z_var_gps_time_data = List of time data from the gps data set in seconds e.g. [1, 1.5, 2, 2.5, 3]
-    # TODO: Make this function recognise if the imports are present.
+    z_var_gps_time_data = List of time data from the gps data set in seconds. This should
+        have the same length as the latitude/longtude data. e.g. [1, 1.5, 2, 2.5, 3]
     """
+    # Checks that the correct modules have been imported:
+    try:
+        import geopandas as gpd
+        import contextily as ctx
+        from pyproj import Proj as proj, transform
+    except ImportError:
+        raise ImportError("Make sure that geopandas, contextily and pyproj are installed before continuing.")
 
     # Sets titles for the data frame
     column_titles = np.array(['index', 'lat, long'])
