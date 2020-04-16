@@ -253,15 +253,22 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
             # Assigns data to variables
             lat = y[data_set][2]
             long = x[data_set][2]
+            z_var = plot_data_map[data_set][0][0][0]
+            z_var_data = plot_data_map[data_set][0][0][2]
+            z_var_gps_time_data = plot_data_map[data_set][2][0][2]
+            z_var_unit = plot_data_map[data_set][0][0][1]
+            z_var_time_data = plot_data_map[data_set][1][0][2]
             if generate_title is True:
                 title_text = "Latitude v Longitude for " + str(flight_dates_list[data_set])
             # Plots map with data
-            backplt_map(lat, long, z_var=plot_data_map[data_set], text_title=title_text,
+            backplt_map(lat, long, z_var=z_var, z_var_unit=z_var_unit, z_var_data=z_var_data,
+                        z_var_time_data=z_var_time_data, z_var_gps_time_data=z_var_gps_time_data, text_title=title_text,
                         z_var_limits=map_info_limits)
             # Plots a second map only if one flight is being analysed
             if single_flight is True:
-                backplt_map(lat, long, z_var=plot_data_map[data_set], scale_factor=float(1 / scale),
-                            text_title=title_text, z_var_limits=map_info_limits)
+                backplt_map(lat, long, z_var=z_var, z_var_unit=z_var_unit, z_var_data=z_var_data,
+                            z_var_time_data=z_var_time_data, z_var_gps_time_data=z_var_gps_time_data,
+                            scale_factor=float(1 / scale), text_title=title_text, z_var_limits=map_info_limits)
         return
 
     elif plot_info == 1 and x[0][0] == 'Longitude' and y[0][0] == 'Latitude' and map_modules_imported is False:
@@ -880,13 +887,20 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     plt.show()
 
 
-def backplt_map(lat, long, z_var=None, scale_factor=1, text_title=None, z_var_limits=(None, None)):
+def backplt_map(lat, long, z_var=None, z_var_unit=None, z_var_data=None, z_var_time_data=None, z_var_gps_time_data=None,
+                scale_factor=1, text_title=None, z_var_limits=(None, None)):
     """
     Currently this is a support function to graph_plotter() and should not be used on its own.
     This plots a map behind some latitude-longitude data and colours the line according to a third variable (z_var).
-    # TODO: Replace z_var with simple data lists, titles and units so that this method can be used separately.
+
+    z_var = String for the name of the variable e.g. "Altitude"
+    z_var_unit = String for the units of the variable e.g. "m"
+    z_var_data = List of the data to be plotted e.g. [5, 12, 14]
+    z_var_time_data = List of the time data accompanying z_var_data in seconds e.g. [1, 2, 3]
+    z_var_gps_time_data = List of time data from the gps data set in seconds e.g. [1, 1.5, 2, 2.5, 3]
     # TODO: Make this function recognise if the imports are present.
     """
+
     # Sets titles for the data frame
     column_titles = np.array(['index', 'lat, long'])
     index = range(len(lat))
@@ -934,16 +948,24 @@ def backplt_map(lat, long, z_var=None, scale_factor=1, text_title=None, z_var_li
                      path_data_geo['geometry'].y]
 
     # Processes data for the colour scale:
+    # Checks that all the necessary data has been entered correctly.
+    z_var_complete = [z_var, z_var_data, z_var_gps_time_data, z_var_unit, z_var_time_data]
+    if all in z_var_complete is None:
+        z_var = None
+    elif None in z_var_complete:
+        print("Not enough data entered for plotting a colour scale (z_var). Make sure that z_var, "
+              "z_var_unit, z_var_data, z_var_time_data and z_var_gps_time_data have all been completed. If z_var or"
+              " z_var_unit are not available, enter an empty string.")
+        z_var = None
+    else:
+        pass
     # Interpolates the data for the colour series over the data's time scale
-    # z_var[1][0][2] = colour variable time data
-    # z_var[0][0][2] = colour variable data
     if z_var is not None:
-        z_var_interp = interp.interp1d(z_var[1][0][2], z_var[0][0][2])
+        z_var_interp = interp.interp1d(z_var_time_data, z_var_data)
 
         # Creates the data series of same length as the latitude/longitude data:
-        # z_var[2][0][2] = gps time data
         colour_data_uncut = []
-        for point in [p for p in z_var[2][0][2] if min(z_var[1][0][2]) <= p <= max(z_var[1][0][2])]:
+        for point in [p for p in z_var_gps_time_data if min(z_var_time_data) <= p <= max(z_var_time_data)]:
             colour_data_uncut.append(z_var_interp(point))
 
         # TODO: THIS NEEDS FIXING IN A WAY THAT WORKS BETTER. NEED TO MATCH THE TIME STAMPS OF THE LOCATION DATA WITH
@@ -1102,7 +1124,7 @@ def backplt_map(lat, long, z_var=None, scale_factor=1, text_title=None, z_var_li
     if text_title is not None:
         map_title = text_title
     elif scale_factor <= 5:
-        map_title += " v " + str(z_var[0][0][0])
+        map_title += " v " + str(z_var)
 
     # Splits title if its width exceeds 60
     wraped_title = textwrap.wrap(map_title, width=60)
@@ -1122,9 +1144,7 @@ def backplt_map(lat, long, z_var=None, scale_factor=1, text_title=None, z_var_li
         # Plots the colour map
         cbar = plt.colorbar(mapplot, cax=cax)
         # Adds a label to the colour bar
-        # z_var[0][0][0] = colour variable name
-        # z_var[0][0][1] = colour variable units
-        cbar.ax.set_ylabel(str(z_var[0][0][0]) + " (" + str(z_var[0][0][1]) + ")", rotation=90)
+        cbar.ax.set_ylabel(str(z_var) + " (" + str(z_var_unit) + ")", rotation=90)
 
     plt.show()
     return
