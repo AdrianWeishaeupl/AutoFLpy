@@ -2,6 +2,11 @@
 History
 =======
 
+1.1.5 (2020-04-17)
+------------------
+
+* backplt_map in plotting.py upgraded for stand alone use
+
 
 1.1.4 (2020-03-23)
 ------------------
