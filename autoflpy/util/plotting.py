@@ -264,11 +264,13 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
             backplt_map(lat, long, z_var=z_var, z_var_unit=z_var_unit, z_var_data=z_var_data,
                         z_var_time_data=z_var_time_data, z_var_gps_time_data=z_var_gps_time_data, text_title=title_text,
                         z_var_limits=map_info_limits)
+            plt.show()
             # Plots a second map only if one flight is being analysed
             if single_flight is True:
                 backplt_map(lat, long, z_var=z_var, z_var_unit=z_var_unit, z_var_data=z_var_data,
                             z_var_time_data=z_var_time_data, z_var_gps_time_data=z_var_gps_time_data,
                             scale_factor=float(1 / scale), text_title=title_text, z_var_limits=map_info_limits)
+            plt.show()
         return
 
     elif plot_info == 1 and x[0][0] == 'Longitude' and y[0][0] == 'Latitude' and map_modules_imported is False:
@@ -899,6 +901,8 @@ def backplt_map(lat, long, z_var=None, z_var_unit=None, z_var_data=None, z_var_t
     z_var_time_data = List of the time data accompanying z_var_data in seconds e.g. [1, 2, 3]
     z_var_gps_time_data = List of time data from the gps data set in seconds. This should
         have the same length as the latitude/longtude data. e.g. [1, 1.5, 2, 2.5, 3]
+
+    Returns a figure object
     """
     # Checks that the correct modules have been imported:
     try:
@@ -1153,8 +1157,7 @@ def backplt_map(lat, long, z_var=None, z_var_unit=None, z_var_data=None, z_var_t
         # Adds a label to the colour bar
         cbar.ax.set_ylabel(str(z_var) + " (" + str(z_var_unit) + ")", rotation=90)
 
-    plt.show()
-    return
+    return fig
 
 
 def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=False, alt_sensitivity=0.3,
