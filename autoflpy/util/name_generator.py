@@ -83,7 +83,6 @@ def excel_file_name_updater(dates, flight_numbers):
 
         # Outputs generated file names for reading in the Flight Log Code.
         global generated_file_name
-        print(type(flight_names))
         generated_file_name = flight_names
     else:
         raise IndexError("Number of dates does not match the number of flights. Check the Input_file.json to make sure"
