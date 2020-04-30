@@ -752,10 +752,10 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         for pair in xy_pairs:
             # plots x against y values.
             if single_flight is True:
-                line = axis_1.plot(pair[0][2], pair[1][2], label=pair[1][0],
+                line = axis_2.plot(pair[0][2], pair[1][2], label=pair[1][0],
                                    color="C" + str(line_count))
             else:
-                line = axis_1.plot(pair[0][2], pair[1][2], label=(str(pair[1][0]) + " " + str(pair[2])),
+                line = axis_2.plot(pair[0][2], pair[1][2], label=(str(pair[1][0]) + " " + str(pair[2])),
                                    color="C" + str(line_count))
             # Increments line count
             line_count += 1
