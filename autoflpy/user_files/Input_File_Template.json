@@ -4,7 +4,7 @@
 		"log_file_path": "Set to your storage location. If blank, uses the file path of the sample data. NOTE: file paths need // as separators.",
         "excel_data_file_path": "Destination for the generated excel data. If blank, creates folder in the current directory",
 		"date": "YYYYMMDD",
-		"flight_number": "Flight number on the date specified"
+		"flight_number": "Flight number on the date specified. These can contain a "." for sub-flight numbering."
 	},
 	
 	"flight_log_generator_input": {		
