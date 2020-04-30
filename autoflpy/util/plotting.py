@@ -957,7 +957,6 @@ def backplt_map(lat, long, z_var=None, z_var_unit=None, z_var_data=None, z_var_t
     # Retrieves data from the dataframe
     geometry_data = [path_data_geo['geometry'].x,
                      path_data_geo['geometry'].y]
-
     # Processes data for the colour scale:
     # Checks that all the necessary data has been entered correctly.
     z_var_complete = [z_var, z_var_data, z_var_gps_time_data, z_var_unit, z_var_time_data]
@@ -973,21 +972,25 @@ def backplt_map(lat, long, z_var=None, z_var_unit=None, z_var_data=None, z_var_t
     # Interpolates the data for the colour series over the data's time scale
     if z_var is not None:
         z_var_interp = interp.interp1d(z_var_time_data, z_var_data)
+        geom_x_interp = interp.interp1d(z_var_gps_time_data, geometry_data[0])
+        geom_y_interp = interp.interp1d(z_var_gps_time_data, geometry_data[1])
 
-        # Creates the data series of same length as the latitude/longitude data:
-        colour_data_uncut = []
-        for point in [p for p in z_var_gps_time_data if min(z_var_time_data) <= p <= max(z_var_time_data)]:
-            colour_data_uncut.append(z_var_interp(point))
+        common_times = []
+        # Finds common times across both data sets
+        for point in z_var_gps_time_data:
+            if min(z_var_time_data) <= point <= max(z_var_time_data):
+                common_times.append(point)
 
-        # TODO: THIS NEEDS FIXING IN A WAY THAT WORKS BETTER. NEED TO MATCH THE TIME STAMPS OF THE LOCATION DATA WITH
-        #  THE COLOUR DATA.
-        # Makes sure that the colour data has the same length as the latitude and longitude data
+        # Generates the data across the common_times
         colour_data = []
-        if len(geometry_data[0]) != len(colour_data_uncut):
-            for point in colour_data_uncut[:(len(geometry_data) - 1)]:
-                colour_data.append(point)
-        else:
-            colour_data = colour_data_uncut
+        geom_x = []
+        geom_y = []
+        for point in common_times:
+            geom_x.append(geom_x_interp(point))
+            geom_y.append(geom_y_interp(point))
+            colour_data.append(z_var_interp(point))
+
+        geometry_data = [np.array(geom_x), np.array(geom_y)]
 
         # Creates lists of points of latitude and longitude of colour values above and below the limits specified limits
         # and notes the points
