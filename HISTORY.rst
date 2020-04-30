@@ -2,10 +2,19 @@
 History
 =======
 
+1.1.7 (2020-04-30)
+------------------
+
+* multiaxis_graph_plotter bug where the data was plotted on the wrong axis fixed
+* backplt_map improved so that the z_var data always corresponds to the correct gps data (linked via time)
+* flight_numbers can now be decimals for recording sub-flight numbers
+
+
 1.1.6 (2020-04-24)
 ------------------
 
 * backplt_map in plotting.py now returns a figure object for further customisation
+
 
 1.1.5 (2020-04-17)
 ------------------
