@@ -390,10 +390,10 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
     # Removes new line at end
     plt.title(final_title[:-1], y=1.05)
     # Checks to see if plot limits have been set for the x values
-    if isinstance(x_limits[0], int) and isinstance(x_limits[1], int):
+    if isinstance(x_limits[0], float) and isinstance(x_limits[1], float):
         plt.xlim(x_limits)
     # Checks to see if plot limits have been set for the y values
-    if isinstance(y_limits[0], int) and isinstance(y_limits[1], int):
+    if isinstance(y_limits[0], float) and isinstance(y_limits[1], float):
         plt.ylim(y_limits)
 
     axes_limits_center_y = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1]) / 2
@@ -858,15 +858,15 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         print('Right axis data missing or entered incorrectly.')
 
     # Checks to see if plot limits have been set for the x values
-    if isinstance(x_limits[0], int) and isinstance(x_limits[1], int):
+    if isinstance(x_limits[0], float) and isinstance(x_limits[1], float):
         axis_1.set_xlim(x_limits)
     # Checks to see if plot limits have been set for the y values on the left
     # axis.
-    if isinstance(y_limits_left[0], int) and isinstance(y_limits_left[1], int):
+    if isinstance(y_limits_left[0], float) and isinstance(y_limits_left[1], float):
         axis_1.set_ylim(y_limits_left)
         # Checks to see if plot limits have been set for the y values on the
         # right axis.
-    if isinstance(y_limits_right[0], int) and isinstance(y_limits_right[1], int):
+    if isinstance(y_limits_right[0], float) and isinstance(y_limits_right[1], float):
         axis_2.set_ylim(y_limits_right)
 
     axes_limits_center_y = (plt.gca().get_ylim()[0] + plt.gca().get_ylim()[1]) / 2
