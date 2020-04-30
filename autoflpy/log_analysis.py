@@ -204,7 +204,7 @@ def autoflpy(input_file='Input_File.json'):
         copyfile(base_path + 'test_arduino.CSV', arduino_flight_data_file_path
                  + 'test_arduino.CSV')
 
-    flight_log_file_name_header = "Generated_flight_log_"
+    flight_log_file_name_header = "Flight_report_"
     if data["flight_log_generator_input"][
         "checklist_data_file_path"] != "" and \
         os.path.exists(data[
