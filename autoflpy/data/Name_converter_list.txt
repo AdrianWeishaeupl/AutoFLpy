@@ -13,6 +13,21 @@ MULT, Mult, Mult, unavailable
 PARM, TimeUS, Time, US
 PARM, Name, Name, unavailable
 PARM, Value, Value, unavailable
+TECS, TimeUS, Time, US
+TECS, h, Height_Estimate, m
+TECS, dh, Climb_Rate, mpers
+TECS, hdem, Target_Height, m
+TECS, dhdem, Target_Climb_Rate, mpers
+TECS, spdem, Target_TAS, mpers
+TECS, sp, TAS, mpers
+TECS, dsp, X_Acceleration, mperspers
+TECS, ith, Throttle_Integrator_Value, unavailable
+TECS, iph, Specific_Energy_Balance_Integrator_Value, unavailable
+TECS, th, Throttle_Out, unavailable
+TECS, ph, Pitch_Out, degrees
+TECS, dspdem, Dem_Acceleration_Out, mpers
+TECS, w, TECS_Speed_Height_Priority, no unit
+TECS, f, Flags, unavailable
 GPS, TimeUS, Time, US
 GPS, Status, Status, unavailable
 GPS, GMS, GMS, unavailable
@@ -24,8 +39,9 @@ GPS, Lng, longitude, degrees longitude
 GPS, Alt, Altitude, m
 GPS, Spd, Groundspeed, mpers
 GPS, GCrs, Ground_Course, degrees
-GPS, VZ, VZ, unavailable
-GPS, U, U, unavailable
+GPS, VZ, VZ, mpers
+GPS, Yaw, Yaw, degrees
+GPS, U, U, no unit
 GPS2, TimeUS, Time, US
 GPS2, Status, Status, unavailable
 GPS2, GMS, GMS, unavailable
@@ -37,25 +53,27 @@ GPS2, Lng, longitude, degrees longitude
 GPS2, Alt, Altitude, m
 GPS2, Spd, Groundspeed, mpers
 GPS2, GCrs, Ground_Course, degrees
-GPS2, VZ, VZ, unavailable
-GPS2, U, U, unavailable
+GPS2, VZ, VZ, mpers
+GPS2, Yaw, Yaw, degrees
+GPS2, U, U, no unit
 GPSB, TimeUS, Time, US
 GPSB, Status, Status, unavailable
-GPSB, GMS, GMS, unavailable
-GPSB, GWk, GWk, unavailable
-GPSB, NSats, NSats, unavailable
+GPSB, GMS, GMS, ms
+GPSB, GWk, GWk, ms
+GPSB, NSats, NSats, no unit
 GPSB, HDop, HDop, unavailable
 GPSB, Lat, latitude, degrees latitude
 GPSB, Lng, longitude, degrees longitude
 GPSB, Alt, Altitude, m
 GPSB, Spd, Groundspeed, mpers
 GPSB, GCrs, Ground_Course, degrees
-GPSB, VZ, VZ, unavailable
-GPSB, U, U, unavailable
+GPSB, VZ, VZ, mpers
+GPSB, U, U, no unit
 GPA, TimeUS, Time, US
 GPA, VDop, VDop, unavailable
 GPA, HAcc, Horizontal_Accuracy, m
 GPA, VAcc, Vertical_Accuracy, m
+GPA, SAcc, Speed_Accuracy, mpers
 GPA, GPA2, SAcc, Speed_Accuracy, mperspers
 GPA, VV, VV, unavailable
 GPA, SMS, SMS, unavailable
@@ -132,6 +150,7 @@ BARO, CRt, CRt, unavailable
 BARO, SMS, SMS, unavailable
 BARO, Offset, Offset, unavailable
 BARO, GndTemp, GndTemp, degrees Celsius
+BARO, Health, Health, unavailable
 POWR, TimeUS, Time, US
 POWR, Vcc, Vcc, unavailable
 POWR, VServo, VServo, unavailable
@@ -187,7 +206,8 @@ ARSP, RawPress, Raw_Pressure, Pa
 ARSP, Offset, Offset, unavailable
 ARSP, U, U, unavailable
 ARSP, Health, Health, unavailable
-ARSP, Primary, Primary, unavailable
+ARSP, Pri, Primary_Sensor, no unit
+ARSP, Pri, Primary, unavailable
 ASP2, TimeUS, Time, US
 ASP2, Airspeed, Airspeed, mpers
 ASP2, DiffPress, DiffPress, unavailable
@@ -198,6 +218,7 @@ ASP2, U, U, unavailable
 ASP2, Health, Health, unavailable
 ASP2, Primary, Primary, unavailable
 BAT, TimeUS, Time, US
+BAT, Instance, Insance, no unit
 BAT, Volt, Voltage, V
 BAT, VoltR, Voltage R, V
 BAT, Curr, Current, A
@@ -939,6 +960,7 @@ BAR2, CRt, CRt, unavailable
 BAR2, SMS, SMS, unavailable
 BAR2, Offset, Offset, unavailable
 BAR2, GndTemp, GndTemp, unavailable
+BAR2, Health, Health, unavailable
 BAR3, TimeUS, Time, US
 BAR3, Alt, Altitude, m
 BAR3, Press, Press, unavailable
@@ -947,6 +969,7 @@ BAR3, CRt, CRt, unavailable
 BAR3, SMS, SMS, unavailable
 BAR3, Offset, Offset, unavailable
 BAR3, GndTemp, GndTemp, unavailable
+BAR3, Health, Health, unavailable
 VIBE, TimeUS, Time, US
 VIBE, VibeX, VibeX, mperspers
 VIBE, VibeY, VibeY, mperspers
@@ -1109,8 +1132,8 @@ CTUN, NavRoll, NavRoll, unavailable
 CTUN, Roll, Roll, degrees
 CTUN, NavPitch, NavPitch, unavailable
 CTUN, Pitch, Pitch, degrees
-CTUN, ThrOut, ThrOut, unavailable
-CTUN, RdrOut, RdrOut, unavailable
+CTUN, ThrOut, ThrOut, %
+CTUN, RdrOut, RdrOut, %
 CTUN, ThrDem, ThrDem, unavailable
 CTUN, Aspd, airspeed, mpers
 NTUN, TimeUS, Time, US
@@ -1130,8 +1153,10 @@ SONR, Volt, Voltage, V
 SONR, Cnt, Cnt, unavailable
 SONR, Corr, Corr, unavailable
 ARM, TimeUS, Time, US
-ARM, ArmState, ArmState, unavailable
-ARM, ArmChecks, ArmChecks, unavailable
+ARM, ArmState, Arm_State, no unit
+ARM, ArmChecks, Arm_Checks, no unit
+ARM, Forced, Forced, no unit
+ARM, Method, Method, unavailable
 ATRP, TimeUS, Time, US
 ATRP, Type, Type, unavailable
 ATRP, State, State, unavailable
@@ -1198,10 +1223,32 @@ PIQA, D, D, unavailable
 PIQA, FF, FF, unavailable
 PIQA, AFF, AFF, unavailable
 AETR, TimeUS, Time, US
-AETR, Ail, Ail, unavailable
-AETR, Elev, Elev, unavailable
-AETR, Thr, Thr, unavailable
-AETR, Rudd, Rudd, unavailable
-AETR, Flap, Flap, unavailable
+AETR, Ail, Aileron, cdegree
+AETR, Elev, Elevator, cdegree
+AETR, Thr, Throttle, cdegree
+AETR, Rudd, Rudder, cdegree
+AETR, Flap, Flap, cdegree
 EV, TimeUS, Time, US
 EV, Event, Event, unavailable
+CESC, TimeUS, Time, US
+CESC, Id, Id, no unit
+CESC, ECnt, ECnt, unavailable
+CESC, Voltage, Voltage, V
+CESC, Curr, Current, A
+CESC, Temp, Temperature, degrees C
+CESC, RPM, RPM, rpm
+CESC, Pow, PowerOut, W
+CSRV, TimeUS, Time, US
+CSRV, Id,, Id, no unit
+CSRV, Pos, Position, unavailable
+CSRV, Force, Force, unavailable
+CSRV, Speed, Speed, unavailable
+CSRV, Pow, Power, W
+LGR, TimeUS, Time, US
+LGR, LandingGear, Landing_Gear_State, no unit
+LGR, WeightOnWheels, Weight_On_Wheels, no unit
+MAV, TimeUS, Time, US
+MAV, chan, Channel_Number, no unit
+MAV, txp, Transmitted_Packet_Count, no unit
+MAV, rxp, Received_Packet_Count, no unit
+MAV, rxdp, Expected_Number_of_Packets, no unit
