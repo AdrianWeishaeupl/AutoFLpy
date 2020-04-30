@@ -50,10 +50,30 @@ def excel_file_name_updater(dates, flight_numbers):
             # Gets the flight number from the input data.
             try:
                 # Checks to see if the flight number is available
-                flight_number = int(flight_numbers[flight])
+                flight_number = str(flight_numbers[flight])
                 flight_number_available = True
-                if len(str(flight_number)) < 2:
-                    flight_number = "0" + str(flight_number)
+                # Formats the flight number to be in the form of xy or xy_z where:
+                # x, y, z are integers and
+                # xy is the flight number and z is the autopilot number in case of multiple autopilots.
+                if "." in str(flight_numbers):
+                    flight_number = str(flight_number).replace(".", "_")
+                    multiple_autopilots = True
+                else:
+                    multiple_autopilots = False
+
+                if multiple_autopilots is False:
+                    # xy format for when only one autopilot is present
+                    if len(str(flight_number)) < 2:
+                        flight_number = "0" + str(flight_number)
+                else:
+                    # xy_z format for when multiple autopilots are present
+                    if "_" not in str(flight_number):
+                        flight_number = str(flight_number) + "_"
+                    if len(str(flight_number).split("_")[0]) < 2:
+                        flight_number = "0" + str(flight_number)
+                    if len(str(flight_number).split("_")[1]) < 1:
+                        flight_number = str(flight_number) + "0"
+
             except ValueError:
                 # If it is not then the flight number is returned as False.
                 flight_number_available = False
@@ -62,7 +82,7 @@ def excel_file_name_updater(dates, flight_numbers):
                 text = str(flight_date) + "_Flight"
                 # Checks to see if the flight number is available
                 if flight_number_available is True:
-                    text += flight_number
+                    text += str(flight_number)
                 else:
                     # Error message explaining that data is required
                     raise Exception("Error", "Flight number is required for"
