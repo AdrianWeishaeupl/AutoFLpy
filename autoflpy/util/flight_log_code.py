@@ -329,6 +329,7 @@ def flight_data(file_path, file_name):
     for sheet in sheet_list:
         frame = pd.read_excel(data, sheet_name=sheet, engine='openpyxl')
         frame_list.append(frame)
+    data.close()
     return frame_list
 
 
