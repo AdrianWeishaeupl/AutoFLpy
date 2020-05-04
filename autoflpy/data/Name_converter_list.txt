@@ -141,7 +141,7 @@ RCOU, C12, CH12, us
 RCOU, C13, CH13, us
 RCOU, C14, CH14, us
 RSSI, TimeUS, Time, US
-RSSI, RXRSSI, RXRSSI, unavailable
+RSSI, RXRSSI, Receiver_RSSI, unavailable
 BARO, TimeUS, Time, US
 BARO, Alt, Altitude, m
 BARO, Press, Pressure, Pa
@@ -152,10 +152,10 @@ BARO, Offset, Offset, unavailable
 BARO, GndTemp, GndTemp, degrees Celsius
 BARO, Health, Health, unavailable
 POWR, TimeUS, Time, US
-POWR, Vcc, Vcc, unavailable
-POWR, VServo, VServo, unavailable
+POWR, Vcc, Flight_Board_Voltage, V
+POWR, VServo, Servo_Rail_Voltage, V
 POWR, Flags, Flags, unavailable
-POWR, Safety, Safety, unavailable
+POWR, Safety, Hardware_Safety_Switch_Status, unavailable
 CMD, TimeUS, Time, US
 CMD, CTot, CTot, unavailable
 CMD, CNum, CNum, unavailable
@@ -170,10 +170,10 @@ CMD, Alt, Altitude, m
 CMD, Frame, Frame, unavailable
 RAD, TimeUS, Time, US
 RAD, RSSI, RSSI, unavailable
-RAD, RemRSSI, RemRSSI, unavailable
+RAD, RemRSSI, Remote_RSSI, unavailable
 RAD, TxBuf, TxBuf, unavailable
 RAD, Noise, Noise, unavailable
-RAD, RemNoise, RemNoise, unavailable
+RAD, RemNoise, Remote_Noise, unavailable
 RAD, RxErrors, RxErrors, unavailable
 RAD, Fixed, Fixed, unavailable
 CAM, TimeUS, Time, US
@@ -382,8 +382,8 @@ AHR2, Q2, Q2, unavailable
 AHR2, Q3, Q3, unavailable
 AHR2, Q4, Q4, unavailable
 POS, TimeUS, Time, US
-POS, Lat, latitude, degrees latitude
-POS, Lng, longitude, degrees longitude
+POS, Lat, Latitude, degrees latitude
+POS, Lng, Longitude, degrees longitude
 POS, Alt, Altitude, m
 POS, RelHomeAlt, RelHomeAlt, m
 POS, RelOriginAlt, RelOriginAlt, m
@@ -1023,8 +1023,8 @@ ISBD, y, y, unavailable
 ISBD, z, z, unavailable
 ORGN, TimeUS, Time, US
 ORGN, Type, Type, unavailable
-ORGN, Lat, latitude, degrees latitude
-ORGN, Lng, longitude, degrees longitude
+ORGN, Lat, Latitude, degrees latitude
+ORGN, Lng, Longitude, degrees longitude
 ORGN, Alt, Altitude, m
 DSF, TimeUS, Time, US
 DSF, Dp, Dp, unavailable
@@ -1137,16 +1137,17 @@ CTUN, RdrOut, RdrOut, %
 CTUN, ThrDem, ThrDem, unavailable
 CTUN, Aspd, airspeed, mpers
 NTUN, TimeUS, Time, US
-NTUN, WpDist, WpDist, unavailable
+NTUN, Dist, WpDist, unavailable
 NTUN, TBrg, TBrg, unavailable
 NTUN, NavBrg, NavBrg, unavailable
 NTUN, AltErr, AltErr, unavailable
 NTUN, XT, XT, unavailable
 NTUN, XTi, XTi, unavailable
-NTUN, ArspdErr, ArspdErr, unavailable
-NTUN, TLat, TLat, unavailable
-NTUN, TLng, TLng, unavailable
-NTUN, TAlt, TAlt, unavailable
+NTUN, AspdE, Airspeed_Error, unavailable
+NTUN, TLat, Target_Latitude, degrees latitude
+NTUN, TLng, Target_Longitude, degrees longitude
+NTUN, TAlt, Target_Altitude, m
+NTUN, TAspd, Target_Airspeed, mpers
 SONR, TimeUS, Time, US
 SONR, Dist, Dist, unavailable
 SONR, Volt, Voltage, V
@@ -1168,11 +1169,11 @@ STAT, TimeUS, Time, US
 STAT, isFlying, isFlying, unavailable
 STAT, isFlyProb, isFlyProb, unavailable
 STAT, Armed, Armed, unavailable
-STAT, Safety, Safety, unavailable
-STAT, Crash, Crash, unavailable
+STAT, Safety, Safety_Switch, unavailable
+STAT, Crash, Crash_Detected, unavailable
 STAT, Still, Still, unavailable
 STAT, Stage, Stage, unavailable
-STAT, Hit, Hit, unavailable
+STAT, Hit, Impact_Detected, unavailable
 QTUN, TimeUS, Time, US
 QTUN, AngBst, AngBst, unavailable
 QTUN, ThrOut, ThrOut, unavailable
