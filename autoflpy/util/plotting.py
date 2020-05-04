@@ -1177,9 +1177,9 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
     ["pitch", "ctun"]
     ["desired pitch", "att"]
 
-    ["throttle ch3", "rcin"]
-    ["flap ch5", "rcin"]
-    ["elevator ch2", "rcin"]
+    ["throttle ch3", "rcou"]
+    ["flap ch5", "rcou"]
+    ["elevator ch2", "rcou"]
     ["current", "bat"]
 
     ["vibex", "vibe"]
@@ -1235,8 +1235,8 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
     graph_plotter([["y", "pitch", "att"], ["y", "desired pitch", "att"], ["x", "time", "att"]], values_list, x_limits,
                   y_limits, marker_list, arm_data=arm_data)
 
-    multiaxis_graph_plotter([["y", "throttle ch3", "rcin"], ["y", "flap ch5", "rcin"], ["y", "elevator ch2", "rcin"],
-                             ["x", "time", "rcin"]], [["y", "current", "bat"], ["x", "time", "bat"]],
+    multiaxis_graph_plotter([["y", "throttle ch3", "rcou"], ["y", "flap ch5", "rcou"], ["y", "elevator ch2", "rcou"],
+                             ["x", "time", "rcou"]], [["y", "current", "bat"], ["x", "time", "bat"]],
                             values_list, x_limits, y_limits_left, y_limits_right, marker_list,
                             legend_location, arm_data=arm_data)
 

@@ -126,11 +126,11 @@ RCIN, C12, CH12, us
 RCIN, C13, CH13, us
 RCIN, C14, CH14, us
 RCOU, TimeUS, Time, US
-RCOU, C1, CH1, us
-RCOU, C2, CH2, us
-RCOU, C3, CH3, us
-RCOU, C4, CH4, us
-RCOU, C5, CH5, us
+RCOU, C1, aileron_CH1, us
+RCOU, C2, elevator_CH2, us
+RCOU, C3, throttle_CH3, us
+RCOU, C4, rudder_CH4, us
+RCOU, C5, flap_CH5, us
 RCOU, C6, CH6, us
 RCOU, C7, CH7, us
 RCOU, C8, CH8, us
