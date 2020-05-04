@@ -202,10 +202,10 @@ def flight_log_maker(template_file_path, template_file_name,
             flight_date = str(flight_dates[flight])
             if (icao_airfields[flight] != "data" or icao_airfields[flight] != "") and all(hours_valid) is True:
                 # Retrieves METAR data.
-                metar_data_list.append(metar_finder(icao_airfields[flight], flight_date[:4],
-                                                    flight_date[4:6], flight_date[6:8],
-                                                    flight_date[4:6], flight_date[6:8],
-                                                    start_times_hours[flight], end_times_hours[flight],
+                metar_data_list.append(metar_finder(icao_airfields[flight], str(flight_date[:4]),
+                                                    str(flight_date[4:6]), str(flight_date[6:8]),
+                                                    str(flight_date[4:6]), str(flight_date[6:8]),
+                                                    str(start_times_hours[flight]), str(end_times_hours[flight]),
                                                     metar_file_path))
                 metar_generated.append(True)
             else:
