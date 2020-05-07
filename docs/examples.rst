@@ -205,21 +205,37 @@ Sample data::
 	
 
 
-For simply plotting the points on the map, only the location data and associated times are required:
+For simply plotting the points on the map, only the location data and associated times are required::
+
+	from autoflpy.util.plotting import backplt_map
+	figure = backplt_map(latitudes, longitudes, gps_time)
+	figure.show()
 
 .. image:: images/Ex_backplt_map1.png
 	:width: 900
 	:align: center
 	:alt: backplt_map use as a stand alone function.
 
-An additional variable can be added as the z_var (in this case, altitude data) as follows. This requires data and a corresponding time series that overlaps with the latitude/longitude data. A name and unit can be added as a string and should be an empty string if not desired. Print statements can also be removed using disable_prints=True.
+An additional variable can be added as the z_var (in this case, altitude data) as follows. This requires data and a corresponding time series that overlaps with the latitude/longitude data. A name and unit can be added as a string and should be an empty string if not desired. Print statements can also be removed using disable_prints=True.::
+
+	from autoflpy.util.plotting import backplt_map
+	figure = backplt_map(latitudes, longitudes, gps_time, z_var="Altitude",
+	z_var_data=altitude, z_var_time_data=altitude_time, z_var_unit="m",
+	disable_prints=True)
+	figure.show()
 
 .. image:: images/Ex_backplt_map2.png
 	:width: 900
 	:align: center
 	:alt: backplt_map use as a stand alone function with altitude data.
 
-Just as in the graph_plotter, outliers can also be marked on the plot by using the z_var_limits and entering a desired list containing an upper and lower bound.
+Just as in the graph_plotter, outliers can also be marked on the plot by using the z_var_limits and entering a desired list containing an upper and lower bound.::
+
+	from autoflpy.util.plotting import backplt_map
+	figure = backplt_map(latitudes, longitudes, gps_time, z_var="Altitude", 
+	z_var_data=altitude, z_var_time_data=altitude_time, z_var_unit="m",
+	z_var_limits=[20, 75], disable_prints=True)
+	figure.show()
 
 .. image:: images/Ex_backplt_map3.png
 	:width: 900
@@ -233,7 +249,9 @@ Take-off Graphs
 
 Take-off graphs can be generated using the take_off_graph function. This allows the user to quickly plot the variables that influence the take off of the UAV. In it's most basic form, this function detects the take off and plots 5 figures focused around the take-off. The take off point is gound using the GPS data provided. If the function does not automatically detect the take off it can be entered manually using the take_off_time argument. Sensitivity of the take-off detection can be adjusted in the alt_sensitivity and groundspeed_sensitivity arguments. Markers and arm data work as normally described.
 
-The following figure shows the use of this feature.
+The following figure shows the use of this feature.::
+
+	take_off_graph(values_list)
 
 .. image:: images/Ex_take_off.png
 	:width: 900
@@ -255,7 +273,12 @@ AutoFLpy allows for the user to compare multiple flights in the same Jupyter Not
 
 Variables are entered into the plotting functions as usual and plotted for both sets of data if present. Some functionality is reduced including the automated take-off detection (reverted to manual only) and plotting the arm data when plotting multiple flights simultaneously.
 
-To aid with the lining up of data, the time_x_offset argument can be added to the plot to allow the user to shift the data along the time axis. It should only be used in the first figure to be plotted and, as it directly edits the imported data, all subsequent figures will be plotted with the new data. This argument takes one number for each flight being plotted and subtracts this from the time data:
+To aid with the lining up of data, the time_x_offset argument can be added to the plot to allow the user to shift the data along the time axis. It should only be used in the first figure to be plotted and, as it directly edits the imported data, all subsequent figures will be plotted with the new data. This argument takes one number for each flight being plotted and subtracts this from the time data::
+
+	x_limits=["x_min", "x_max"]
+	y_limits=["y_min", "y_max"]
+	graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]], 
+	values_list, x_limits, y_limits, marker_list, time_x_offset=[-32.5, -187.5])
 
 .. image:: images/Ex_time_x_offset.png
 	:width: 900
