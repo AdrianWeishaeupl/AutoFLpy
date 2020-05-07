@@ -262,13 +262,13 @@ def graph_plotter(plot_information, values_list, x_limits=("x_min", "x_max"),
                 title_text = "Latitude v Longitude for " + str(flight_dates_list[data_set])
             # Plots map with data
             backplt_map(lat, long, z_var=z_var, z_var_unit=z_var_unit, z_var_data=z_var_data,
-                        z_var_time_data=z_var_time_data, z_var_gps_time_data=z_var_gps_time_data, text_title=title_text,
+                        z_var_time_data=z_var_time_data, time_data=z_var_gps_time_data, text_title=title_text,
                         z_var_limits=map_info_limits)
             plt.show()
             # Plots a second map only if one flight is being analysed
             if single_flight is True:
                 backplt_map(lat, long, z_var=z_var, z_var_unit=z_var_unit, z_var_data=z_var_data,
-                            z_var_time_data=z_var_time_data, z_var_gps_time_data=z_var_gps_time_data,
+                            z_var_time_data=z_var_time_data, time_data=z_var_gps_time_data,
                             scale_factor=float(1 / scale), text_title=title_text, z_var_limits=map_info_limits)
             plt.show()
         return
@@ -889,18 +889,24 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
     plt.show()
 
 
-def backplt_map(lat, long, z_var=None, z_var_unit=None, z_var_data=None, z_var_time_data=None, z_var_gps_time_data=None,
+def backplt_map(lat, long, time_data, z_var=None, z_var_unit=None, z_var_data=None, z_var_time_data=None,
                 scale_factor=1, text_title=None, z_var_limits=(None, None)):
     """
-    Currently this is a support function to graph_plotter() and should not be used on its own.
     This plots a map behind some latitude-longitude data and colours the line according to a third variable (z_var).
+
+    lat = A list of latitude data
+    long = A list of longitude data
+    time_data = A list of time data corresponding to the latitude and longitude data in seconds
+
+    lat, long and time_data need to be of the same length.
 
     z_var = String for the name of the variable e.g. "Altitude"
     z_var_unit = String for the units of the variable e.g. "m"
     z_var_data = List of the data to be plotted e.g. [5, 12, 14]
     z_var_time_data = List of the time data accompanying z_var_data in seconds e.g. [1, 2, 3]
-    z_var_gps_time_data = List of time data from the gps data set in seconds. This should
-        have the same length as the latitude/longtude data. e.g. [1, 1.5, 2, 2.5, 3]
+
+    z_var_data and z_var_time_data should be lists of equal lengths. The z_var_time_data should overlap with the
+    time_data range.
 
     Returns a figure object
     """
@@ -959,7 +965,7 @@ def backplt_map(lat, long, z_var=None, z_var_unit=None, z_var_data=None, z_var_t
                      path_data_geo['geometry'].y]
     # Processes data for the colour scale:
     # Checks that all the necessary data has been entered correctly.
-    z_var_complete = [z_var, z_var_data, z_var_gps_time_data, z_var_unit, z_var_time_data]
+    z_var_complete = [z_var, z_var_data, time_data, z_var_unit, z_var_time_data]
     if all in z_var_complete is None:
         z_var = None
     elif None in z_var_complete:
@@ -972,12 +978,12 @@ def backplt_map(lat, long, z_var=None, z_var_unit=None, z_var_data=None, z_var_t
     # Interpolates the data for the colour series over the data's time scale
     if z_var is not None:
         z_var_interp = interp.interp1d(z_var_time_data, z_var_data)
-        geom_x_interp = interp.interp1d(z_var_gps_time_data, geometry_data[0])
-        geom_y_interp = interp.interp1d(z_var_gps_time_data, geometry_data[1])
+        geom_x_interp = interp.interp1d(time_data, geometry_data[0])
+        geom_y_interp = interp.interp1d(time_data, geometry_data[1])
 
         common_times = []
         # Finds common times across both data sets
-        for point in z_var_gps_time_data:
+        for point in time_data:
             if min(z_var_time_data) <= point <= max(z_var_time_data):
                 common_times.append(point)
 
@@ -1029,15 +1035,16 @@ def backplt_map(lat, long, z_var=None, z_var_unit=None, z_var_data=None, z_var_t
 
     # Adds geometry data
     # Highlights user defined outliers
-    for index in range(len(colour_data)):
-        if lower_limit is not None:
-            if colour_data[index] <= lower_limit:
-                low_colour_lat_values.append(geometry_data[0][index])
-                low_colour_long_values.append(geometry_data[1][index])
-        if upper_limit is not None:
-            if colour_data[index] >= upper_limit:
-                high_colour_lat_values.append(geometry_data[0][index])
-                high_colour_long_values.append(geometry_data[1][index])
+    if colour_data is not None:
+        for index in range(len(colour_data)):
+            if lower_limit is not None:
+                if colour_data[index] <= lower_limit:
+                    low_colour_lat_values.append(geometry_data[0][index])
+                    low_colour_long_values.append(geometry_data[1][index])
+            if upper_limit is not None:
+                if colour_data[index] >= upper_limit:
+                    high_colour_lat_values.append(geometry_data[0][index])
+                    high_colour_long_values.append(geometry_data[1][index])
     if scale_factor <= 200:
         # Plots the geometry data using matplotlib
         plt.plot(geometry_data[0], geometry_data[1], 'r', zorder=1,
@@ -1137,7 +1144,7 @@ def backplt_map(lat, long, z_var=None, z_var_unit=None, z_var_data=None, z_var_t
 
     if text_title is not None:
         map_title = text_title
-    elif scale_factor <= 5:
+    elif scale_factor <= 5 and colour_data is not None:
         map_title += " v " + str(z_var)
 
     # Splits title if its width exceeds 60
@@ -1151,7 +1158,7 @@ def backplt_map(lat, long, z_var=None, z_var_unit=None, z_var_data=None, z_var_t
     plt.title(final_title[:-1], y=1.05)
     plt.grid(which='both', axis='both', linewidth=0.2, color="0.1")
     # Adds a colour bar to a plot if the scale is not out of bounds.
-    if scale_factor <= 5:
+    if scale_factor <= 5 and colour_data is not None:
         # Formats location of the colour bar
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="5%", pad=0.1)
