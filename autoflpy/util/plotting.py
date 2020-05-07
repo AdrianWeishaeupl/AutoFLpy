@@ -906,7 +906,10 @@ def backplt_map(lat, long, time_data, z_var=None, z_var_unit=None, z_var_data=No
     z_var_time_data = List of the time data accompanying z_var_data in seconds e.g. [1, 2, 3]
 
     z_var_data and z_var_time_data should be lists of equal lengths. The z_var_time_data should overlap with the
-    time_data range.
+        time_data range.
+
+    z_var_limits = Limits to the z_var data in the form [lower_limit, upper_limit].
+        This is not required for plotting z_var.
 
     disable_prints = If True, warning about no z_var data and map selection advice are not printed.
 
