@@ -8,9 +8,8 @@ Graph Plotter Examples
 
 Once AutoFLpy has been run, a Jupyter Notebook is generated. This can be opened using Jupyter Notebook and run to generate the requested graphs.
 
-The graph_plotter is used to plot simple data such as the following altitude plot:
+The graph_plotter is used to plot simple data such as the following altitude plot: ::
 
-::
 	x_limits = ["x_min", "x_max"]
 	y_limits = ["y_min", "y_max"]
 	graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]], 
@@ -21,9 +20,8 @@ The graph_plotter is used to plot simple data such as the following altitude plo
 	:align: center
 	:alt: Image of a graph generated with AutoFLpy showing altitude plotted against time.
 
-The code cell above the graph is used to define variables used in the plot such as the axes limits and variables used in the function itself. The axes limits (x_limits and y_limits) can be changed and the code re-run to generate a view of a more precise section of the plot:
+The code cell above the graph is used to define variables used in the plot such as the axes limits and variables used in the function itself. The axes limits (x_limits and y_limits) can be changed and the code re-run to generate a view of a more precise section of the plot::
 
-::
 	x_limits = [45, 90]
 	y_limits = [30, 85]
 	graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]], 
@@ -34,9 +32,8 @@ The code cell above the graph is used to define variables used in the plot such 
 	:align: center
 	:alt: Image of a graph generated with AutoFLpy showing a section of the altitude v time plot.
 
-Variables in the same data group (in this case "gps") can be plotted on the same graph either by changing the Notebook template (recommended) or by inserting the data tag (eg. ["y", "groundspeed", "gps"]) into the function:
+Variables in the same data group (in this case "gps") can be plotted on the same graph either by changing the Notebook template (recommended) or by inserting the data tag (eg. ["y", "groundspeed", "gps"]) into the function::
 
-::
 	x_limits=["x_min", "x_max"]
 	y_limits=["y_min", "y_max"]
 	graph_plotter([["y", "altitude", "gps"], ["y", "groundspeed", "gps"],
@@ -49,9 +46,8 @@ Variables in the same data group (in this case "gps") can be plotted on the same
 	:align: center
 	:alt: Image of a graph generated with AutoFLpy showing altitude and groundspeed v time.
 
-If two variables are from different data sets, there is a good chance that they were sampled at different frequencies. For this, the multiaxes plotter function can be used. This function works under the same principle as the function mentioned above but allows for several data sets to be plotted:
+If two variables are from different data sets, there is a good chance that they were sampled at different frequencies. For this, the multiaxes plotter function can be used. This function works under the same principle as the function mentioned above but allows for several data sets to be plotted::
 
-::
 	x_limits=["x_min", "x_max"]
 	y_limits_left=["y_min", "y_max"]
 	y_limits_right=["y_min", "y_max"]
@@ -65,9 +61,8 @@ If two variables are from different data sets, there is a good chance that they 
 	:align: center
 	:alt: Image of a graph generated with AutoFLpy showing altitude and airspeed v time.
 
-The arm and disarm times can be added to both multi-variable and standard graphs. This is done through the addition of the arm_data variable. The time between the arm and disarm will also be calculated:
+The arm and disarm times can be added to both multi-variable and standard graphs. This is done through the addition of the arm_data variable. The time between the arm and disarm will also be calculated::
 
-::
 	x_limits=["x_min", "x_max"]
 	y_limits=["y_min", "y_max"]
 	graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]], 
