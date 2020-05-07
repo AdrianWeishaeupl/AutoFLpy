@@ -8,12 +8,12 @@ Graph Plotter Examples
 
 Once AutoFLpy has been run, a Jupyter Notebook is generated. This can be opened using Jupyter Notebook and run to generate the requested graphs.
 
-The graph_plotter is used to plot simple data such as the following altitude plot: ::
+The graph_plotter is used to plot simple data such as the following altitude plot::
 
 	x_limits = ["x_min", "x_max"]
 	y_limits = ["y_min", "y_max"]
-	graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]], 
-				  values_list, x_limits, y_limits, marker_list)
+	graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]],
+	values_list, x_limits, y_limits, marker_list)
 
 .. image:: images/Ex_alt_v_time_1.png
 	:width: 900
@@ -25,7 +25,7 @@ The code cell above the graph is used to define variables used in the plot such 
 	x_limits = [45, 90]
 	y_limits = [30, 85]
 	graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]], 
-				  values_list, x_limits, y_limits, marker_list)
+	values_list, x_limits, y_limits, marker_list)
 
 .. image:: images/Ex_alt_v_time_2.png
 	:width: 900
@@ -37,8 +37,8 @@ Variables in the same data group (in this case "gps") can be plotted on the same
 	x_limits=["x_min", "x_max"]
 	y_limits=["y_min", "y_max"]
 	graph_plotter([["y", "altitude", "gps"], ["y", "groundspeed", "gps"],
-				  ["x", "time", "gps"]], values_list, x_limits, y_limits,
-				  marker_list)
+	["x", "time", "gps"]], values_list, x_limits, y_limits,
+	marker_list)
 
 
 .. image:: images/Ex_alt_v_time_3.png
@@ -52,9 +52,9 @@ If two variables are from different data sets, there is a good chance that they 
 	y_limits_left=["y_min", "y_max"]
 	y_limits_right=["y_min", "y_max"]
 	legend_location=1
-	multiaxis_graph_plotter([["y", "airspeed", "arsp"], ["x", "time",	"arsp"]],
-							[["y", "altitude", "gps"], ["x", "time", "gps"]], values_list,
-							x_limits, y_limits_left, y_limits_right, marker_list, legend_location)
+	multiaxis_graph_plotter([["y", "airspeed", "arsp"], ["x", "time", "arsp"]],
+	[["y", "altitude", "gps"], ["x", "time", "gps"]], values_list,
+	x_limits, y_limits_left, y_limits_right, marker_list, legend_location)
 
 .. image:: images/Ex_arsp_alt_v_time_1.png
 	:width: 900
@@ -66,7 +66,7 @@ The arm and disarm times can be added to both multi-variable and standard graphs
 	x_limits=["x_min", "x_max"]
 	y_limits=["y_min", "y_max"]
 	graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]], 
-				  values_list, x_limits, y_limits, marker_list, arm_data=True)
+	values_list, x_limits, y_limits, marker_list, arm_data=True)
 
 .. image:: images/Ex_alt_v_time_4.png
 	:width: 900
@@ -84,12 +84,12 @@ For marking specific flight points across all graphs simultaneously, define your
 Plotting Maps
 -------------
 
-This is a special feature of the graph plotter and allows for a top down visualisation of the flight and surrounding area. To activate this feature, plot latitude against longitude. Two maps will be generated, one of the immediate flight area and one of the region:
+This is a special feature of the graph plotter and allows for a top down visualisation of the flight and surrounding area. To activate this feature, plot latitude against longitude. Two maps will be generated, one of the immediate flight area and one of the region::
 
-.. image:: images/Ex_map_1_code.png
-	:width: 900
-	:align: center
-	:alt: Image of input to the graph plotter to gerenate a map.
+	x_limits=["x_min", "x_max"]
+	y_limits=["y_min", "y_max"]
+	graph_plotter([["y", "latitude", "gps"], ["x", "longitude", "gps"]],
+	values_list, x_limits, y_limits, marker_list)
 
 .. image:: images/SITL_flight_map.png
 	:width: 900
@@ -101,31 +101,36 @@ This is a special feature of the graph plotter and allows for a top down visuali
 	:align: center
 	:alt: Image of zoomed in map generated using Software In The Loop.
 
-The scale of the second plot can be changed through the addition of the scale variable:
+The scale of the second plot can be changed through the addition of the scale variable::
 
-.. image:: images/Ex_map_2_code.png
-	:width: 900
-	:align: center
-	:alt: Image of input to the graph plotter to gerenate a map with a scale defined.
+	x_limits=["x_min", "x_max"]
+	y_limits=["y_min", "y_max"]
+	graph_plotter([["y", "latitude", "gps"], ["x", "longitude", "gps"]], 
+	values_list, x_limits, y_limits, marker_list, scale=0.001)
 
 .. image:: images/SITL_flight_map_out_2.png
 	:width: 900
 	:align: center
 	:alt: Image of zoomed in map generated using Software In The Loop.
 
-The colour of the additional variable on the map plot can be defined by any third varible for which data is present. This is done through the addition of the map_info variable. The following examplke demonstrates this with airspeed:
+The colour of the additional variable on the map plot can be defined by any third varible for which data is present. This is done through the addition of the map_info variable. The following examplke demonstrates this with airspeed::
 
-.. image:: images/Ex_map_3_code.png
-	:width: 900
-	:align: center
-	:alt: Image of input to the graph plotter to gerenate a map with airspeed on the colour axes.
+	x_limits=["x_min", "x_max"]
+	y_limits=["y_min", "y_max"]
+	graph_plotter([["y", "latitude", "gps"], ["x", "longitude", "gps"]], 
+	values_list, x_limits, y_limits, marker_list, map_info=["airspeed", "arsp"])
 
 .. image:: images/SITL_flight_map_3.png
 	:width: 900
 	:align: center
 	:alt: Image of zoomed in map generated using Software In The Loop showing airspeed on the colour axes.
 
-To set limits in the map plot, the map_info_limits argument can be used. map_info_limits are limits to be applied in to the map_info data in the form [lower_limit, upper_limit]. If only one limit is required, enter the other limit as None. This colours any points below the lower_limit in blue and any above the upper_limit in red. Below is an example with altitudes below 25 m and above 85 m marked.
+To set limits in the map plot, the map_info_limits argument can be used. map_info_limits are limits to be applied in to the map_info data in the form [lower_limit, upper_limit]. If only one limit is required, enter the other limit as None. This colours any points below the lower_limit in blue and any above the upper_limit in red. Below is an example with altitudes below 25 m and above 85 m marked.::
+
+	x_limits=["x_min", "x_max"]
+	y_limits=["y_min", "y_max"]
+	graph_plotter([["y", "latitude", "gps"], ["x", "longitude", "gps"]],
+	values_list, x_limits, y_limits, marker_list, map_info_limits=[30, 85])
 
 .. image:: images/SITL_flight_map_4.png
 	:width: 900
