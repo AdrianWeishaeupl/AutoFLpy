@@ -2,6 +2,13 @@
 History
 =======
 
+1.1.8 (2020-05-07)
+------------------
+
+* Documentation updated to include examples of the backplt_map function
+* Improvements made to the backplt_map function for isolated use
+
+
 1.1.7 (2020-04-30)
 ------------------
 
