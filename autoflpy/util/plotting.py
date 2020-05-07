@@ -890,7 +890,7 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
 
 
 def backplt_map(lat, long, time_data, z_var=None, z_var_unit=None, z_var_data=None, z_var_time_data=None,
-                scale_factor=1, text_title=None, z_var_limits=(None, None)):
+                scale_factor=1, text_title=None, z_var_limits=(None, None), disable_prints=False):
     """
     This plots a map behind some latitude-longitude data and colours the line according to a third variable (z_var).
 
@@ -907,6 +907,8 @@ def backplt_map(lat, long, time_data, z_var=None, z_var_unit=None, z_var_data=No
 
     z_var_data and z_var_time_data should be lists of equal lengths. The z_var_time_data should overlap with the
     time_data range.
+
+    disable_prints = If True, warning about no z_var data and map selection advice are not printed.
 
     Returns a figure object
     """
@@ -968,7 +970,7 @@ def backplt_map(lat, long, time_data, z_var=None, z_var_unit=None, z_var_data=No
     z_var_complete = [z_var, z_var_data, time_data, z_var_unit, z_var_time_data]
     if all in z_var_complete is None:
         z_var = None
-    elif None in z_var_complete:
+    elif None in z_var_complete and disable_prints is False:
         print("Not enough data entered for plotting a colour scale (z_var). Make sure that z_var, "
               "z_var_unit, z_var_data, z_var_time_data and z_var_gps_time_data have all been completed. If z_var or"
               " z_var_unit are not available, enter an empty string.")
@@ -1128,8 +1130,9 @@ def backplt_map(lat, long, time_data, z_var=None, z_var_unit=None, z_var_data=No
     except HTTPError:
         # If the resolution is not good enough, plots an OpenStreetMap
         # instead
-        print('Location does not have high resolution Stamen terrain'
-              ' map data. Defaulting to OpenStreetMap data.')
+        if disable_prints is False:
+            print('Location does not have high resolution Stamen terrain'
+                  ' map data. Defaulting to OpenStreetMap data.')
         ctx.add_basemap(ax, url=ctx.sources.OSM_A)
     except ConnectionError:
         # If there is no internet connection present, the map can't be called.
