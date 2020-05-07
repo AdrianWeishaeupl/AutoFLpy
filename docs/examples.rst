@@ -8,7 +8,7 @@ Graph Plotter Examples
 
 Once AutoFLpy has been run, a Jupyter Notebook is generated. This can be opened using Jupyter Notebook and run to generate the requested graphs.
 
-The graph plotter is used to plot simple data such as the following altitude plot:
+The graph_plotter is used to plot simple data such as the following altitude plot:
 
 .. image:: images/Ex_alt_v_time_1.png
 	:width: 900
@@ -101,6 +101,97 @@ To set limits in the map plot, the map_info_limits argument can be used. map_inf
 	:width: 900
 	:align: center
 	:alt: Image of zoomed in map generated using Software In The Loop showing outliers marked.
+
+Stand alone maps (backplt_map)
+------------------------------
+
+The above mentioned functions can also be used externally to plot latitude and longitude data. Using this returns a matplotlib pyplot figure object which can be customised before showing.
+
+Sample data::
+
+	{
+	latitudes = [49.953711  , 49.95345004, 49.9531899 , 49.95293059, 49.9526721 ,
+		   49.95241445, 49.95215761, 49.95190161, 49.95164643, 49.95139208,
+		   49.95113855, 49.95088585, 49.95063398, 49.95038293, 49.95013271,
+		   49.94988331, 49.94963474, 49.949387  , 49.94914009, 49.948894  ,
+		   49.94864873, 49.9484043 , 49.94816069, 49.9479179 , 49.94767594,
+		   49.94743481, 49.94719451, 49.94695503, 49.94671638, 49.94647855,
+		   49.94624155, 49.94600538, 49.94577003, 49.94553551, 49.94530181,
+		   49.94506895, 49.9448369 , 49.94460569, 49.9443753 , 49.94414574,
+		   49.943917  , 49.94368909, 49.94346201, 49.94323575, 49.94301032,
+		   49.94278571, 49.94256193, 49.94233898, 49.94211686, 49.94189556,
+		   49.94167508, 49.94145544, 49.94123662, 49.94101862, 49.94080145,
+		   49.94058511, 49.9403696 , 49.94015491, 49.93994105, 49.93972801,
+		   49.9395158 , 49.93930442, 49.93909386, 49.93888413, 49.93867522,
+		   49.93846715, 49.93825989, 49.93805347, 49.93784787, 49.9376431 ,
+		   49.93743915, 49.93723603, 49.93703374, 49.93683227, 49.93663163,
+		   49.93643181, 49.93623282, 49.93603466, 49.93583733, 49.93564082,
+		   49.93544513, 49.93525028, 49.93505625, 49.93486304, 49.93467066,
+		   49.93447911, 49.93428839, 49.93409849, 49.93390942, 49.93372117,
+		   49.93353375, 49.93334716, 49.93316139, 49.93297645, 49.93279233,
+		   49.93260905, 49.93242658, 49.93224495, 49.93206414, 49.93188416,
+		   49.931705  ]
+
+	longitudes = [-6.369436  , -6.37093546, -6.37240315, -6.37383906, -6.37524321,
+		   -6.37661558, -6.37795618, -6.379265  , -6.38054206, -6.38178734,
+		   -6.38300085, -6.38418259, -6.38533255, -6.38645074, -6.38753716,
+		   -6.38859181, -6.38961469, -6.39060579, -6.39156512, -6.39249268,
+		   -6.39338847, -6.39425248, -6.39508472, -6.39588519, -6.39665389,
+		   -6.39739081, -6.39809596, -6.39876934, -6.39941095, -6.40002079,
+		   -6.40059885, -6.40114514, -6.40165966, -6.4021424 , -6.40259338,
+		   -6.40301258, -6.40340001, -6.40375566, -6.40407955, -6.40437166,
+		   -6.404632  , -6.40486057, -6.40505736, -6.40522238, -6.40535563,
+		   -6.40545711, -6.40552682, -6.40556475, -6.40557091, -6.4055453 ,
+		   -6.40548792, -6.40539876, -6.40527783, -6.40512513, -6.40494066,
+		   -6.40472441, -6.40447639, -6.4041966 , -6.40388504, -6.40354171,
+		   -6.4031666 , -6.40275972, -6.40232107, -6.40185064, -6.40134845,
+		   -6.40081448, -6.40024874, -6.39965122, -6.39902194, -6.39836088,
+		   -6.39766805, -6.39694345, -6.39618707, -6.39539892, -6.394579  ,
+		   -6.39372731, -6.39284385, -6.39192861, -6.3909816 , -6.39000282,
+		   -6.38899227, -6.38794994, -6.38687584, -6.38576997, -6.38463233,
+		   -6.38346291, -6.38226172, -6.38102876, -6.37976403, -6.37846753,
+		   -6.37713925, -6.3757792 , -6.37438738, -6.37296378, -6.37150842,
+		   -6.37002128, -6.36850237, -6.36695168, -6.36536923, -6.363755  ,
+		   -6.362109  ]
+
+	gps_time = [  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.,   9.,  10.,
+			11.,  12.,  13.,  14.,  15.,  16.,  17.,  18.,  19.,  20.,  21.,
+			22.,  23.,  24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.,  32.,
+			33.,  34.,  35.,  36.,  37.,  38.,  39.,  40.,  41.,  42.,  43.,
+			44.,  45.,  46.,  47.,  48.,  49.,  50.,  51.,  52.,  53.,  54.,
+			55.,  56.,  57.,  58.,  59.,  60.,  61.,  62.,  63.,  64.,  65.,
+			66.,  67.,  68.,  69.,  70.,  71.,  72.,  73.,  74.,  75.,  76.,
+			77.,  78.,  79.,  80.,  81.,  82.,  83.,  84.,  85.,  86.,  87.,
+			88.,  89.,  90.,  91.,  92.,  93.,  94.,  95.,  96.,  97.,  98.,
+			99., 100.]
+
+	altitude = [0, 60, 80, 80, 40, 0]
+	altitude_time = [0, 20, 30, 60, 80, 100]
+	}
+
+
+For simply plotting the points on the map, only the location data and associated times are required:
+
+.. image:: images/Ex_backplt_map1.png
+	:width: 900
+	:align: center
+	:alt: backplt_map use as a stand alone function.
+
+An additional variable can be added as the z_var (in this case, altitude data) as follows. This requires data and a corresponding time series that overlaps with the latitude/longitude data. A name and unit can be added as a string and should be an empty string if not desired. Print statements can also be removed using disable_prints=True.
+
+.. image:: images/Ex_backplt_map2.png
+	:width: 900
+	:align: center
+	:alt: backplt_map use as a stand alone function with altitude data.
+
+Just as in the graph_plotter, outliers can also be marked on the plot by using the z_var_limits and entering a desired list containing an upper and lower bound.
+
+.. image:: images/Ex_backplt_map3.png
+	:width: 900
+	:align: center
+	:alt: backplt_map use as a stand alone function with altitude data and outliers marked.
+
+
 
 Take-off Graphs
 ---------------
