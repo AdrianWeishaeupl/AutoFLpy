@@ -102,14 +102,14 @@ To set limits in the map plot, the map_info_limits argument can be used. map_inf
 	:align: center
 	:alt: Image of zoomed in map generated using Software In The Loop showing outliers marked.
 
-Stand alone maps (backplt_map)
+Stand alone maps - backplt_map
 ------------------------------
 
-The above mentioned functions can also be used externally to plot latitude and longitude data. Using this returns a matplotlib pyplot figure object which can be customised before showing.
+The above mentioned functions can also be used externally to plot latitude and longitude data. Using this returns a matplotlib pyplot figure object which can be customised before showing. Import the backplt_map from autoflpy.util.plotting to use the function.
 
 Sample data::
 
-	{
+	
 	latitudes = [49.953711  , 49.95345004, 49.9531899 , 49.95293059, 49.9526721 ,
 		   49.95241445, 49.95215761, 49.95190161, 49.95164643, 49.95139208,
 		   49.95113855, 49.95088585, 49.95063398, 49.95038293, 49.95013271,
@@ -167,7 +167,7 @@ Sample data::
 
 	altitude = [0, 60, 80, 80, 40, 0]
 	altitude_time = [0, 20, 30, 60, 80, 100]
-	}
+	
 
 
 For simply plotting the points on the map, only the location data and associated times are required:
