@@ -948,7 +948,11 @@ def backplt_map(lat, long, time_data, z_var=None, z_var_unit=None, z_var_data=No
     path_data_geo = geo_data_frame
     # Changes the data's coordinate system to epsg 3857 (needed for the
     # maps)
-    path_data_geo = path_data_geo.to_crs(epsg=3857)
+    try:
+        # Catches the unknown error
+        path_data_geo = path_data_geo.to_crs(epsg=3857)
+    except RuntimeError:
+        raise RuntimeError("Unknown error: make sure pyproj is installed correctly.")
 
     # To get the axis labels correctly:
     # Find max and min lat and long.
