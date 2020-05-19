@@ -1226,9 +1226,9 @@ PIQA, AFF, AFF, unavailable
 AETR, TimeUS, Time, US
 AETR, Ail, Aileron, cdegree
 AETR, Elev, Elevator, cdegree
-AETR, Thr, Throttle, cdegree
+AETR, Thr, Throttle, %
 AETR, Rudd, Rudder, cdegree
-AETR, Flap, Flap, cdegree
+AETR, Flap, Flap, %
 EV, TimeUS, Time, US
 EV, Event, Event, unavailable
 CESC, TimeUS, Time, US
