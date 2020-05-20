@@ -1,6 +1,20 @@
 Examples
 ========
 
+log_analysis.autoflpy
+---------------------
+
+To activate the METAR feature, set include_metar to True. This feature is only available when a single flight is being analysed. Default is False.::
+
+	log_analysis.autoflpy(input_file='Input_File.json', include_metar=True)
+
+
+Once the xlsx files for the flight in question have been generated, the report generation time can be reduced by setting run_log_to_xlsx to False. This can be useful for re-plotting the flight with a different template or for comparing two or more flights that have previously been plotted. Default is True.::
+
+	log_analysis.autoflpy(input_file='Input_File.json', run_log_to_xlsx=False)
+
+
+
 The following section contains examples on how to use the Jupyter Notebook generated through AutoFLpy.
 
 Graph Plotter Examples
