@@ -28,7 +28,7 @@ DONE:
 """
 
 
-def autoflpy(input_file='Input_File.json'):
+def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=True):
     # Finds the file path from where this code is being run.
     base_path = os.path.join(os.path.dirname(__file__), "data") + os.sep
     # Tidies up the base path for python.
@@ -125,17 +125,21 @@ def autoflpy(input_file='Input_File.json'):
     aircraft_data_lists = flight_log_code.multi_dictionary_data_formatter(
         aircraft_data_multi, flight_dates, "aircraft_data")
 
-    # Runs the xlsx converter
-    log_to_xlsx.log_reader_multi(log_file_paths,
-                                 name_converter_file_path,
-                                 data_sources_path,
-                                 excel_file_path,
-                                 excel_file_names,
-                                 flight_dates,
-                                 flight_numbers,
-                                 weather_data_lists,
-                                 runway_data_lists,
-                                 aircraft_data_lists)
+    if run_log_to_xlsx is True:
+        # Runs the xlsx converter
+        log_to_xlsx.log_reader_multi(log_file_paths,
+                                     name_converter_file_path,
+                                     data_sources_path,
+                                     excel_file_path,
+                                     excel_file_names,
+                                     flight_dates,
+                                     flight_numbers,
+                                     weather_data_lists,
+                                     runway_data_lists,
+                                     aircraft_data_lists)
+    else:
+        print("log_to_xlsx has been disabled. This will cause errors if .xlsx data has not been generated previously or"
+              "is not in the correct folder.")
 
     start_times_hours = flight_log_code.multi_string_data_formatter(
         data["flight_log_generator_input"]["start_time_hours"], flight_dates, "start_time_hours")
@@ -275,7 +279,9 @@ def autoflpy(input_file='Input_File.json'):
                                      start_times_hours,
                                      end_times_hours,
                                      metar_file_path,
-                                     weather_data_lists, runway_data_lists)
+                                     weather_data_lists,
+                                     runway_data_lists,
+                                     include_metar)
 
 
 if __name__ == "__main__":
