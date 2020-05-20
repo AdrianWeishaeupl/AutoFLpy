@@ -157,7 +157,8 @@ class TestFlightLogCode(unittest.TestCase):
                                          self.end_time_hours,
                                          self.metar_file_path,
                                          self.weather_data,
-                                         self.runway_data)
+                                         self.runway_data,
+                                         True)
         # This code tests the flight_log_maker function.
         # First, check that a file has been created.
         test_flight_log_file_path = self.base_path + 'test_generated_flight_logtest_xlsx.ipynb'
