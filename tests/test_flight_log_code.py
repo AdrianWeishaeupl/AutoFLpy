@@ -355,12 +355,16 @@ class TestFlightLogCode(unittest.TestCase):
 
     def test_dictionary_reader(self):
         # Returns a string of formatted weather data
-        read_data = flight_log_code.dictionary_reader(self.weather_data_dict, units_present=True)
+        read_data = flight_log_code.dictionary_reader(self.weather_data_dict, units_present=True, flight_number="1")
         # Adds a string of formatted runway data
-        read_data += flight_log_code.dictionary_reader(self.runway_data_dict, units_present=False)
-        expected_results = ["Action time : 12:34 hh:mm", "Pressure : 1234567 Pa", "Temperature : -12.3 C",
-                            "Wind direction : 123 degrees", "Wind speed : 12.3 mps", "take off direction : 321",
-                            "runway surface : XYZ", "surface condition : ZYX"]
+        read_data += flight_log_code.dictionary_reader(self.runway_data_dict, units_present=False, flight_number="2")
+        expected_results = [" | Flight | Action time  (hh:mm) | Pressure  (Pa) | Temperature  (C) | Wind direction"
+                            "  (degrees) | Wind speed  (mps) |",
+                            " | --- | --- | --- | --- | --- | --- |",
+                            "| Flight 1| 12:34 | 1234567 | -12.3 | 123 | 12.3 |",
+                            " | Flight | runway surface  | surface condition  | take off direction  |",
+                            " | --- | --- | --- | --- |",
+                            "| Flight 2| XYZ | ZYX | 321 |"]
         # Checks that the correct data is present in the read_data string
         for string in expected_results:
             self.assertTrue(string in read_data)
