@@ -2,6 +2,13 @@
 History
 =======
 
+1.1.9 (2020-05-20)
+------------------
+
+* Options added in log_analysis.autoflpy for including METAR data and running log_to_xlsx to generate xlsx files of the data
+* Runway and weather data is now written as a table tor ease of viewing
+
+
 1.1.8 (2020-05-07)
 ------------------
 
