@@ -34,18 +34,19 @@ def flight_log_maker(template_file_path, template_file_name,
                      arduino_flight_data_names, flight_dates, flight_numbers,
                      flight_log_file_name_header, checklist_file_path,
                      icao_airfields, start_times_hours, end_times_hours, metar_file_path,
-                     weather_data_lists, runway_data_lists):
+                     weather_data_lists, runway_data_lists, include_metar):
     """This code will edit a specified template and return the result that has
     been produced after the substitution of data into the template."""
     print('Starting Flight Log Maker')
     # Sets the number of flights for iterating through the data lists
     number_of_flights = len(flight_dates)
 
-    if number_of_flights > 1:
-        include_metar = False
-        print("Metar is disabled for multiple flights")
-    else:
-        include_metar = True
+    if include_metar is True:
+        if number_of_flights > 1:
+            include_metar = False
+            print("Metar is disabled for multiple flights")
+        else:
+            include_metar = True
 
     # loads contents.
     contents = contents_opener(template_file_path, template_file_name)
