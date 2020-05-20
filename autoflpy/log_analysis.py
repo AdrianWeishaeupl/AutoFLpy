@@ -15,20 +15,41 @@ from shutil import copyfile
 
 """
 TODO:
-    Find a way that the code can recognise if the nearest airfield has weather
-        data.
-    Throttle as a %??
-    Axis variables in plots only take round numbers.
     Calculate wind speed/vector/plot.
     Add flight duration from vibration data.
     Add a 3D map image to summarise flight.
     Option to display time in UTC or time after flight start.
-    Fix cell removal if no weather/runway information was entered.
-DONE:
 """
 
 
 def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=True):
+    """autoflpy serves as the user interface for flight report generation.
+
+    Upon first time running of the script, sample data will be used to create a sample flight report for the user to
+    look at for inspiration.
+
+    A folder structure containing the "Input_File.json" and base file paths will also be created.
+    The user can then complete the "Input_File.json" with appropriate information and analyse their own flight data.
+
+    Folder structure generated:
+
+    user_files
+        * arduino_data              Contains sample Arduino data. User data in the form of a csv file can be added here.
+        * checklists                Contains sample checklists. User data can be added here.
+        * excel_file_path		    Contains excel files generated from the log files.
+        * flight_logs_generated		Contains the generated flight reports.
+        * log_files					Contains the user input flight data in the .log format.
+        * METAR_storage				This acts as a database for the METAR data.
+
+    arguments:
+        include_metar=False
+            If set to True, METAR information from the nearest airport will be collected and added to the log. This only
+            works when data from a single flight is being analysed.
+
+        run_log_to_xlsx=True
+            If set to False, xlsx files will not be generated which will save time. Do this if these files have already
+            been created. It will cause errors if the xlsx files are not present or in the wrong directory.
+    """
     # Finds the file path from where this code is being run.
     base_path = os.path.join(os.path.dirname(__file__), "data") + os.sep
     # Tidies up the base path for python.
@@ -67,10 +88,10 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
     # If no log file path has been entered, go to the standard log path.
     log_file_paths = []
     if data["log_to_xlsx_input"]["log_file_path"] != "" and os.path.exists(
-      data["log_to_xlsx_input"]["log_file_path"]) is True:
+        data["log_to_xlsx_input"]["log_file_path"]) is True:
         for file in data["log_to_xlsx_input"]["log_file_name"].replace(" ", "").split(","):
             log_file_paths.append(data["log_to_xlsx_input"][
-                                 "log_file_path"] + os.sep + file)
+                                      "log_file_path"] + os.sep + file)
     else:
         # Creates a new directory to look for files.
         log_file_base_path = (default_storage_path + "log_files" + os.sep
