@@ -88,7 +88,7 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
     # If no log file path has been entered, go to the standard log path.
     log_file_paths = []
     if data["log_to_xlsx_input"]["log_file_path"] != "" and os.path.exists(
-        data["log_to_xlsx_input"]["log_file_path"]) is True:
+      data["log_to_xlsx_input"]["log_file_path"]) is True:
         for file in data["log_to_xlsx_input"]["log_file_name"].replace(" ", "").split(","):
             log_file_paths.append(data["log_to_xlsx_input"][
                                       "log_file_path"] + os.sep + file)
@@ -280,9 +280,22 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
     if os.path.exists(images_path + 'Your_logo_file_name_here.png') is False:
         copyfile(base_path + 'Your_logo_file_name_here.png',
                  images_path + 'Your_logo_file_name_here.png')
+
+    # Excludes METAR for multiple flights
+    if include_metar is True:
+        if len(flight_dates) > 1:
+            include_metar = False
+            print("Metar is disabled for multiple flights")
+        else:
+            include_metar = True
+
     # Finds the nearest airfield for METAR information
-    icao_airfields = nearest_ICAO_finder.multi_icao_finder(flight_data_file_path,
-                                                           flight_data_file_names, excel_file_names)
+    if include_metar is True:
+        icao_airfields = nearest_ICAO_finder.multi_icao_finder(flight_data_file_path,
+                                                               flight_data_file_names, excel_file_names)
+    else:
+        # ICAO airfields not required
+        icao_airfields = []
 
     # Runs the flight log generator
     flight_log_code.flight_log_maker(template_file_path,
