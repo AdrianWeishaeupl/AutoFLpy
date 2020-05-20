@@ -41,13 +41,6 @@ def flight_log_maker(template_file_path, template_file_name,
     # Sets the number of flights for iterating through the data lists
     number_of_flights = len(flight_dates)
 
-    if include_metar is True:
-        if number_of_flights > 1:
-            include_metar = False
-            print("Metar is disabled for multiple flights")
-        else:
-            include_metar = True
-
     # loads contents.
     contents = contents_opener(template_file_path, template_file_name)
 
