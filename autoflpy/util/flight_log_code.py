@@ -8,9 +8,9 @@ from autoflpy.util.text_manipulation import *
 
 
 """
-Flight Log Generation Code.
+Flight Report Generation Code.
 This code takes flight data in the form of an .xlsx document (generated from a
-.log file in log_to_xlsx.py) and plots and
+.log file in log_to_xlsx.py) or a correctly formatted .csv and plots and
 formats the data to be displayed using a template .ipynb file.
 
 @author Adrian Weishaeupl
@@ -274,9 +274,13 @@ def flight_log_maker(template_file_path, template_file_name,
     runway_information = ""
     for flight in range(number_of_flights):
         weather_information += dictionary_reader(weather_data_lists[flight], debug_name="Weather data",
-                                                 units_present=True) + ","
+                                                 units_present=True, flight_index=flight,
+                                                 flight_number=(str(flight_numbers[flight] + " " +
+                                                                str(flight_dates[flight])))) + ","
         runway_information += dictionary_reader(runway_data_lists[flight], debug_name="Runway data",
-                                                units_present=False) + ","
+                                                units_present=False, flight_index=flight,
+                                                flight_number=(str(flight_numbers[flight] + " " +
+                                                               str(flight_dates[flight])))) + ","
     weather_information = weather_information[:-1]  # Removes the last "," for json formatting
     runway_information = runway_information[:-1]  # Removes the last "," for json formatting
 
@@ -1026,8 +1030,9 @@ def compile_and_compress(flight_data_file_path, flight_data_file_name,
     print('Pickling finished')
 
 
-def dictionary_reader(dictionary, debug_name="Dictionary data", units_present=False):
-    """Takes a dictionary of data and outputs a formatted string"""
+def dictionary_reader(dictionary, debug_name="Dictionary data", units_present=False, flight_index=0,
+                      flight_number=""):
+    """Takes a dictionary of data and outputs a formatted string in the form of a table"""
     # Splits the dictionary into lists of values and keys
     dictionary_keys = list(dictionary.keys())
     dictionary_values = list(dictionary.values())
@@ -1061,18 +1066,32 @@ def dictionary_reader(dictionary, debug_name="Dictionary data", units_present=Fa
             joined_names, dictionary_values = zip(*sorted(zip(
                 joined_names, dictionary_values)))  # Sort alphabetically
 
-        # Adds any non empty values to the text string
+        if flight_index == 0:
+            # Create a header for the table
+            header = "\"\\n\", \" | Flight |"
+            if units_present is True:
+                for data_item in range(len(dictionary_keys)):
+                    header += " " + str(joined_names[data_item]) + " (" + str(units[data_item]) + ") |"
+            else:
+                for data_item in range(len(dictionary_keys)):
+                    header += " " + str(joined_names[data_item]) + " |"
+            text = header + "\", \n "
+            # Creates the next empty row
+            counter = 0
+            text += "\"\\n\", \" | --- |"
+            while counter <= len(dictionary_keys) - 1:
+                text += " --- |"
+                counter += 1
+            text += "\", \n   "
+        else:
+            text = ""
+
+        # Adds data to the table
+        text += "\"\\n |" + " Flight " + str(flight_number) + "|"
         for data_item in range(len(dictionary_keys)):
-            if dictionary_values[data_item] != "":
-                if units_present is True:
-                    text += "\"" + str(joined_names[data_item]) + \
-                            ": " + str(dictionary_values[data_item]) + " " + str(units[data_item]) \
-                            + "\\n\",  \"\\n\", \n   "
-                else:
-                    text += "\"" + str(joined_names[data_item]) + \
-                            ": " + str(dictionary_values[data_item]) \
-                            + "\\n\",  \"\\n\", \n   "
-        text += "\"\\n\""
+            text += " " + str(dictionary_values[data_item]) + " |"
+
+        text += "\"  \n   "
 
     except ValueError:
         print("{0} not entered or in an incorrect format in the Input_File.json. ".format(debug_name) +
