@@ -201,7 +201,7 @@ If a cell contains the label CHECKLIST_TEXT, it will be removed if checklists do
 
 METAR information
 -----------------
-The text METAR_INFORMATION will import a paragraph of text stating the METAR information for the input times and dates. METAR_INFORMATION must be on a cell on its own to work.
+The text METAR_INFORMATION will import a paragraph of text stating the METAR information for the input times and dates. METAR_INFORMATION must be on a cell on its own and the variable include_metar when calling autoflpy must be set to True for this to work.
 
 METAR_INFORMATION
 
