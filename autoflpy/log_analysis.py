@@ -319,4 +319,4 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
 
 
 if __name__ == "__main__":
-    autoflpy()
+    autoflpy(run_log_to_xlsx=True, include_metar=True)
