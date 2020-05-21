@@ -691,6 +691,10 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         # Plots the title.
         title = text
 
+    if plot_info != 0:
+        # Assigns a name to be used in the title in case there is no right data.
+        x_variable_name = xy_pairs[0][0][0]
+
     # Records plot info for the left axis
     plot_info_left = plot_info
     # Renames data to make it compatible with older code.
@@ -811,19 +815,18 @@ def multiaxis_graph_plotter(plot_information_left, plot_information_right,
         plt.close()
         print('No data present or data entered incorrectly.')
         return
+
     if plot_info != 0 and plot_info_left != 0:
         # Plots the title.
         full_title = title + " and " + text
-
-    elif plot_info == 0:
+    elif plot_info == 0 and plot_info_left != 0:
         # Plots the title.
-        full_title = title
+        full_title = title + " v " + x_variable_name
         # Hides right axis if data is missing.
         axis_2.set_yticks([])
     else:
         # Creates a title.
-        full_title = text + " v " + \
-                     xy_pairs[0][0][0]
+        full_title = text
         # Hides left axis if data is missing.
         axis_1.set_yticks([])
         print('Left axis data missing or entered incorrectly.')
