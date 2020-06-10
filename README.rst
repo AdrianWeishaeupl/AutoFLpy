@@ -39,9 +39,9 @@ Features
 
 * Generates a highly customisable and agile flight summary report using data from .log and input files.
 * Default flight summary includes:
-	* Plots for **:
+	* Plots for (Note 1):
 		* GPS altitude and velocity.
-		* GPS latitude and longitude plotted on a map***.
+		* GPS latitude and longitude plotted on a map Note 2.
 		* Control inputs throughout the flight.
 		* Barometric data throughout the flight.
 		* Flight attitude throughout the flight.
@@ -53,9 +53,9 @@ Features
 * Sample data files included. This will be **created when the code is run for the first time**.
 * Full choice of file paths for the data and outputs can be specified using the input file.
 
-** If the raw data has been recorded and supplied.
+Note 1 -  If the raw data has been recorded and supplied.
 
-*** For this feature to work, both `geopandas <https://geopandas.org/>`_ and `contextily <https://github.com/darribas/contextily>`_ need to be installed on the local machine. This needs to be done by the user due to difficulty installing these on various operating systems. A short help guide is attached in the installation instructions.
+Note 2 -  For this feature to work, both `geopandas <https://geopandas.org/>`_ and `contextily <https://github.com/darribas/contextily>`_ need to be installed on the local machine. This needs to be done by the user due to difficulty installing these on various operating systems. A short help guide is attached in the installation instructions.
 
 .. image:: images/SITL_flight_map.png
 	:width: 700
