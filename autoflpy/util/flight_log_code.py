@@ -277,7 +277,6 @@ def flight_log_maker(template_file_path, template_file_name,
                                                                str(flight_dates[flight])))) + ","
     weather_information = weather_information[:-1]  # Removes the last "," for json formatting
     runway_information = runway_information[:-1]  # Removes the last "," for json formatting
-    print("WEATHER INFO", weather_information)
 
     if "empty_dictionary" not in weather_information:  # If information is present, add it to the content.
         contents = contents.replace("\"WEATHER_INFORMATION\"", "\"<h2>Weather Information</h2><a class=\\\"anchor\\\"" +
@@ -1031,7 +1030,6 @@ def dictionary_reader(dictionary, debug_name="Dictionary data", units_present=Fa
     # Splits the dictionary into lists of values and keys
     dictionary_keys = list(dictionary.keys())
     dictionary_values = list(dictionary.values())
-    print(f"Dictionary {debug_name} = ", dictionary)
     if dictionary == {'': 'N/A'}:
         text = "\"empty_dictionary \\n\""
     else:
