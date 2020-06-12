@@ -1105,32 +1105,37 @@ def multi_dictionary_data_formatter(dictionaries, flight_dates, debug_name):
     into:
     [{key}=value_dataset_1, {key}=value_dataset_2]
 
-    returns dictionary
+    returns a list of dictionaries
     """
 
     dictionary = []
-    # Removes any blank fields in the dictionaries:
-    for key in dictionaries.keys():
-        if dictionaries[key] == "":
-            dictionaries = remove_dictionary_key(dictionaries, key)
-        else:
-            pass
-
-    # Checks that the dictionary data lengths are equal to the number of flights
-    for item in dictionaries.values():
-        if len(item.replace(" ", "").split(",")) == len(flight_dates):
-            pass
-        else:
-            raise IndexError("{} data content does not match the number"
-                             " of flights entered ({}).".format(debug_name, len(flight_dates)))
-
-    # Formats dictionaries data as lists of data dictionaries
-    for flight in range(len(flight_dates)):
-        # Creates a new dictionary for each set of data
-        dictionary_data_temp = {}
+    if len(dictionaries.keys()) == 0:
+        # If the lists are empty, create blank templates
+        for time in range(len(flight_dates)):
+            dictionary.append({"": "N/A"})
+    else:
+        # Removes any blank fields in the dictionaries:
         for key in dictionaries.keys():
-            dictionary_data_temp[key] = dictionaries[key].replace(" ", "").split(",")[flight]
-        dictionary.append(dictionary_data_temp)
+            if dictionaries[key] == "":
+                dictionaries = remove_dictionary_key(dictionaries, key)
+            else:
+                pass
+
+        # Checks that the dictionary data lengths are equal to the number of flights
+        for item in dictionaries.values():
+            if len(item.replace(" ", "").split(",")) == len(flight_dates):
+                pass
+            else:
+                raise IndexError("{} data content does not match the number"
+                                 " of flights entered ({}).".format(debug_name, len(flight_dates)))
+
+        # Formats dictionaries data as lists of data dictionaries
+        for flight in range(len(flight_dates)):
+            # Creates a new dictionary for each set of data
+            dictionary_data_temp = {}
+            for key in dictionaries.keys():
+                dictionary_data_temp[key] = dictionaries[key].replace(" ", "").split(",")[flight]
+            dictionary.append(dictionary_data_temp)
 
     return dictionary
 
