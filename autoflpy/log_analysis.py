@@ -151,7 +151,7 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
     except KeyError:
         print("'aircraft_data' has not been entered.")
         aircraft_data_multi = {}
-    
+
     # Formats the weather data into several separate dictionaries
     weather_data_lists = flight_log_code.multi_dictionary_data_formatter(
         weather_data_multi, flight_dates, "weather_data")
