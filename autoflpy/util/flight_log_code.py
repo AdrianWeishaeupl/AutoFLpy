@@ -277,8 +277,9 @@ def flight_log_maker(template_file_path, template_file_name,
                                                                str(flight_dates[flight])))) + ","
     weather_information = weather_information[:-1]  # Removes the last "," for json formatting
     runway_information = runway_information[:-1]  # Removes the last "," for json formatting
+    print("WEATHER INFO", weather_information)
 
-    if weather_information != "\"\\n\"":  # If information is present, add it to the content.
+    if "empty_dictionary" not in weather_information:  # If information is present, add it to the content.
         contents = contents.replace("\"WEATHER_INFORMATION\"", "\"<h2>Weather Information</h2><a class=\\\"anchor\\\"" +
                                     " id=\\\"Weather-Information\\\"></a>\\n\"" + ",\n   \"\\n\",\n   " +
                                     weather_information)  # Creates a formatted title
@@ -291,7 +292,7 @@ def flight_log_maker(template_file_path, template_file_name,
         contents = cell_remover(contents, "WEATHER_TEXT")
         contents = contents.replace("WEATHER_INFORMATION", "")
 
-    if runway_information != "\"\\n\"":  # If information is present, add it to the content.
+    if "empty_dictionary" not in runway_information:  # If information is present, add it to the content.
         contents = contents.replace("\"RUNWAY_INFORMATION\"", "\"<h2>Runway Information</h2><a class=\\\"anchor\\\"" +
                                     " id=\\\"Runway-Information\\\"></a>\\n\"" + ",\n   \"\\n\",\n   " +
                                     runway_information)  # Creates a formatted title
@@ -1030,67 +1031,72 @@ def dictionary_reader(dictionary, debug_name="Dictionary data", units_present=Fa
     # Splits the dictionary into lists of values and keys
     dictionary_keys = list(dictionary.keys())
     dictionary_values = list(dictionary.values())
-    try:
-        text = ""
+    print(f"Dictionary {debug_name} = ", dictionary)
+    if dictionary == {'': 'N/A'}:
+        text = "\"empty_dictionary \\n\""
+    else:
 
-        units = []
-        names = []
-        if units_present is True:
-            # Removes the _ from the names and separates the units from the variable names
-            for key in dictionary_keys:
-                units.append(str(key).split("_")[-1])
-                names.append(str(key).split("_")[:-1])
-        else:
-            # Removes the _ from the names
-            for key in dictionary_keys:
-                names.append(str(key).split("_"))
-
-        # Joins up variable names in case they are two words
-        joined_names = []
-        for name_array in names:
-            name = ""
-            for part in name_array:
-                name += part + " "
-            joined_names.append(name)
-
-        if units_present is True:
-            joined_names, units, dictionary_values = zip(*sorted(zip(
-                joined_names, units, dictionary_values)))  # Sort alphabetically
-        else:
-            joined_names, dictionary_values = zip(*sorted(zip(
-                joined_names, dictionary_values)))  # Sort alphabetically
-
-        if flight_index == 0:
-            # Create a header for the table
-            header = "\"\\n\", \" | Flight |"
-            if units_present is True:
-                for data_item in range(len(dictionary_keys)):
-                    header += " " + str(joined_names[data_item]) + " (" + str(units[data_item]) + ") |"
-            else:
-                for data_item in range(len(dictionary_keys)):
-                    header += " " + str(joined_names[data_item]) + " |"
-            text = header + "\", \n "
-            # Creates the next empty row
-            counter = 0
-            text += "\"\\n\", \" | --- |"
-            while counter <= len(dictionary_keys) - 1:
-                text += " --- |"
-                counter += 1
-            text += "\", \n   "
-        else:
+        try:
             text = ""
 
-        # Adds data to the table
-        text += "\"\\n |" + " Flight " + str(flight_number) + "|"
-        for data_item in range(len(dictionary_keys)):
-            text += " " + str(dictionary_values[data_item]) + " |"
+            units = []
+            names = []
+            if units_present is True:
+                # Removes the _ from the names and separates the units from the variable names
+                for key in dictionary_keys:
+                    units.append(str(key).split("_")[-1])
+                    names.append(str(key).split("_")[:-1])
+            else:
+                # Removes the _ from the names
+                for key in dictionary_keys:
+                    names.append(str(key).split("_"))
 
-        text += "\"  \n   "
+            # Joins up variable names in case they are two words
+            joined_names = []
+            for name_array in names:
+                name = ""
+                for part in name_array:
+                    name += part + " "
+                joined_names.append(name)
 
-    except ValueError:
-        print("{0} not entered or in an incorrect format in the Input_File.json. ".format(debug_name) +
-              "Format should be \"variable_unit\": \"value\"")
-        text = ""
+            if units_present is True:
+                joined_names, units, dictionary_values = zip(*sorted(zip(
+                    joined_names, units, dictionary_values)))  # Sort alphabetically
+            else:
+                joined_names, dictionary_values = zip(*sorted(zip(
+                    joined_names, dictionary_values)))  # Sort alphabetically
+
+            if flight_index == 0:
+                # Create a header for the table
+                header = "\"\\n\", \" | Flight |"
+                if units_present is True:
+                    for data_item in range(len(dictionary_keys)):
+                        header += " " + str(joined_names[data_item]) + " (" + str(units[data_item]) + ") |"
+                else:
+                    for data_item in range(len(dictionary_keys)):
+                        header += " " + str(joined_names[data_item]) + " |"
+                text = header + "\", \n "
+                # Creates the next empty row
+                counter = 0
+                text += "\"\\n\", \" | --- |"
+                while counter <= len(dictionary_keys) - 1:
+                    text += " --- |"
+                    counter += 1
+                text += "\", \n   "
+            else:
+                text = ""
+
+            # Adds data to the table
+            text += "\"\\n |" + " Flight " + str(flight_number) + "|"
+            for data_item in range(len(dictionary_keys)):
+                text += " " + str(dictionary_values[data_item]) + " |"
+
+            text += "\"  \n   "
+
+        except ValueError:
+            print("{0} not entered or in an incorrect format in the Input_File.json. ".format(debug_name) +
+                  "Format should be \"variable_unit\": \"value\"")
+            text = ""
 
     return text
 
