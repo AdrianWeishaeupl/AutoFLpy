@@ -10,4 +10,4 @@ Development Lead
 Contributors
 ------------
 
-* Samuel Pearson <sp1g18@soton.ac.uk>
+* Samuel Mark Pearson <smp1y19@soton.ac.uk>
