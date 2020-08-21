@@ -36,6 +36,7 @@
 	"aircraft_data": {
 		"m_empty_kg": "Empty mass of the aircraft in kg",
 		"m_fuel_kg": "Mass of any consumable fuel in kg",
+		"m_fuel_final_kg": "Final fuel quantity after the mission is finished",
 		"b_m": "Wing span from wing tip to wing tip in m",
 		"S_m2": "Projected wing area (c * b) in m^2",
 		"c_m": "Mean Aerodynamic Chord in m",

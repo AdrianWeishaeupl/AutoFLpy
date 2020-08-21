@@ -36,6 +36,7 @@
 	"aircraft_data": {
 		"m_empty_kg": "15",
 		"m_fuel_kg": "1",
+		"m_fuel_final_kg": "0.2",
 		"b_m": "4",
 		"S_m2": "2",
 		"c_m": "0.55",
