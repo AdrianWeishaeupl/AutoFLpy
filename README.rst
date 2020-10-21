@@ -48,7 +48,6 @@ Features
 		* Flight computer vibrational data.
 		* Additional `Arduino <https://www.arduino.cc/>`_ and csv data.
 	* METAR information of the nearest airfield.
-	* Checklist information (if provided).
 * Multi-flight simultaneous analysis for comparing different flights.
 * Sample data files included. This will be **created when the code is run for the first time**.
 * Full choice of file paths for the data and outputs can be specified using the input file.

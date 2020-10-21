@@ -26,7 +26,6 @@ The Input_file.json is structured as follows::
 			"template_file_name": "If blank, uses the default template",
 			"arduino_flight_data_name": "Name of correctly formatted Arduino data. If blank, uses the name of the sample data",
 			"arduino_flight_data_file_path": "Path to Arduino data. If blank, finds the path to the sample data",
-			"checklist_data_file_path": "If blank, uses the sample checklist file path",
 			"metar_file_path": "METAR data collected will be stored here. If blank, creates folder in the current directory",
 			"flight_log_destination": "Destination for the generated flight reports. If blank, creates folder in the current directory",
 			"start_time_hours": "HH - 24 hr clock",
@@ -70,8 +69,6 @@ Folder structure generated:
 	user_files
 	
 	* arduino_data					Contains sample `Arduino <https://www.arduino.cc/>`_ data. User data in the form of a csv file can be added here.
-	
-	* checklists					Contains sample checklists. User data can be added here.
 	
 	* excel_file_path				Contains excel files generated from the log files.
 	
@@ -186,19 +183,6 @@ Graph related information
 -------------------------
 If the graphs cannot be plotted, then the graphs and any cells or lines labelled with GRAPH_TEXT or lines labelled with GRAPH_LINE will be removed. For any python that needs to be removed the comment # GRAPH_DATA_IMPORT will also remove cells, this is used in the python code to remove the python cells that import the graph data.
 
-Checklists
-----------
-The text CHECKLIST_INFORMATION will import a paragraph of text stating which checklists were actioned, how many times, and who actioned them and at what times they started and finished the checklist. CHECKLIST_INFORMATION must be on a cell on its own to work.
-
-CHECKLIST_INFORMATION
-
-An example showing how the cell must be laid out for the checklist information.
-The checklist information paragraph created will have an anchor with the id "Checklist-Information".
-
-Checklist related information
------------------------------
-If a cell contains the label CHECKLIST_TEXT, it will be removed if checklists do not appear on that flight date. Likewise, CHECKLIST_LINE will remove a specific line when checklists do not appear.
-
 METAR information
 -----------------
 The text METAR_INFORMATION will import a paragraph of text stating the METAR information for the input times and dates. METAR_INFORMATION must be on a cell on its own and the variable include_metar when calling autoflpy must be set to True for this to work.
@@ -240,12 +224,6 @@ RIGHT_AXIS				Labels data for Right axis of multiaxis graph.
 GRAPH_TEXT				Removes cell containing this label when there is no data to create graphs with.
 
 GRAPH_LINE				Removes line containing this label when there is no data to create graphs with.
-
-CHECKLIST_INFORMATION	When CHECKLIST_INFORMATION is placed in a cell, this will place a cell containing a paragraph of checklist information when available.
-
-CHECKLIST_TEXT			Removes cell containing this label when there is no checklist data for that date.
-
-CHECKLIST_LINE			Removes line containing this label when there is no checklist data for that date.
 
 METAR_INFORMATION		When METAR_INFORMATION is placed in a cell, this will place a cell containing the METAR data when available.
 
