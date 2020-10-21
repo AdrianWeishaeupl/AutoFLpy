@@ -106,7 +106,6 @@ class TestFlightLogCode(unittest.TestCase):
         self.arduino_flight_data_name = self.data["flight_log_generator_input"
         ]["arduino_flight_data_name"].replace(" ", "").split(",")
         self.flight_log_file_name_header = "test_generated_flight_log"
-        self.checklist_file_path = self.base_path
         self.start_time_hours = self.data["flight_log_generator_input"][
             "start_time_hours"].replace(" ", "").split(",")
         self.end_time_hours = self.data["flight_log_generator_input"][
@@ -151,7 +150,6 @@ class TestFlightLogCode(unittest.TestCase):
                                          self.flight_date,
                                          self.flight_number,
                                          self.flight_log_file_name_header,
-                                         self.checklist_file_path,
                                          self.ICAO_airfield,
                                          self.start_time_hours,
                                          self.end_time_hours,
@@ -194,26 +192,6 @@ class TestFlightLogCode(unittest.TestCase):
             raise ValueError('Frame list length is not as expected: {0} != 11'
                              .format(len(frame_list)))
 
-    def test_checklist_finder(self):
-        # Loads a checklist
-        try:
-            frame_list = flight_log_code.flight_data(self.checklist_file_path,
-                                                     'Checklists_nominal.xlsx')
-            # Filters the checklist for the correct data
-            filtered_frame = \
-                flight_log_code.checklist_finder(frame_list,
-                                                 self.flight_number[0],
-                                                 self.flight_date[0])
-            # Check that the correct data was output
-            battery_voltage = filtered_frame['Battery Voltages'][2]
-            self.assertEqual('25.2', str(battery_voltage))
-            # Check that the ID also matches
-            id_chosen_frame = filtered_frame['ID'][2]
-            self.assertEqual('3', str(id_chosen_frame))
-        # Passes if the checklist is open.
-        except PermissionError:
-            self.assertEqual(1, 1)
-
     def test_flight_log_creator(self):
         # Generates content
         content = flight_log_code.contents_opener(self.template_file_path,
@@ -228,34 +206,6 @@ class TestFlightLogCode(unittest.TestCase):
                                      + 'test_generated_flight_log20190123'
                                        '_2.ipynb')
         self.assertTrue(file_exists)
-
-    def test_flight_log_checklist(self):
-        # Generates the content
-        content = flight_log_code.contents_opener(self.template_file_path,
-                                                  self.template_file_name)
-        # Creates checklist frames
-        frame_list_nominal = flight_log_code.flight_data(
-            self.checklist_file_path, "Checklists_nominal.xlsx")
-        frame_list_emergency = flight_log_code.flight_data(
-            self.checklist_file_path, "Checklists_emergency.xlsx")
-        # Filters checklist for the current flight
-        filtered_frame_nominal = flight_log_code.checklist_finder(
-            frame_list_nominal, self.flight_number[0], self.flight_date[0])
-        filtered_frame_emergency = flight_log_code.checklist_finder(
-            frame_list_emergency, self.flight_number[0], self.flight_date[0])
-        # Runs the flight_log_checklist code
-        content = \
-            flight_log_code.flight_log_checklist(filtered_frame_nominal,
-                                                 filtered_frame_emergency,
-                                                 "CHECKLIST_INFORMATION",
-                                                 content)[0]
-        # Checks that the content has been changed
-        expected_content = 'The Initial Pre-Flight was actioned by Adria' + \
-                           'n Weishaeupl starting at 2019-01-23 15:31:44 an' + \
-                           'd ending at 2019-01-23 15:32:58. The notes reco' + \
-                           'rded on this checklist were: <i>THIS IS A TEST.'
-        content_present = check_str_in_content(expected_content, content)
-        self.assertEqual(1, content_present)
 
     def test_date_and_flight_number(self):
         # Gets run in the Jupyter Notebook.
@@ -336,7 +286,7 @@ class TestFlightLogCode(unittest.TestCase):
     def test_file_type_finder(self):
         # Detects xlsx files from the test_files folder
         detected_files = flight_log_code.file_type_finder(self.base_path, ".xlsx")
-        expected_file_names = ['Checklists_emergency.xlsx', 'Checklists_nominal.xlsx', 'test_xlsx.xlsx']
+        expected_file_names = ['test_xlsx.xlsx']
         # Checks that all the expected files are present
         for file_name in expected_file_names:
             if file_name in detected_files:

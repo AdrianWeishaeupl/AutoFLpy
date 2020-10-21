@@ -71,7 +71,7 @@ class TestTextManipulation(unittest.TestCase):
 
     def test_cell_remover(self):
         # Defines keys to be tested in the cell remover
-        keys = ['METAR_INFORMATION', 'CHECKLIST_INFORMATION', 'GRAPH',
+        keys = ['METAR_INFORMATION', 'GRAPH',
                 'MULTIAXIS_GRAPH']
         for key in keys:
             # Generates content
@@ -90,8 +90,8 @@ class TestTextManipulation(unittest.TestCase):
 
     def test_line_remover(self):
         # Defines keys to be tested in the line remover
-        keys = ['METAR_INFORMATION', 'CHECKLIST_INFORMATION', 'GRAPH',
-                'MULTIAXIS_GRAPH', 'CHECKLIST_LINE', 'GRAPH_LINE']
+        keys = ['METAR_INFORMATION', 'GRAPH',
+                'MULTIAXIS_GRAPH', 'GRAPH_LINE']
         for key in keys:
             # Generates content
             content = text_manipulation.contents_opener(self.template_file_path,
