@@ -16,7 +16,7 @@ from autoflpy.util.testing.check_str_in_content import *
 
 
 def notebook_sample_code(flight_data_file_path, flight_data_file_name,
-                         arduino_data_file_path, arduino_flight_data_name):
+                         csv_data_file_path, csv_flight_data_name):
     """Sample flight log code for testing purposes"""
     # GRAPH_DATA_IMPORT
 
@@ -30,26 +30,26 @@ def notebook_sample_code(flight_data_file_path, flight_data_file_name,
     # flight_data_file_path = base_path
     # Excel File name
     # flight_data_file_name = "test_xlsx.xlsx"
-    # Arduino File name
-    # arduino_flight_data_name = "test_arduino.CSV"
-    # Arduino Data file path
-    # arduino_data_file_path = base_path
+    # CSV File name
+    # csv_flight_data_name = "test_csv.CSV"
+    # csv Data file path
+    # csv_data_file_path = base_path
     # Excel Sheets
     frame_list = flight_log_code.flight_data(flight_data_file_path,
                                              flight_data_file_name)
     # A list containing the date first and then the flight number
     date_and_flight_number = flight_log_code.date_and_flight_number(frame_list)
-    # Retrieves arduino flight data
-    arduino_micro_flight_data_frame = \
-        flight_log_code.arduino_micro_frame(arduino_data_file_path,
-                                            arduino_flight_data_name)
-    # Appends arduino frame to flight data from pixhawk
-    frame_list.append(arduino_micro_flight_data_frame)
+    # Retrieves csv flight data
+    csv_flight_data_frame = \
+        flight_log_code.csv_frame(csv_data_file_path,
+                                  csv_flight_data_name)
+    # Appends csv frame to flight data from pixhawk
+    frame_list.append(csv_flight_data_frame)
     # Sorts frames by time
     sorted_frames = flight_log_code.flight_data_time_sorter(frame_list)
     # Creates a list of all the values.
     values_list = flight_log_code.flight_data_and_axis(sorted_frames)
-    return (frame_list, date_and_flight_number, arduino_micro_flight_data_frame,
+    return (frame_list, date_and_flight_number, csv_flight_data_frame,
             sorted_frames, values_list)
 
 
@@ -69,18 +69,18 @@ class TestFlightLogCode(unittest.TestCase):
         # Defines variables
         flight_data_file_path = base_path
         flight_data_file_name = "test_xlsx.xlsx"
-        arduino_flight_data_file_path = base_path + data[
-            "flight_log_generator_input"]["arduino_flight_data_file_path"]
-        arduino_flight_data_name = data["flight_log_generator_input"
-        ]["arduino_flight_data_name"]
+        csv_flight_data_file_path = base_path + data[
+            "flight_log_generator_input"]["csv_flight_data_file_path"]
+        csv_flight_data_name = data["flight_log_generator_input"
+        ]["csv_flight_data_name"]
         # Creates a global variable to be used in the testing
         global notebook_results
         # Populates the global variable
         notebook_results = \
             notebook_sample_code(flight_data_file_path,
                                  flight_data_file_name,
-                                 arduino_flight_data_file_path,
-                                 arduino_flight_data_name)
+                                 csv_flight_data_file_path,
+                                 csv_flight_data_name)
 
     def setUp(self):
         # Sets up all of the test variables and locations to be used
@@ -101,10 +101,10 @@ class TestFlightLogCode(unittest.TestCase):
         self.flight_data_file_path = self.base_path  # Path to xlsx file
         self.flight_data_file_name = "test_xlsx.xlsx"
         self.flight_data_file_name_list = ["test_xlsx.xlsx"]
-        self.arduino_flight_data_file_path = self.base_path + self.data[
-            "flight_log_generator_input"]["arduino_flight_data_file_path"]
-        self.arduino_flight_data_name = self.data["flight_log_generator_input"
-        ]["arduino_flight_data_name"].replace(" ", "").split(",")
+        self.csv_flight_data_file_path = self.base_path + self.data[
+            "flight_log_generator_input"]["csv_flight_data_file_path"]
+        self.csv_flight_data_name = self.data["flight_log_generator_input"
+        ]["csv_flight_data_name"].replace(" ", "").split(",")
         self.flight_log_file_name_header = "test_generated_flight_log"
         self.start_time_hours = self.data["flight_log_generator_input"][
             "start_time_hours"].replace(" ", "").split(",")
@@ -145,8 +145,8 @@ class TestFlightLogCode(unittest.TestCase):
                                          self.flight_log_file_path,
                                          self.flight_data_file_path,
                                          self.flight_data_file_name_list,
-                                         self.arduino_flight_data_file_path,
-                                         self.arduino_flight_data_name,
+                                         self.csv_flight_data_file_path,
+                                         self.csv_flight_data_name,
                                          self.flight_date,
                                          self.flight_number,
                                          self.flight_log_file_name_header,
@@ -216,20 +216,20 @@ class TestFlightLogCode(unittest.TestCase):
         self.assertEqual(expected_date_and_flight_number,
                          date_and_flight_number)
 
-    def test_arduino_micro_frame(self):
+    def test_csv_frame(self):
         # Gets run in the Jupyter Notebook.
         # Runs the sample notebook code to extract teh desired variable
-        arduino_micro_frame = notebook_results[2]
+        csv_frame = notebook_results[2]
         try:
             # Checks if the key is correct
-            arduino_micro_frame['X']
+            csv_frame['X']
             # Failed if no error is raised
             self.assertFalse(True)
         except KeyError:
             # Passes if an error is raised
             self.assertTrue(True)
         # Loads values
-        values = arduino_micro_frame['Temp0_degC_ArduinoMicro_20190123_Flight2'
+        values = csv_frame['Temp0_degC_ArduinoMicro_20190123_Flight2'
         ]
         # Compares expected values with values from the data frame
         expected_values = [24.38, 24.38, 24.38, 24.44, 25.31, 26.69, 27.69,
@@ -298,7 +298,7 @@ class TestFlightLogCode(unittest.TestCase):
     def test_compile_and_compress(self):
         # Runs the compiler and compressor.
         flight_log_code.compile_and_compress(self.flight_data_file_path, [self.flight_data_file_name],
-                                             self.arduino_flight_data_file_path, self.arduino_flight_data_name,
+                                             self.csv_flight_data_file_path, self.csv_flight_data_name,
                                              self.comp_data_file_path)
         pickle_file_name = self.base_path + "test_xlsx.pkl"  # Defines the file name
         # Checks that the file exists
