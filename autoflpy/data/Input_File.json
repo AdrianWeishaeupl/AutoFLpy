@@ -12,7 +12,6 @@
 		"template_file_name": "",
 		"arduino_flight_data_name": "test_arduino.CSV",
 		"arduino_flight_data_file_path": "",
-		"checklist_data_file_path": "",
 		"metar_file_path": "",
 		"flight_log_destination": "",
 		"start_time_hours": "15",
