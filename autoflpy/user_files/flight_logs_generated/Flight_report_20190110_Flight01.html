@@ -13104,7 +13104,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -13163,7 +13163,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># GRAPH_DATA_IMPORT</span>
@@ -13175,12 +13175,11 @@ div#notebook {
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
 
 <span class="c1"># Creates a link to where the code is stored.</span>
-<span class="c1"># NOTE: file paths have been shortened for privacy purposes</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;AutoFLpy</span><span class="se">\\</span><span class="s2">autoflpy&quot;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;C:</span><span class="se">\\</span><span class="s2">Users</span><span class="se">\\</span><span class="s2">AutoFLpy</span><span class="se">\\</span><span class="s2">autoflpy&quot;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">autoflpy.util.plotting</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">autoflpy.util.metar_processing</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="c1">#Path to the compressed data.</span>
-<span class="n">data_file_path</span> <span class="o">=</span> <span class="s2">&quot;AutoFLpy</span><span class="se">\\</span><span class="s2">autoflpy</span><span class="se">\\</span><span class="s2">user_files</span><span class="se">\\</span><span class="s2">excel_file_path</span><span class="se">\\</span><span class="s2">20190110_Flight01.pkl&quot;</span>
+<span class="n">data_file_path</span> <span class="o">=</span> <span class="s2">&quot;C:</span><span class="se">\\</span><span class="s2">Users</span><span class="se">\\\\</span><span class="s2">AutoFLpy</span><span class="se">\\</span><span class="s2">autoflpy</span><span class="se">\\</span><span class="s2">user_files</span><span class="se">\\</span><span class="s2">excel_file_path</span><span class="se">\\</span><span class="s2">20190110_Flight01.pkl&quot;</span>
 <span class="c1"># Uncompressing the data.</span>
 <span class="n">values_list</span> <span class="o">=</span> <span class="n">pk</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">data_file_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data imported&quot;</span><span class="p">)</span>
@@ -13224,8 +13223,8 @@ div#notebook {
 <li><a href="#Air">Air data aginst time</a> </li>
 <li><a href="#Attitude">Flight attitude</a> </li>
 <li><a href="#vibration-data">Flight computer vibration data</a> </li>
-<li><a href="#Arduino-temprature-data">Arduino temprature data</a> </li>
-<li><a href="#Arduino-battery-data">Arduino battery data</a> </li>
+<li><a href="#CSV-temprature-data">CSV temprature data</a> </li>
+<li><a href="#CSV-battery-data">CSV battery data</a> </li>
 <li><a href="#Autopilot-data">Autopilot data</a> </li>
 <li><a href="#Take-off-data">Take-off data</a> </li>
 </ul>
@@ -13331,7 +13330,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">marker_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -13352,7 +13351,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -13397,7 +13396,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -13445,7 +13444,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -13501,7 +13500,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -13581,7 +13580,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -13629,7 +13628,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -13692,7 +13691,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -13729,7 +13728,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -13766,7 +13765,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -13811,7 +13810,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -13859,7 +13858,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -13912,7 +13911,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -13949,7 +13948,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -13986,7 +13985,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -14031,7 +14030,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -14084,7 +14083,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -14122,7 +14121,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><h2>Arduino temprature data</h2><a class="anchor" id="Arduino-temprature-data"></a></p>
+<p><h2>CSV temprature data</h2><a class="anchor" id="CSV-temprature-data"></a></p>
 
 </div>
 </div>
@@ -14130,14 +14129,14 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The arduino data section serves to show the user how to add additional, non-flight computer related data to the report. In this example, the data is recorded by an arduino.</p>
+<p>The CSV data section serves to show the user how to add additional, non-flight computer related data to the report. In this example, the data is recorded by an arduino.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -14183,14 +14182,14 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><h2>Arduino battery data</h2><a class="anchor" id="Arduino-battery-data"></a></p>
+<p><h2>CSV battery data</h2><a class="anchor" id="CSV-battery-data"></a></p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -14256,7 +14255,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -14293,7 +14292,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -14330,7 +14329,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_min&quot;</span><span class="p">,</span> <span class="s2">&quot;x_max&quot;</span><span class="p">]</span>
@@ -14375,7 +14374,7 @@ This METAR data was from:<a href="https://www.ogimet.com/display_metars2.php?lan
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">take_off_graph</span><span class="p">(</span><span class="n">values_list</span><span class="p">)</span>
