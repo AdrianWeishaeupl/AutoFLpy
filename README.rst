@@ -46,7 +46,7 @@ Features
 		* Barometric data throughout the flight.
 		* Flight attitude throughout the flight.
 		* Flight computer vibrational data.
-		* Additional `Arduino <https://www.arduino.cc/>`_ and csv data.
+		* Additional csv and `Arduino <https://www.arduino.cc/>`_ data.
 	* METAR information of the nearest airfield.
 * Multi-flight simultaneous analysis for comparing different flights.
 * Sample data files included. This will be **created when the code is run for the first time**.
