@@ -35,7 +35,6 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
 
     user_files
         * arduino_data              Contains sample Arduino data. User data in the form of a csv file can be added here.
-        * checklists                Contains sample checklists. User data can be added here.
         * excel_file_path		    Contains excel files generated from the log files.
         * flight_logs_generated		Contains the generated flight reports.
         * log_files					Contains the user input flight data in the .log format.
@@ -245,30 +244,7 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
                  + 'test_arduino.CSV')
 
     flight_log_file_name_header = "Flight_report_"
-    if data["flight_log_generator_input"][
-        "checklist_data_file_path"] != "" and \
-        os.path.exists(data[
-                           "flight_log_generator_input"]["checklist_data_file_path"]) is True:
-        checklist_file_path = data[
-            "flight_log_generator_input"]["checklist_data_file_path"]
-    else:
-        # Makes a directory in the current working path to be used.
-        checklist_file_path = (default_storage_path + "checklists" + os.sep
-                               )
-        try:
-            os.makedirs(checklist_file_path)
-        except OSError:
-            print('Checklists folder found.')
-        # Checks that the checklists are not already present in the folder
-        if os.path.exists(checklist_file_path + 'Checklists_emergency.xlsx'
-                          ) is False:
-            # Copies sample checklists into the generated folder.
-            copyfile(base_path + 'Checklists_emergency.xlsx',
-                     checklist_file_path + 'Checklists_emergency.xlsx')
-        if os.path.exists(checklist_file_path + 'Checklists_nominal.xlsx'
-                          ) is False:
-            copyfile(base_path + 'Checklists_nominal.xlsx', checklist_file_path
-                     + 'Checklists_nominal.xlsx')
+
     if data["flight_log_generator_input"][
         "metar_file_path"] != "" and \
         os.path.exists(
@@ -323,7 +299,6 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
                                      flight_dates,
                                      flight_numbers,
                                      flight_log_file_name_header,
-                                     checklist_file_path,
                                      icao_airfields,
                                      start_times_hours,
                                      end_times_hours,
