@@ -30,8 +30,8 @@ else:
 
 def flight_log_maker(template_file_path, template_file_name,
                      flight_log_file_path, flight_data_file_path,
-                     flight_data_file_names, arduino_flight_data_file_path,
-                     arduino_flight_data_names, flight_dates, flight_numbers,
+                     flight_data_file_names, csv_flight_data_file_path,
+                     csv_flight_data_names, flight_dates, flight_numbers,
                      flight_log_file_name_header, icao_airfields, start_times_hours,
                      end_times_hours, metar_file_path, weather_data_lists, runway_data_lists,
                      include_metar):
@@ -63,7 +63,7 @@ def flight_log_maker(template_file_path, template_file_name,
     # Inserts the flight number into the contents.
     contents = contents.replace("FLIGHT_NUMBER", flight_numbers_str)
     compressed_data_file_name = ""
-    # Checks to see whether there is graph data or arduino data that can be
+    # Checks to see whether there is graph data or csv data that can be
     # used to plot graphs by checking if the path exists and if the path has a
     # suitable length to that it is not just greater than 1.
     directories_present = []
@@ -72,10 +72,10 @@ def flight_log_maker(template_file_path, template_file_name,
             is True and
             len(flight_data_file_path + os.sep + flight_data_file_names[flight]) > 1) \
             or \
-            (os.path.exists(arduino_flight_data_file_path + os.sep +
-                            arduino_flight_data_names[flight]) is True and
-             len(arduino_flight_data_file_path + os.sep +
-                 arduino_flight_data_names[flight]) > 1):
+            (os.path.exists(csv_flight_data_file_path + os.sep +
+                            csv_flight_data_names[flight]) is True and
+             len(csv_flight_data_file_path + os.sep +
+                 csv_flight_data_names[flight]) > 1):
             directories_present.append(True)
         else:
             directories_present.append(False)
@@ -117,8 +117,6 @@ def flight_log_maker(template_file_path, template_file_name,
     contents = contents.replace("COMPRESSED_DATA_FILE_PATH", "\\\"" +
                                 (compressed_data_file_path
                                  ).replace("\\", jupyter_sep) + "\\\"")
-
-
 
     # Checks to see if the start and end time are in the correct format
     hours_valid = []
@@ -255,8 +253,8 @@ def flight_log_maker(template_file_path, template_file_name,
     print('Pickling data')
     # Compresses the flight data for faster loading
     compile_and_compress(flight_data_file_path, flight_data_file_names,
-                         arduino_flight_data_file_path,
-                         arduino_flight_data_names, compressed_data_file_path)
+                         csv_flight_data_file_path,
+                         csv_flight_data_names, compressed_data_file_path)
     print('Flight log maker finished')
 
 
@@ -552,11 +550,11 @@ def date_and_flight_number(frames):
                 return date, flight_number
 
 
-def arduino_micro_frame(flight_data_file_path, arduino_flight_data_name):
-    """Takes file path of arduino micro flight data and returns a pandas data frame_micro."""
+def csv_frame(flight_data_file_path, csv_flight_data_name):
+    """Takes file path of csv flight data and returns a pandas data frame_micro."""
     # Creates file path from graph file path and file name
-    file_path = flight_data_file_path + os.sep + arduino_flight_data_name
-    if arduino_flight_data_name == "" or flight_data_file_path == "":
+    file_path = flight_data_file_path + os.sep + csv_flight_data_name
+    if csv_flight_data_name == "" or flight_data_file_path == "":
         return pd.DataFrame()
     # Reads CSV
     frame_micro = pd.read_csv(file_path)
@@ -564,24 +562,24 @@ def arduino_micro_frame(flight_data_file_path, arduino_flight_data_name):
 
 
 def compile_and_compress(flight_data_file_path, flight_data_file_name,
-                         arduino_data_file_path, arduino_data_file_name,
+                         csv_data_file_path, csv_data_file_name,
                          comp_data_file_path):
     """
     This is used to compile all the entered data. This is then pickled and saved for faster loading.
 
-    flight_data_file_names and arduino_data_file_name are of type list.
+    flight_data_file_names and csv_data_file_name are of type list.
     """
     values_list = []
     for data_set in range(len(flight_data_file_name)):
         # Excel Sheets
         print(flight_data_file_name[data_set])
         frame_list = flight_data(flight_data_file_path, flight_data_file_name[data_set])
-        # Retrieves arduino flight data if present
-        if arduino_data_file_name != ['']:
-            arduino_flight_data_frame = arduino_micro_frame(arduino_data_file_path,
-                                                            arduino_data_file_name[data_set])
-            # Appends arduino frame to flight data from pixhawk
-            frame_list.append(arduino_flight_data_frame)
+        # Retrieves csv flight data if present
+        if csv_data_file_name != ['']:
+            csv_flight_data_frame = csv_frame(csv_data_file_path,
+                                              csv_data_file_name[data_set])
+            # Appends csv frame to flight data from pixhawk
+            frame_list.append(csv_flight_data_frame)
         # Sorts frames by time
         sorted_frames = flight_data_time_sorter(frame_list)
         values = flight_data_and_axis(sorted_frames)

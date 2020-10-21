@@ -34,7 +34,7 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
     Folder structure generated:
 
     user_files
-        * arduino_data              Contains sample Arduino data. User data in the form of a csv file can be added here.
+        * csv_data                  Contains sample CSV data. User data in the form of a csv file can be added here.
         * excel_file_path		    Contains excel files generated from the log files.
         * flight_logs_generated		Contains the generated flight reports.
         * log_files					Contains the user input flight data in the .log format.
@@ -180,8 +180,8 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
         data["flight_log_generator_input"]["start_time_hours"], flight_dates, "start_time_hours")
     end_times_hours = flight_log_code.multi_string_data_formatter(
         data["flight_log_generator_input"]["end_time_hours"], flight_dates, "end_time_hours")
-    arduino_flight_data_names = flight_log_code.multi_string_data_formatter(
-        data["flight_log_generator_input"]["arduino_flight_data_name"], flight_dates, "arduino_flight_data_name")
+    csv_flight_data_names = flight_log_code.multi_string_data_formatter(
+        data["flight_log_generator_input"]["csv_flight_data_name"], flight_dates, "csv_flight_data_name")
     flight_data_file_names = []
     for name in excel_file_names:
         flight_data_file_names.append(str(name) + ".xlsx")
@@ -226,22 +226,22 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
                   "generated flight log files.")
     flight_data_file_path = (excel_file_path + os.sep)
     if data["flight_log_generator_input"][
-        "arduino_flight_data_file_path"] != "" and \
+        "csv_flight_data_file_path"] != "" and \
         os.path.exists(data["flight_log_generator_input"]
-                       ["arduino_flight_data_file_path"]) is True:
-        arduino_flight_data_file_path = data[
-            "flight_log_generator_input"]["arduino_flight_data_file_path"]
+                       ["csv_flight_data_file_path"]) is True:
+        csv_flight_data_file_path = data[
+            "flight_log_generator_input"]["csv_flight_data_file_path"]
     else:
         # Makes a directory in the current working path to be used.
-        arduino_flight_data_file_path = (default_storage_path + "arduino_flight_data" + os.sep
+        csv_flight_data_file_path = (default_storage_path + "csv_flight_data" + os.sep
                                          )
         try:
-            os.makedirs(arduino_flight_data_file_path)
+            os.makedirs(csv_flight_data_file_path)
         except OSError:
-            print('Arduino flight data folder found.')
-        # Copies the arduino test data into the new file path
-        copyfile(base_path + 'test_arduino.CSV', arduino_flight_data_file_path
-                 + 'test_arduino.CSV')
+            print('CSV flight data folder found.')
+        # Copies the csv test data into the new file path
+        copyfile(base_path + 'test_csv.CSV', csv_flight_data_file_path
+                 + 'test_csv.CSV')
 
     flight_log_file_name_header = "Flight_report_"
 
@@ -294,8 +294,8 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
                                      flight_log_file_path,
                                      flight_data_file_path,
                                      flight_data_file_names,
-                                     arduino_flight_data_file_path,
-                                     arduino_flight_data_names,
+                                     csv_flight_data_file_path,
+                                     csv_flight_data_names,
                                      flight_dates,
                                      flight_numbers,
                                      flight_log_file_name_header,
