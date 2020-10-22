@@ -262,18 +262,11 @@ def flight_data(file_path, file_name):
     """This imports the data excel using pandas"""
     # Excel file.
     file_path_with_name = file_path + file_name
-    data = load_workbook(file_path_with_name, read_only=True)
-    sheet_list = data.sheetnames
-    # Creates empty list for frames.
+    # # Extracts data from each sheet.
+    frame = pd.read_excel(file_path_with_name, sheet_name=None, engine='openpyxl')
     frame_list = []
-    # Extracts data from each sheet.
-
-    for sheet in sheet_list:
-        frame = pd.read_excel(data, sheet_name=sheet, engine='openpyxl')
-        # TODO: There is an issue here
-        #  - file closes before it is finished.
-        frame_list.append(frame)
-    data.close()
+    for data in frame.keys():
+        frame_list.append(frame[data])
     return frame_list
 
 
