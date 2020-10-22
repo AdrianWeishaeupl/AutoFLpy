@@ -2,6 +2,14 @@
 History
 =======
 
+1.1.10 (2020-10-22)
+-------------------
+
+* multiaxis_graph_plotter title generation bug fixed
+* Checklist feature removed and is no longer supported
+* arduino_flight_data folder renamed to csv_flight_data NOTE: This will require a new folder structure to be created or it will cause errors by searching for the old folder names
+
+
 1.1.9 (2020-05-20)
 ------------------
 
