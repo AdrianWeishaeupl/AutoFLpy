@@ -174,7 +174,7 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
                                      aircraft_data_lists)
     else:
         print("log_to_xlsx has been disabled. This will cause errors if .xlsx data has not been generated previously or"
-              "is not in the correct folder.")
+              " is not in the correct folder.")
 
     start_times_hours = flight_log_code.multi_string_data_formatter(
         data["flight_log_generator_input"]["start_time_hours"], flight_dates, "start_time_hours")
