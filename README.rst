@@ -24,12 +24,12 @@ AutoFLpy (Automated Flight Log python) is an open source code to allow you to cr
 * GitHub repository: https://github.com/AdrianWeishaeupl/AutoFLpy/
 * PyPI: https://pypi.org/project/autoflpy/
 
-.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/Flow_chart_simple.png
+.. image:: images/Flow_chart_simple.png
 	:width: 500
 	:align: center
 	:alt: Flow chart summarising AutoFLpy operation.
 
-.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/Report_image.png
+.. image:: images/Report_image.png
 	:width: 700
 	:align: center
 	:alt: Image of a sample generated flight report.
@@ -56,7 +56,7 @@ Note 1 -  If the raw data has been recorded and supplied.
 
 Note 2 -  For this feature to work, both `geopandas <https://geopandas.org/>`_ and `contextily <https://github.com/darribas/contextily>`_ need to be installed on the local machine. This needs to be done by the user due to difficulty installing these on various operating systems. A short help guide is attached in the installation instructions.
 
-.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/SITL_flight_map.png
+.. image:: images/SITL_flight_map.png
 	:width: 700
 	:align: center
 	:alt: Image of a flight plotted over a map using AutoFLpy.

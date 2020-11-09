@@ -95,7 +95,7 @@ The template will only accept capital letters as inputs in the cells. Only certa
 Graphs
 ------
 
-.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/PER_flight_alt.png
+.. image:: images/PER_flight_alt.png
 	:width: 900
 	:align: center
 	:alt: Image of a graph generated with AutoFLpy showing altitude and airspeed of a section of a flight.
