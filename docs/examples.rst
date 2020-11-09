@@ -29,7 +29,7 @@ The graph_plotter is used to plot simple data such as the following altitude plo
 	graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]],
 		values_list, x_limits, y_limits, marker_list)
 
-.. image:: images/Ex_alt_v_time_1.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/Ex_alt_v_time_1.png
 	:width: 900
 	:align: center
 	:alt: Image of a graph generated with AutoFLpy showing altitude plotted against time.
@@ -41,7 +41,7 @@ The code cell above the graph is used to define variables used in the plot such 
 	graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]], 
 		values_list, x_limits, y_limits, marker_list)
 
-.. image:: images/Ex_alt_v_time_2.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/Ex_alt_v_time_2.png
 	:width: 900
 	:align: center
 	:alt: Image of a graph generated with AutoFLpy showing a section of the altitude v time plot.
@@ -55,7 +55,7 @@ Variables in the same data group (in this case "gps") can be plotted on the same
 		marker_list)
 
 
-.. image:: images/Ex_alt_v_time_3.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/Ex_alt_v_time_3.png
 	:width: 900
 	:align: center
 	:alt: Image of a graph generated with AutoFLpy showing altitude and groundspeed v time.
@@ -70,7 +70,7 @@ If two variables are from different data sets, there is a good chance that they 
 		[["y", "altitude", "gps"], ["x", "time", "gps"]], values_list,
 		x_limits, y_limits_left, y_limits_right, marker_list, legend_location)
 
-.. image:: images/Ex_arsp_alt_v_time_1.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/Ex_arsp_alt_v_time_1.png
 	:width: 900
 	:align: center
 	:alt: Image of a graph generated with AutoFLpy showing altitude and airspeed v time.
@@ -82,14 +82,14 @@ The arm and disarm times can be added to both multi-variable and standard graphs
 	graph_plotter([["y", "altitude", "gps"], ["x", "time", "gps"]], 
 		values_list, x_limits, y_limits, marker_list, arm_data=True)
 
-.. image:: images/Ex_alt_v_time_4.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/Ex_alt_v_time_4.png
 	:width: 900
 	:align: center
 	:alt: Image of a graph generated with AutoFLpy showing the altitude v time plot as well as the times when it was armed and disarmed.
 
 For marking specific flight points across all graphs simultaneously, define your markers in the marker_list as a list of numbers. Below is an example marking the two highest points in the flight on the altitude figure and displaying these in the airspeed and groundspeed figure.
 
-.. image:: images/Ex_markers.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/Ex_markers.png
 	:width: 900
 	:align: center
 	:alt: Image of a graph generated with AutoFLpy showing the use of custom markers on various plots.
@@ -105,12 +105,12 @@ This is a special feature of the graph plotter and allows for a top down visuali
 	graph_plotter([["y", "latitude", "gps"], ["x", "longitude", "gps"]],
 		values_list, x_limits, y_limits, marker_list)
 
-.. image:: images/SITL_flight_map.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/SITL_flight_map.png
 	:width: 900
 	:align: center
 	:alt: Image of zoomed in map generated using Software In The Loop.
 
-.. image:: images/SITL_flight_map_out.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/SITL_flight_map_out.png
 	:width: 900
 	:align: center
 	:alt: Image of zoomed in map generated using Software In The Loop.
@@ -122,7 +122,7 @@ The scale of the second plot can be changed through the addition of the scale va
 	graph_plotter([["y", "latitude", "gps"], ["x", "longitude", "gps"]], 
 		values_list, x_limits, y_limits, marker_list, scale=0.001)
 
-.. image:: images/SITL_flight_map_out_2.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/SITL_flight_map_out_2.png
 	:width: 900
 	:align: center
 	:alt: Image of zoomed in map generated using Software In The Loop.
@@ -134,7 +134,7 @@ The colour of the additional variable on the map plot can be defined by any thir
 	graph_plotter([["y", "latitude", "gps"], ["x", "longitude", "gps"]], 
 		values_list, x_limits, y_limits, marker_list, map_info=["airspeed", "arsp"])
 
-.. image:: images/SITL_flight_map_3.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/SITL_flight_map_3.png
 	:width: 900
 	:align: center
 	:alt: Image of zoomed in map generated using Software In The Loop showing airspeed on the colour axes.
@@ -146,7 +146,7 @@ To set limits in the map plot, the map_info_limits argument can be used. map_inf
 	graph_plotter([["y", "latitude", "gps"], ["x", "longitude", "gps"]],
 		values_list, x_limits, y_limits, marker_list, map_info_limits=[30, 85])
 
-.. image:: images/SITL_flight_map_4.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/SITL_flight_map_4.png
 	:width: 900
 	:align: center
 	:alt: Image of zoomed in map generated using Software In The Loop showing outliers marked.
@@ -225,7 +225,7 @@ For simply plotting the points on the map, only the location data and associated
 	figure = backplt_map(latitudes, longitudes, gps_time)
 	figure.show()
 
-.. image:: images/Ex_backplt_map1.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/Ex_backplt_map1.png
 	:width: 900
 	:align: center
 	:alt: backplt_map use as a stand alone function.
@@ -238,7 +238,7 @@ An additional variable can be added as the z_var (in this case, altitude data) a
 		disable_prints=True)
 	figure.show()
 
-.. image:: images/Ex_backplt_map2.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/Ex_backplt_map2.png
 	:width: 900
 	:align: center
 	:alt: backplt_map use as a stand alone function with altitude data.
@@ -251,7 +251,7 @@ Just as in the graph_plotter, outliers can also be marked on the plot by using t
 		z_var_limits=[20, 75], disable_prints=True)
 	figure.show()
 
-.. image:: images/Ex_backplt_map3.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/Ex_backplt_map3.png
 	:width: 900
 	:align: center
 	:alt: backplt_map use as a stand alone function with altitude data and outliers marked.
@@ -267,7 +267,7 @@ The following figure shows the use of this feature.::
 
 	take_off_graph(values_list)
 
-.. image:: images/Ex_take_off.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/Ex_take_off.png
 	:width: 900
 	:align: center
 	:alt: Image of the take off data plotted through the take_off_graph function.
@@ -295,7 +295,7 @@ To aid with the lining up of data, the time_x_offset argument can be added to th
 		values_list, x_limits, y_limits, marker_list,
 		time_x_offset=[-32.5, -187.5])
 
-.. image:: images/Ex_time_x_offset.png
+.. image:: https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/docs/images/Ex_time_x_offset.png
 	:width: 900
 	:align: center
 	:alt: Image of two simulated flights with the time axes shifted through the time_x_offset argument.
