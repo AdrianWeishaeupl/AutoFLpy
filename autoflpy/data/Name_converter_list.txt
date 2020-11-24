@@ -217,6 +217,14 @@ ASP2, Offset, Offset, unavailable
 ASP2, U, U, unavailable
 ASP2, Health, Health, unavailable
 ASP2, Primary, Primary, unavailable
+CURR, TimeUS, Time, US
+CURR, Volt, Voltage, V
+CURR, Curr, Current, A
+CURR, CurrTot, TotalCurrent, Ah
+CUR2, TimeUS, Time, US
+CUR2, Volt, Voltage, V
+CUR2, Curr, Current, A
+CUR2, CurrTot, TotalCurrent, Ah
 BAT, TimeUS, Time, US
 BAT, Instance, Insance, no unit
 BAT, Volt, Voltage, V
@@ -1253,3 +1261,4 @@ MAV, chan, Channel_Number, no unit
 MAV, txp, Transmitted_Packet_Count, no unit
 MAV, rxp, Received_Packet_Count, no unit
 MAV, rxdp, Expected_Number_of_Packets, no unit
+
