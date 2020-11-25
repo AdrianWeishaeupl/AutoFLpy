@@ -220,11 +220,11 @@ ASP2, Primary, Primary, unavailable
 CURR, TimeUS, Time, US
 CURR, Volt, Voltage, V
 CURR, Curr, Current, A
-CURR, CurrTot, TotalCurrent, Ah
+CURR, CurrTot, TotalCurrent, mAh
 CUR2, TimeUS, Time, US
 CUR2, Volt, Voltage, V
 CUR2, Curr, Current, A
-CUR2, CurrTot, TotalCurrent, Ah
+CUR2, CurrTot, TotalCurrent, mAh
 BAT, TimeUS, Time, US
 BAT, Instance, Insance, no unit
 BAT, Volt, Voltage, V
