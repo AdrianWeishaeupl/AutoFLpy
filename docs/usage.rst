@@ -244,4 +244,38 @@ RUNWAY_TEXT				Removes cell containing this label when there is no runway data e
 RUNWAY_LINE				Removes line containing this label when there is no runway data entered.
 
 
+Additional data sources recorded by the flight computer
+=======================================================
+
+The current capability of AutoFLpy to plot data collected by the autopilot extends to the data collected in the .bin file. A large quantity of this data is of no use to the majority of AutoFLpy's users and hence the standard data sources that are loaded are as follows:
+
+GPS
+
+AOA
+
+CTUN
+
+RCIN
+
+RCOU
+
+ARSP
+
+BARO
+
+ATT
+
+VIBE
+
+BAT
+
+AETR
+
+EV
+
+More information on these data sources and their explanations can be found on the `ArduPilot webpage  <https://ardupilot.org/plane/docs/logmessages.html>`_. 
+
+If any data sources that are not listed above are of interest to the user, these need to be added to the Data_sources.txt file before AutoFLpy is run.
+
+Care has been taken to add information about interpreting all the individual data sources. If missing/incorrect data has been found, this needs to be adjusted in the Name_converter_list.txt file found in the local installation or on `GitHub <https://github.com/AdrianWeishaeupl/AutoFLpy/blob/master/autoflpy/data/Name_converter_list.txt>`_.
 
