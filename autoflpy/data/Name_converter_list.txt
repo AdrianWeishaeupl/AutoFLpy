@@ -228,20 +228,20 @@ CUR2, CurrTot, TotalCurrent, mAh
 BAT, TimeUS, Time, US
 BAT, Instance, Insance, no unit
 BAT, Volt, Voltage, V
-BAT, VoltR, Voltage R, V
+BAT, VoltR, Voltage_R, V
 BAT, Curr, Current, A
-BAT, CurrTot, Current_Total, A
+BAT, CurrTot, Current_Total, Ah
 BAT, EnrgTot, Enrgy_Total, J
 BAT, Temp, Temprature, degrees Celsius
-BAT, Res, Res, unavailable
+BAT, Res, Resistance, Ohm
 BAT2, TimeUS, Time, US
 BAT2, Volt, Voltage, V
 BAT2, VoltR, Voltage_R, V
 BAT2, Curr, Current, A
-BAT2, CurrTot, Current_Total, A
+BAT2, CurrTot, Current_Total, Ah
 BAT2, EnrgTot, Energy_Total, J
 BAT2, Temp, Temperature, degrees Celsius
-BAT2, Res, Res, unavailable
+BAT2, Res, Resistance, Ohm
 BCL, TimeUS, Time, US
 BCL, Volt, Voltage, V
 BCL, V1, V1, unavailable
