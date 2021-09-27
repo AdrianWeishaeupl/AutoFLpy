@@ -233,8 +233,7 @@ def autoflpy(input_file='Input_File.json', include_metar=False, run_log_to_xlsx=
             "flight_log_generator_input"]["csv_flight_data_file_path"]
     else:
         # Makes a directory in the current working path to be used.
-        csv_flight_data_file_path = (default_storage_path + "csv_flight_data" + os.sep
-                                         )
+        csv_flight_data_file_path = (default_storage_path + "csv_flight_data" + os.sep)
         try:
             os.makedirs(csv_flight_data_file_path)
         except OSError:
