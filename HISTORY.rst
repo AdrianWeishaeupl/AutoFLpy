@@ -2,6 +2,14 @@
 History
 =======
 
+1.1.11 (2021-11-01)
+-------------------
+
+* Fixed a bug in the map plotting caused by contextily updating.
+* Added documentation to the take_off_graph function.
+* Template generalised for RCIN and RCOU sources. 
+
+
 1.1.10 (2020-10-22)
 -------------------
 
