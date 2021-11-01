@@ -897,27 +897,28 @@ def backplt_map(lat, long, time_data, z_var=None, z_var_unit=None, z_var_data=No
     """
     This plots a map behind some latitude-longitude data and colours the line according to a third variable (z_var).
 
-    lat = A list of latitude data
-    long = A list of longitude data
-    time_data = A list of time data corresponding to the latitude and longitude data in seconds
+    ARGS:
+        lat = A list of latitude data
+        long = A list of longitude data
+        time_data = A list of time data corresponding to the latitude and longitude data in seconds
 
-        lat, long and time_data need to be of the same length.
+            lat, long and time_data need to be of the same length.
 
-    z_var = String for the name of the variable e.g. "Altitude"
-    z_var_unit = String for the units of the variable e.g. "m"
-    z_var_data = List of the data to be plotted e.g. [5, 12, 14]
-    z_var_time_data = List of the time data accompanying z_var_data in seconds e.g. [1, 2, 3]
+        z_var = String for the name of the variable e.g. "Altitude"
+        z_var_unit = String for the units of the variable e.g. "m"
+        z_var_data = List of the data to be plotted e.g. [5, 12, 14]
+        z_var_time_data = List of the time data accompanying z_var_data in seconds e.g. [1, 2, 3]
 
-        z_var_data and z_var_time_data should be lists of equal lengths. The z_var_time_data should overlap with the
-            time_data range.
+            z_var_data and z_var_time_data should be lists of equal lengths. The z_var_time_data should overlap with the
+                time_data range.
 
-    z_var_limits = Limits to the z_var data in the form [lower_limit, upper_limit].
-            This is not required for plotting z_var.
+        z_var_limits = Limits to the z_var data in the form [lower_limit, upper_limit].
+                This is not required for plotting z_var.
 
-    disable_prints = If True, warning about no z_var data and map selection advice are not printed.
-    scale_factor = Allows the user to choose how much map is shown. Acts like an inverse zoom from the middle of
-        the plot.
-    marker_size = Size of the markers plotted.
+        disable_prints = If True, warning about no z_var data and map selection advice are not printed.
+        scale_factor = Allows the user to choose how much map is shown. Acts like an inverse zoom from the middle of
+            the plot.
+        marker_size = Size of the markers plotted.
 
     Returns a figure object
     """
