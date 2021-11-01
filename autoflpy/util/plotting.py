@@ -1139,14 +1139,14 @@ def backplt_map(lat, long, time_data, z_var=None, z_var_unit=None, z_var_data=No
 
     try:
         # Tries to plot a Statem terrain map
-        ctx.add_basemap(ax, url=ctx.sources.ST_TERRAIN)
+        ctx.add_basemap(ax, source=ctx.providers.Stamen.Terrain)
     except HTTPError:
         # If the resolution is not good enough, plots an OpenStreetMap
         # instead
         if disable_prints is False:
             print('Location does not have high resolution Stamen terrain'
                   ' map data. Defaulting to OpenStreetMap data.')
-        ctx.add_basemap(ax, url=ctx.sources.OSM_A)
+        ctx.add_basemap(ax, source=ctx.providers.OpenStreetMap.Mapnik)
     except ConnectionError:
         # If there is no internet connection present, the map can't be called.
         print('Map unavailable when offline. Try again once an internet '
