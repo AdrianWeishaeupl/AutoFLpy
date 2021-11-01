@@ -1187,8 +1187,18 @@ def backplt_map(lat, long, time_data, z_var=None, z_var_unit=None, z_var_data=No
 
 
 def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=False, alt_sensitivity=0.3,
-                   groundspeed_sensitivity=0.3):
+                   groundspeed_sensitivity=0.3, lower_time_bound=10, upper_time_bound=15):
     """Plots the main variables over the take-off range of the flight on a multi-axis plot.
+
+    ARGS:
+        values_list - output from an AutoFLpy analysis of the flight log
+        marker_list - list, makers to present on the figures for visualisation purposes
+        take_off_time - float, manual time override in case the take-off has not been determined correctly
+        arm_data - bool, show when the aircraft has been armed/disarmed (if applicable)
+        alt_sensitivity - float, sensitivity criterion for determining the altitude change at take-off
+        groundspeed_sensitivity - float, sensitivity criterion for determining the groundspeed change at take-off
+        lower_time_bound - float, time to plot before the take-off point (s)
+        upper_time_bound - float, time to plot after the take-off point (s)
 
     Variables plotted:
     ["altitude", "baro"]
@@ -1200,9 +1210,10 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
     ["pitch", "ctun"]
     ["desired pitch", "att"]
 
-    ["throttle ch3", "rcou"]
-    ["flap ch5", "rcou"]
-    ["elevator ch2", "rcou"]
+    ["ch1", "rcou"]
+    ["ch2", "rcou"]
+    ["ch3", "rcou"]
+    ["ch4", "rcou"]
     ["current", "bat"]
 
     ["vibex", "vibe"]
@@ -1236,8 +1247,8 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
             print("Detected ground run start time: ", take_off_time_spd)
 
     # Sets bounds to display on the time axis
-    lower_bound = int(float(take_off_time) - 10)
-    upper_bound = int(float(take_off_time) + 15)
+    lower_bound = int(float(take_off_time) - lower_time_bound)
+    upper_bound = int(float(take_off_time) + upper_time_bound)
 
     # Sets the range for all of the graphs.
     x_limits = [lower_bound, upper_bound]
@@ -1258,7 +1269,7 @@ def take_off_graph(values_list, marker_list=(), take_off_time=None, arm_data=Fal
     graph_plotter([["y", "pitch", "att"], ["y", "desired pitch", "att"], ["x", "time", "att"]], values_list, x_limits,
                   y_limits, marker_list, arm_data=arm_data)
 
-    multiaxis_graph_plotter([["y", "throttle ch3", "rcou"], ["y", "flap ch5", "rcou"], ["y", "elevator ch2", "rcou"],
+    multiaxis_graph_plotter([["y", "ch1", "rcou"], ["y", "ch2", "rcou"], ["y", "ch3", "rcou"], ["y", "ch4", "rcou"],
                              ["x", "time", "rcou"]], [["y", "current", "bat"], ["x", "time", "bat"]],
                             values_list, x_limits, y_limits_left, y_limits_right, marker_list,
                             legend_location, arm_data=arm_data)
