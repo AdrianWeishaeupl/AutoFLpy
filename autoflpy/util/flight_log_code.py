@@ -284,6 +284,7 @@ def flight_data_and_axis(new_frames):
         # Goes through all the columns
         data_lists = []
         data_lists.append(frame.columns[0].split("_")[-3])
+        unit_present = True
         for column in frame.columns:
             # Converts values from data frame into a list.
             y = frame[column].tolist()
