@@ -354,9 +354,9 @@ IMU2, TimeUS, Time, US
 IMU2, GyrX, Gyro_X, degreespers
 IMU2, GyrY, Gyro_Y, degreespers
 IMU2, GyrZ, Gyro_Z, degreespers
-IMU2, AccX, Accelleration_X, mperspers
-IMU2, AccY, Accelleration_Y, mperspers
-IMU2, AccZ, Accelleration_Z, mperspers
+IMU2, AccX, Acceleration_X, mperspers
+IMU2, AccY, Acceleration_Y, mperspers
+IMU2, AccZ, Acceleration_Z, mperspers
 IMU2, EG, EG, unavailable
 IMU2, EA, EA, unavailable
 IMU2, T, T, unavailable
@@ -368,9 +368,9 @@ IMU3, TimeUS, Time, US
 IMU3, GyrX, Gyro_X, degreespers
 IMU3, GyrY, Gyro_Y, degreespers
 IMU3, GyrZ, Gyro_Z, degreespers
-IMU3, AccX, Accelleration_X, mperspers
-IMU3, AccY, Accelleration_Y, mperspers
-IMU3, AccZ, Accelleration_Z, mperspers
+IMU3, AccX, Acceleration_X, mperspers
+IMU3, AccY, Acceleration_Y, mperspers
+IMU3, AccZ, Acceleration_Z, mperspers
 IMU3, EG, EG, unavailable
 IMU3, EA, EA, unavailable
 IMU3, T, T, unavailable
