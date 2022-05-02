@@ -1,13 +1,15 @@
 Data Sources specified here will be placed in the excel document
-GPS
+AETR
 AOA
+ARSP
+ATT
+BARO
+BAT
+BAT2
 CTUN
+EV
+GPS
+IMU
 RCIN
 RCOU
-ARSP
-BARO
-ATT
 VIBE
-BAT
-AETR
-EV

@@ -2,6 +2,14 @@
 History
 =======
 
+1.1.12 (2022-01-07)
+-------------------
+
+* Lincense date updated to 2022.
+* Fixed issue where code blocks were not being hidden in the final report.
+* Updated the Data_sources.txt to include IMU and BAT2 by default.
+
+
 1.1.11 (2021-11-01)
 -------------------
 
